@@ -3,6 +3,7 @@
 | [About](#About) |
 | [Installation](#Installation) |
 | [Containers](#Containers) |
+
 About
 ======
 GUI is a multifunctional graphics library, especially designed and optimized for low-performance computers. You can realize all of your most perverted fantasies using it: from habitual buttons, sliders and charts to complex animated interfaces. Extreme performance of the library is achieved through the use of double buffering and complex color grouping and processing algorithms.
@@ -122,3 +123,31 @@ If the event does not belong to the screen, or the object **does not have** even
 | *function* | :**stopEventHandling**(): *table* container | Stop processing events for this container |
 | *function* | :**draw**() | Recursively renders the contents of the container in the order of the queue of its children. I draw your attention to the fact that this method only draws data into the screen buffer. To display changes on the screen, you must use the doubleBuffering.**draw** () method or use method below |
 | *function* | :**drawOnScreen**([*boolean* force]) | This method is similar to :**draw**() with the only difference that after drawing data  into the screen buffer, it will automatically display changes on the screen. That is, in fact, it exists solely for the convenience of writing code |
+
+Below is a classic example of the implementation of the container:
+
+```lua
+-- Import the library
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+-- Create container fitted to screen resolution
+local mainContainer = GUI.fullScreenContainer()
+-- Create and add second container to main container
+local anotherContainer = mainContainer:addChild(GUI.container(3, 2, 50, 25))
+-- Create simple event handler to it
+anotherContainer.eventHandler = function(mainContainer, object, ...)
+    print("It works! The event data was: ", ...)
+end
+
+--------------------------------------------------------------------------------
+
+-- Start processing event for main container
+mainContainer:startEventHandling()
+```
+
+As a result, you will get an amusing output of event data to the terminal:
+
+![](https://i.imgur.com/6xpX9L9.gif)
+
