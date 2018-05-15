@@ -104,7 +104,7 @@ The first parameter is a pointer to the table of the "main" container, the secon
 | Parameter | Description |
 | ------ | ------ |
 | "touch" | Event type |
-| "7842f8-..." | Screen address |
+| "7842f8..." | Screen address |
 | 13 | Screen x |
 | 21 | Screen y |
 | 0 | Mouse button |
@@ -176,7 +176,7 @@ In addition to the coordinates and size, any object has several universal proper
 
 After adding an object to the container using the :**addChild()** method, it acquires additional properties for ease of use:
 
-| Тип свойства| Свойство |Описание |
+| Type | Property | Description |
 | ------ | ------ | ------ |
 | *table* | .**parent** | A pointer to the parent container of the object |
 | *int* | .**localX** | Local position on the x-axis in the parent container |
@@ -194,7 +194,7 @@ After adding an object to the container using the :**addChild()** method, it acq
 An example of the implementation of the simplest rectangle object:
 
 ```lua
--- We will need double buffering library to render rectangles
+-- We will need downloaded double buffering library to render rectangles
 local buffer = require("doubleBuffering")
 local GUI = require("GUI")
 
@@ -220,3 +220,53 @@ mainContainer:startEventHandling()
 As a result, we will get a nice green rectangle:
 
 ![](https://i.imgur.com/VBrEdyx.png)
+
+Ready-to-use objects
+======
+
+The widgets are listed below comes with the library and are written on the instructions of this documentation. If you want, you can make absolutely similar or much more technically advanced widgets without any difficulties.
+
+GUI.**panel**( x, y, width, height, color, [transparency] ): *table* panel
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object's coordinate by x-axis |
+| *int* | y | Object's coordinate by y-axis |
+| *int* | width | Object's width |
+| *int* | height | Object's height |
+| *int* | color | Object's color |
+| [*int* | transparency] | Optional transparency of the object |
+
+The simplest object is a colored decorative panel. However, paradoxically, it is used quite often to create beautiful interface elements.
+
+To change the panel's color data, refer to the .**colors** table which has following structure:
+```lua
+panel.colors = {
+	background = 0xFFFFFF
+	transparency = 0;
+}
+```
+
+Example of panel implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+
+-- Add panel that fits main container size
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x262626))
+-- Add smaller red panel
+mainContainer:addChild(GUI.panel(10, 10, mainContainer.width - 20, mainContainer.height - 20, 0x880000))
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](http://i.imgur.com/Rho1RTl.png?1)
