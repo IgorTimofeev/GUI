@@ -1,8 +1,8 @@
 | Contents |
 | ----- |
-| [About](#About) |
-| [Installation](#Installation) |
-| [Containers](#Containers) |
+| [About](#about) |
+| [Installation](#installation) |
+| [Containers](#containers) |
 
 About
 ======
@@ -143,7 +143,7 @@ end
 
 --------------------------------------------------------------------------------
 
--- Start processing event for main container
+-- Start processing events for main container
 mainContainer:startEventHandling()
 ```
 
@@ -151,3 +151,72 @@ As a result, you will get an amusing output of event data to the terminal:
 
 ![](https://i.imgur.com/6xpX9L9.gif)
 
+Objects
+======
+
+After understanding the concept of containers, you can easily start adding your widgets to the created container. Each widget is the inherited object of GUI.**object**
+
+GUI.**object**( x, y, width, height ): *table* object
+-----------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object's coordinate by x-axis |
+| *int* | y | Object's coordinate by y-axis |
+| *int* | width | Object's width |
+| *int* | height | Object's height |
+
+In addition to the coordinates and size, any object has several universal properties:
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *boolean* | .**hidden** | Whether the object is hidden. If the object is hidden, then its rendering and analysis of system events are ignored |
+| *boolean* | .**disabled** | Whether the object is disabled. If the object is disabled, then it can be rendered, but all system events are ignored |
+| *function* | :**isPointInside**( *int* x, *int* y ): *boolean* isPointInside | A method for verifying the belonging of a point in a rectangular object. Used by the parent methods of containers and convenient for manual checking of the intersection of the specified coordinates with the location of the object on the screen |
+| *function* | :**draw**() | Mandatory method that is called to render the widget on the screen. It can be defined by the user in any convenient way |
+
+After adding an object to the container using the :**addChild()** method, it acquires additional properties for ease of use:
+
+| Тип свойства| Свойство |Описание |
+| ------ | ------ | ------ |
+| *table* | .**parent** | A pointer to the parent container of the object |
+| *int* | .**localX** | Local position on the x-axis in the parent container |
+| *int* | .**localY** | Local position on the y-axis in the parent container |
+| *function* | :**indexOf**() | Get the index of this object in the parent container (iterative method, works slowly) |
+| *function* | :**moveForward**() | Move the object "back" in the container children hierarchy |
+| *function* | :**moveBackward**() | Move the object "forward" in the container children hierarchy |
+| *function* | :**moveToFront**() | Move the object to the end of the container children hierarchy |
+| *function* | :**moveToBack**() | Move the object to the beginning of the container children hierarchy |
+| *function* | :**getFirstParent**() | Recursively get the first parent container. If there are many nested containers, the method will return the first in the hierarchy and the "main" of them |
+| *function* | :**delete**() | Remove this object from the parent container. Roughly speaking, this is a convenient way of self-destruction |
+| *function* | :**addAnimation**(*function* frameHandler, *function* onFinish): *table* animation | Add an animation to this object. For more information about animations and their creation, see below  |
+| [*callback-function* | .**eventHandler**(*container* mainContainer, *object* object, ... *varargs* eventData) ]| An optional method for handling system events, called by the parent container handler. If it exists in the object under consideration, it will be called with the appropriate arguments |
+
+An example of the implementation of the simplest rectangle object:
+
+```lua
+-- We will need double buffering library to render rectangles
+local buffer = require("doubleBuffering")
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+
+-- Create and add basic object to main container
+local myObject = mainContainer:addChild(GUI.object(3, 2, 50, 10))
+-- Create own :draw() method and make it render green rectangle
+myObject.draw = function(object)
+	buffer.square(object.x, object.y, object.width, object.height, 0x33FF80, 0x0, " ")
+end
+
+--------------------------------------------------------------------------------
+
+-- Draw content of main container once on screen when program starts
+mainContainer:drawOnScreen(true)
+-- Start processing events for main container
+mainContainer:startEventHandling()
+```
+
+As a result, we will get a nice green rectangle:
+
+![](https://i.imgur.com/VBrEdyx.png)
