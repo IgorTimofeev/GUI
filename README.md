@@ -3,6 +3,10 @@
 | [About](#about) |
 | [Installation](#installation) |
 | [Containers](#containers) |
+| [Objects](#objects) |
+| [  GUI.panel](#guipanel-x-y-width-height-color-transparency--table-panel) |
+| [  GUI.text](#guitext-x-y-textcolor-text--table-text) |
+| [  GUI.label](#guilabel-x-y-width-height-textcolor-text--table-label) |
 
 About
 ======
@@ -239,14 +243,6 @@ GUI.**panel**( x, y, width, height, color, [transparency] ): *table* panel
 
 The simplest object is a colored decorative panel. However, paradoxically, it is used quite often to create beautiful interface elements.
 
-To change the panel's color data, refer to the .**colors** table which has following structure:
-```lua
-panel.colors = {
-	background = 0xFFFFFF
-	transparency = 0;
-}
-```
-
 Example of panel implementation:
 
 ```lua
@@ -270,3 +266,85 @@ mainContainer:startEventHandling()
 Result:
 
 ![Imgur](http://i.imgur.com/Rho1RTl.png?1)
+
+GUI.**text**( x, y, textColor, text ): *table* text
+--------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object's coordinate by x-axis |
+| *int* | y | Object's coordinate by y-axis |
+| *int* | width | Object's width |
+| *int* | height | Object's height |
+| *int* | textColor | Object's text color |
+| *string* | text | Object's text |
+
+Another simpliest object is text. If you need to quickly display something in text form, then this widget is created for you. When you change the text, its width is automatically calculated to the desired value.
+
+Example of implementation:
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+mainContainer:addChild(GUI.text(3, 2, 0xFFFFFF, "Hello, world!"))
+mainContainer:addChild(GUI.text(3, 3, 0xFFFFFF, "How are you? Wanna cast some EEWRD meatballs?"))
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](https://i.imgur.com/ygqLguM.png)
+
+GUI.**label**( x, y, width, height, textColor, text ): *table* label
+--------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object's coordinate by x-axis |
+| *int* | y | Object's coordinate by y-axis |
+| *int* | width | Object's width |
+| *int* | height | Object's height |
+| *int* | textColor | Object's text color |
+| *string* | text | Object's text |
+
+A text label is an advanced version of the GUI.**text** that supports various alignment options.
+
+| Тип свойства | Свойство |Описание |
+| ------ | ------ | ------ |
+| *function* | :**setAlignment**(*enum* horizontalAlignment, *enum* verticalAlignment): *table* label| Choose a text display option for label boundaries |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [left, top] alighment")):setAlignment(GUI.alignment.horizontal.left, GUI.alignment.vertical.top)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [center, top] alighment")):setAlignment(GUI.alignment.horizontal.center, GUI.alignment.vertical.top)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [right, top] alighment")):setAlignment(GUI.alignment.horizontal.right, GUI.alignment.vertical.top)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [left, center] alighment")):setAlignment(GUI.alignment.horizontal.left, GUI.alignment.vertical.center)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [center, center] alighment")):setAlignment(GUI.alignment.horizontal.center, GUI.alignment.vertical.center)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [right, center] alighment")):setAlignment(GUI.alignment.horizontal.right, GUI.alignment.vertical.center)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [left, bottom] alighment")):setAlignment(GUI.alignment.horizontal.left, GUI.alignment.vertical.bottom)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [center, bottom] alighment")):setAlignment(GUI.alignment.horizontal.center, GUI.alignment.vertical.bottom)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [right, bottom] alighment")):setAlignment(GUI.alignment.horizontal.right, GUI.alignment.vertical.bottom)
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](https://i.imgur.com/ftonciY.png)
