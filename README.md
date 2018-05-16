@@ -18,8 +18,9 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [Constants](#constants) |
 | [Standalone methods](#standalone-methods) |
 | [    GUI.error](#guierrorvarargs) |
-| [    GUI.addPaletteToContainer](#guiaddpalettetocontainerparentcontainer-addpanel-initialcolor-table-palette) |
-| [    GUI.addFilesystemDialogToContainer](#guiaddfilesystemdialogtocontainerparentcontainer-addpanel--table-filesystemdialog) |
+| [    GUI.addPalette](#guiaddpaletteparentcontainer-addpanel-initialcolor-table-palette) |
+| [    GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel--table-filesystemdialog) |
+| [    GUI.addBackgroundContainer](#guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title-table-palette) |
 | [Ready-to-use widgets](#ready-to-use-widgets) |
 | [    GUI.panel](#guipanel-x-y-width-height-color-transparency--table-panel) |
 | [    GUI.text](#guitext-x-y-textcolor-text--table-text) |
@@ -314,7 +315,7 @@ Result:
 
 ![Imgur](http://i.imgur.com/s8mA2FL.png?1)
 
-GUI.**addPaletteToContainer**(parentContainer, addPanel, initialColor): *table* palette
+GUI.**addPalette**(parentContainer, addPanel, initialColor): *table* palette
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -337,7 +338,7 @@ local mainContainer = GUI.fullScreenContainer()
 mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
 
 -- Add palette window
-local palette = GUI.addPaletteToContainer(mainContainer, false, 0x9900FF)
+local palette = GUI.addPalette(mainContainer, false, 0x9900FF)
 -- Do something after color selection
 palette.onSubmit = function()
 	GUI.error("This color was selected: " .. string.format("0x%06X", palette.color.integer))
@@ -354,7 +355,7 @@ Result:
 
 ![](https://i.imgur.com/GvVbn1b.gif)
 
-GUI.**addFilesystemDialogToContainer**(parentContainer, addPanel, ...): *table* filesystemDialog
+GUI.**addFilesystemDialog**(parentContainer, addPanel, ...): *table* filesystemDialog
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -374,7 +375,7 @@ local GUI = require("GUI")
 local mainContainer = GUI.fullScreenContainer()
 mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
 
-local filesystemDialog = GUI.addFilesystemDialogToContainer(mainContainer, false, 50, math.floor(mainContainer.height * 0.8), "Open", "Cancel", "File name", "/")
+local filesystemDialog = GUI.addFilesystemDialog(mainContainer, false, 50, math.floor(mainContainer.height * 0.8), "Open", "Cancel", "File name", "/")
 filesystemDialog:setMode(GUI.IO_MODE_OPEN, GUI.IO_MODE_FILE)
 filesystemDialog:addExtensionFilter(".pic")
 filesystemDialog.onSubmit = function(path)
