@@ -2,7 +2,7 @@ About
 ======
 GUI is a multifunctional graphics library, especially designed and optimized for low-performance computers. You can realize all of your most perverted fantasies using it: from habitual buttons, sliders and charts to complex animated interfaces. Extreme performance of the library is achieved by using double buffering and complex color grouping and processing algorithms.
 
-For example, my OS, IDE and 3D-application are fully implemented by the methods of this library:
+For example, my OS, IDE and 3D-engine are fully implemented by the methods of this library:
 
 ![Imgur](https://i.imgur.com/Ki5bX0I.gif)
 
@@ -163,8 +163,8 @@ If the event does not belong to the screen, or the object **does not have** even
 | *function* | :**deleteChildren**([*int* fromIndex, *int* toIndex]): *table* container | Delete all child elements of the container. If the optional parameters of the element indices are specified, the deletion will be performed in the appropriate range |
 | *function* | :**startEventHandling**([*float* delay]): *table* container | Run the event processing for this container and analyse events for all it's child objects. The  **delay** parameter is similar to computer.**pullSignal** one |
 | *function* | :**stopEventHandling**(): *table* container | Stop processing events for this container |
-| *function* | :**draw**() | Recursively renders the contents of the container in the order of the queue of its children. I draw your attention to the fact that this method only draws data into the screen buffer. To display changes on the screen, you must use the doubleBuffering.**draw** () method or use method below |
-| *function* | :**drawOnScreen**([*boolean* force]) | This method is similar to :**draw**() with the only difference that after drawing data  into the screen buffer, it will automatically display changes on the screen. That is, in fact, it exists solely for the convenience of writing code |
+| *function* | :**draw**() | Recursively renders the contents of the container in the order of the queue of its children. I draw your attention to the fact that this method only draws data into the screen buffer. To display changes on the screen, you must use the doubleBuffering.**drawChanges**() method or use method below |
+| *function* | :**drawOnScreen**([*boolean* force]) | This method is similar to :**draw**() with the only difference that after drawing data into the screen buffer, it will automatically display changes on the screen. That is, in fact, it exists solely for the convenience of writing code |
 
 Below is a classic example of the implementation of the container:
 
