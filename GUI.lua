@@ -111,14 +111,6 @@ GUI.COLOR_WINDOWS_SHADOW_TRANSPARENCY = 0.5
 
 -----------------------------------------------------------------------
 
-local function objectIsPointInside(object, x, y)
-	return
-		x >= object.x and
-		x <= object.x + object.width - 1 and
-		y >= object.y and
-		y <= object.y + object.height - 1
-end
-
 local function objectDraw(object)
 	return object
 end
@@ -129,12 +121,20 @@ function GUI.object(x, y, width, height)
 		y = y,
 		width = width,
 		height = height,
-		draw = objectDraw,
-		isPointInside = objectIsPointInside
+		draw = objectDraw
 	}
 end
 
 -----------------------------------------------------------------------
+
+function GUI.isPointInside(object, x, y)
+	return
+		x >= object.x and
+		x <= object.x + object.width - 1 and
+		y >= object.y and
+		y <= object.y + object.height - 1
+end
+
 
 function GUI.setAlignment(object, horizontalAlignment, verticalAlignment)
 	object.horizontalAlignment, object.verticalAlignment = horizontalAlignment, verticalAlignment
@@ -357,8 +357,8 @@ local function containerHandler(isScreenEvent, mainContainer, currentContainer, 
 			if isScreenEvent then
 				if
 					e3 >= currentContainer.x and
-					e3 <= currentContainer.x + currentContainer.width - 1 and
 					e4 >= currentContainer.y and
+					e3 <= currentContainer.x + currentContainer.width - 1 and
 					e4 <= currentContainer.y + currentContainer.height - 1 and
 					not currentContainer.disabled
 				then
@@ -392,8 +392,8 @@ local function containerHandler(isScreenEvent, mainContainer, currentContainer, 
 					if isScreenEvent then
 						if
 							e3 >= child.x and
-							e3 <= child.x + child.width - 1 and
 							e4 >= child.y and
+							e3 <= child.x + child.width - 1 and
 							e4 <= child.y + child.height - 1
 						then
 							if child.eventHandler and not child.disabled then
@@ -742,11 +742,13 @@ end
 
 function GUI.label(x, y, width, height, textColor, text)
 	local object = GUI.object(x, y, width, height)
+	
 	object.setAlignment = GUI.setAlignment
 	object:setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
 	object.colors = {text = textColor}
 	object.text = text
 	object.draw = drawLabel
+
 	return object
 end
 
@@ -3164,12 +3166,12 @@ local function inputStartInput(input)
 		e1, e2, e3, e4, e5, e6 = event.pull(input.cursorBlinkDelay)
 		
 		if e1 == "touch" or e1 == "drag" then
-			if input:isPointInside(e3, e4) then
+			if GUI.isPointInside(input, e3, e4) then
 				input:setCursorPosition(input.textCutFrom + e3 - input.x - input.textOffset)
 				
 				input.cursorBlinkState = true
 				mainContainer:drawOnScreen()
-			elseif input.autoComplete:isPointInside(e3, e4) then
+			elseif GUI.isPointInside(input.autoComplete, e3, e4) then
 				input.autoComplete.eventHandler(mainContainer, input.autoComplete, e1, e2, e3, e4, e5, e6)
 			else
 				input.cursorBlinkState = false
@@ -4098,7 +4100,7 @@ local function windowCheck(window, x, y)
 			if windowCheck(child, x, y) then
 				return true
 			end
-		elseif child.eventHandler and not child.hidden and not child.disabled and child:isPointInside(x, y) then
+		elseif child.eventHandler and not child.hidden and not child.disabled and GUI.isPointInside(child, x, y) then
 			return true
 		end
 	end

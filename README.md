@@ -319,8 +319,25 @@ Result:
 
 ![Imgur](http://i.imgur.com/s8mA2FL.png?1)
 
-GUI.**highlightString**(x, y, width, fromSymbol, indentationWidth, syntaxPatterns, syntaxColorScheme, data)
+GUI.**isPointInside**(object, x, y): *boolean* result
 ------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *table* | object | Pointer to any object |
+| *int* | x | Coordinate by x-axis on screen |
+| *int* | y | Coordinate by y-axis on screen |
+
+This method checks whether the specified point is inside the boundaries of the specified object. This method is useful in rare cases for manual verification.
+
+GUI.**getAlignmentCoordinates**(object, x, y): *boolean* result
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *table* | object | Pointer to any object |
+| *int* | x | Coordinate by x-axis on screen |
+| *int* | y | Coordinate by y-axis on screen |
+
+This method checks whether the specified point is inside the boundaries of the specified object. This method is useful in rare cases for manual verification.
 
 GUI.**highlightString**(x, y, width, fromSymbol, indentationWidth, syntaxPatterns, syntaxColorScheme, data)
 ------------------------------------------------------------------------
