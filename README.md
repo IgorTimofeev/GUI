@@ -15,6 +15,7 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [Installation](#installation) |
 | [Containers](#containers) |
 | [Objects](#objects) |
+| [Constants](#constants) |
 | [Ready-to-use widgets](#ready-to-use-widgets) |
 | [    GUI.panel](#guipanel-x-y-width-height-color-transparency--table-panel) |
 | [    GUI.text](#guitext-x-y-textcolor-text--table-text) |
@@ -234,6 +235,39 @@ mainContainer:startEventHandling()
 As a result, we will get a nice green rectangle:
 
 ![](https://i.imgur.com/VBrEdyx.png)
+
+Constants
+======
+
+This is a rather boring section of the documentation, but it is still necessary for learning. The library has several universal constants, with which some objects are oftenly working. For example, if you want to centerize the text on the screen, you will need alignment constants. If you want to change object's direction - use direction constants, and so on.
+
+| Type | Constant | Value | Description |
+| ------ | ------ | ------ | ------ |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | - | Align object to left side horizontally |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_CENTER** | - | Align object to center side horizontally |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | - | Align object to right side horizontally |
+| *enum* | GUI.**ALIGNMENT_VERTICAL_TOP** | - | Align object to top side vertically |
+| *enum* | GUI.**ALIGNMENT_VERTICAL_CENTER** | - | Align object to center side vertically |
+| *enum* | GUI.**ALIGNMENT_VERTICAL_BOTTOM** | - | Align object to bottom side vertically |
+| *enum* | GUI.**DIRECTION_HORIZONTAL** | - | Set horizontal direction to an object |
+| *enum* | GUI.**DIRECTION_VERTICAL** | - | Set horizontal direction to an object |
+| *enum* | GUI.**IO_MODE_OPEN** | - | Mode for opening data |
+| *enum* | GUI.**IO_MODE_SAVE** | - | Mode for saving data |
+| *enum* | GUI.**IO_MODE_FILE** | - | Mode for working with files |
+| *enum* | GUI.**IO_MODE_DIRECTORY** | - | Mode for working with directories |
+| *enum* | GUI.**IO_MODE_BOTH** | - | Mode for working with bothly files and directories |
+| *enum* | GUI.**SIZE_POLICY_ABSOLUTE** | - | Calculation of object's sizes via absolute values |
+| *enum* | GUI.**SIZE_POLICY_RELATIVE** | - | Calculation of object's sizes via relative (percentage) values |
+
+Still not tired yet? And now think how I fucked up writing them during the library development. Shitty constants...
+
+![](https://i.imgur.com/RDg5Qnz.jpg)
+
+| Type | Constant | Value | Description |
+| ------ | ------ | ------ | ------ |
+| *string* | GUI.**PALETTE_CONFIG_PATH** | /lib/.palette.cfg | Path where GUI.**palette** favourites colors are being saved |
+| *table* | GUI.**LUA_SYNTAX_PATTERNS** | - | Required patterns for Lua syntax highlighting by GUI.**highlightString**(...) method |
+| *table* | GUI.**LUA_SYNTAX_COLORS** | - | Default color scheme for Lua syntax highlighting by GUI.**highlightString**(...) method |
 
 Ready-to-use widgets
 ======
@@ -548,13 +582,13 @@ GUI.**input**( x, y, width, height, backgroundColor, textColor, placeholderTextC
 | [*boolean* | eraseTextOnFocus] | Delete text when the input is focused |
 | [*char* | textMask] | A mask character for the text to be entered. Convenient for creating a password entry field |
 
-The input object is intended for input and analysis of text data from the keyboard. You can move the cursor with clicks or left and right arrows. Clicking on the object starts the process of entering text, and pressing Enter or clicking on an empty zone on the screen will finish it.
+The input object is intended for input and analysis of text data from the keyboard. Pasting data from real clipboard is also supported. You can move the cursor with clicks or left and right arrows. Clicking on the object starts the process of entering text, and pressing Enter or clicking on an empty zone on the screen will finish it.
 
 | Type | Property | Description |
 | ------ | ------ | ------ |
 | *string* | .**text** | A variable that contains current displayed text of an object |
 | *function* | :**startInput**() | Method for activation of text inputting |
-| *callback-function* | .**validator**( *string* text ) | The function that is called after the text is entered in the input field. If it returns **true**, the text in the text field will be changed to the entered text, otherwise the entered data will be ignored |
+| *callback-function* | .**validator**(*string* text) | The function that is called after the text is entered in the input field. If it returns **true**, the text in the text field will be changed to the entered text, otherwise the entered data will be ignored |
 | *callback-function* | .**onInputFinished**() | The function that is called after entering data in the input field: it's a handy thing if you want to do something after entering text. If the object has .**validator** function, and if the text does not pass the check through it, then .**onInputFinished** will not be called |
 
 Example of implementation:
