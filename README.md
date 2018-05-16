@@ -175,7 +175,6 @@ In addition to the coordinates and size, any object has several universal proper
 | ------ | ------ | ------ |
 | *boolean* | .**hidden** | Whether the object is hidden. If the object is hidden, then its rendering and analysis of system events are ignored |
 | *boolean* | .**disabled** | Whether the object is disabled. If the object is disabled, then it can be rendered, but all system events are ignored |
-| *function* | :**isPointInside**( *int* x, *int* y ): *boolean* isPointInside | A method for verifying the belonging of a point in a rectangular object. Used by the parent methods of containers and convenient for manual checking of the intersection of the specified coordinates with the location of the object on the screen |
 | *function* | :**draw**() | Mandatory method that is called to render the widget on the screen. It can be defined by the user in any convenient way |
 
 After adding an object to the container using the :**addChild()** method, it acquires additional properties for ease of use:
