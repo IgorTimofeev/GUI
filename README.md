@@ -1084,3 +1084,417 @@ mainContainer:startEventHandling()
 Result:
 
 ![](http://i89.fastpic.ru/big/2017/0402/f1/ef1da27531ccf899eb9eb59c010180f1.png)
+
+GUI.**filesystemTree**( x, y, width, height, backgroundColor, directoryColor, fileColor, arrowColor, backgroundSelectionColor, textSelectionColor, arrowSelectionColor, disabledColor, scrollBarBackground, scrollBarForeground, showMode, selectionMode ): *table* filesystemTree
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* or *nil* | backgroundColor | Object default background color |
+| *int* | directoryColor | Object directories text color |
+| *int* | fileColor | Object files color |
+| *int* | arrowColor | Object default directories arrow color |
+| *int* | backgroundSelectionColor | Object selection background color |
+| *int* | textSelectionColor | Object selection text color |
+| *int* | arrowSelectionColor | Object selection directories arrow color |
+| *int* | disabledColor | Object extension mismatch color |
+| *int* | scrollBarBackground | Object scrollBar primary color |
+| *int* | scrollBarForeground | Object scrollBar secondary colo |
+| [*enum* | filesystemShowMode] | Optional directory content show mode. Can be GUI.**IO_MODE_FILE**, GUI.**IO_MODE_DIRECTORY** or GUI.**IO_MODE_BOTH**
+| [*enum* | filesystemSelectionMode] | Optional directory content selection mode. Can be the same values as above |
+
+This object is intended for navigation on the filesystem via hierarchical tree. When you click on the directory, its contents will be shown, and while scrolling with the mouse wheel, the content will move in the specified direction.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *string* | .**workPath** | Current root directory |
+| *string* | .**selectedItem** | Current selected item path |
+| *function* | :**updateFileList**()| Update tree file list |
+| *function* | :**expandPath**(*string* path)| Recursuvely expands specified path and shows it's content |
+| *function* | :**addExtensionFilter**( *string* extension )| Add a filter to the specified file extension. After that, only files witch specified extension well be able to be selected |
+| *callback-function* | .**onItemSelected**(*string* path) | This function is called when some item was selected |
+| *callback-function* | .**onItemExpanded**(*string* path) | This function is called when some directory was expanded |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x262626))
+
+local tree1 = mainContainer:addChild(GUI.filesystemTree(3, 2, 30, 41, 0xCCCCCC, 0x3C3C3C, 0x3C3C3C, 0x999999, 0x3C3C3C, 0xE1E1E1, 0xBBBBBB, 0xAAAAAA, 0xBBBBBB, 0x444444, GUI.IO_MODE_BOTH, GUI.IO_MODE_FILE))
+tree1:updateFileList()
+tree1.onItemSelected = function(path)
+	GUI.error("Something was selected, the path is: \"" .. path .. "\"")
+end
+
+local tree2 = mainContainer:addChild(GUI.filesystemTree(34, 2, 30, 41, 0xCCCCCC, 0x3C3C3C, 0x3C3C3C, 0x999999, 0x3C3C3C, 0xE1E1E1, 0xBBBBBB, 0xAAAAAA, 0xBBBBBB, 0x444444, GUI.IO_MODE_FILE, GUI.IO_MODE_FILE))
+tree2:updateFileList()
+tree2.onItemSelected = function(path)
+	GUI.error("File was selected, the path is: \"" .. path .. "\"")
+end
+
+local tree3 = mainContainer:addChild(GUI.filesystemTree(66, 2, 30, 41, 0xCCCCCC, 0x3C3C3C, 0x3C3C3C, 0x999999, 0x3C3C3C, 0xE1E1E1, 0xBBBBBB, 0xAAAAAA, 0xBBBBBB, 0x444444, GUI.IO_MODE_DIRECTORY, GUI.IO_MODE_DIRECTORY))
+tree3:updateFileList()
+tree3.onItemSelected = function(path)
+	GUI.error("Directory was selected, the path is: \"" .. path .. "\"")
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](https://i.imgur.com/igGozFP.gif)
+
+GUI.**filesystemChooser**( x, y, width, height, backgroundColor, textColor, tipBackgroundColor, tipTextColor, initialText, sumbitButtonText, cancelButtonText, placeholderText, filesystemDialogMode, filesystemDialogPath ): *table* filesystemChooser
+--------------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* | backgroundColor | Object background color |
+| *int* | textColor | Object text color |
+| *int* | tipBackgroundColor | Object "pipe" background color |
+| *int* | tipTextColor | Object "pipe" text color |
+| *string* | path | Initial path of and object. Can be also **nil** value, it it doesn't needed |
+| *string* | sumbitButtonText | Object submit button text |
+| *string* | cancelButtonText | Object cancel button text |
+| *string* | placeholderText | Text that is shown when no path was typed manually |
+| *enum* | filesystemDialogMode | Directory content show mode. Can be GUI.**IO_MODE_FILE**, GUI.**IO_MODE_DIRECTORY** or GUI.**IO_MODE_BOTH** |
+| *string* | filesystemDialogPath | Initial directory of dialog window |
+
+This object is intended for convenient selection of a file or directory. When you click on the object, a dialog window pops up with filesystemTree already familiar to us, allowing you to select the desired item by navigating the file system.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *callback-function* | .**onSubmit**( *string* path ) | This function is called after choosing file or directory and pressing submit button in dialog window. One single parameter is an absolute path to selected item |
+| *callback-function* | .**onCancel**(  )| This function is called after pressing cancel button in dialog window |
+| *function* | :**setMode**( *enum* IOMode, *enum* showMode ) | This is method for setting window mode. First parameter is needed to tell window what to do: to open or to save items. It can be GUI.**IO_MODE_OPEN**, GUI.**IO_MODE_SAVE** or GUI.**IO_MODE_BOTH**. The second one is needed to setting showing mode. It can be GUI.**IO_MODE_FILE**, GUI.**IO_MODE_FILE** or GUI.**IO_MODE_BOTH** |
+| *function* | :**addExtensionFilter**( *string* extension )| Add a filter to the specified file extension. After that, only files witch specified extension well be able to be selected |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x262626))
+
+local filesystemChooser = mainContainer:addChild(GUI.filesystemChooser(2, 2, 30, 3, 0xE1E1E1, 0x888888, 0x3C3C3C, 0x888888, nil, "Open", "Cancel", "Choose", "/"))
+filesystemChooser:setMode(GUI.IO_MODE_OPEN, GUI.IO_MODE_FILE)
+filesystemChooser.onSubmit = function(path)
+	GUI.error("File \"" .. path .. "\" was selected")
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](https://i.imgur.com/F0ch8yQ.gif)
+
+GUI.**codeView**( x, y, width, height, fromSymbol, fromLine, maximumLineLength, selections, highlights, syntaxPatterns, syntaxColorScheme, syntaxHighlight, lines ): *table* codeView
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* | fromSymbol | From what symbol is drawing will start |
+| *int* | fromLine |  From what lines is drawing will start |
+| *int* | maximumLineLength | Length of the biggest line form **lines** table |
+| *table* | selections | Table with structure {{from = {line = *int* line, symbol = *int* symbol}, to = {line = *int* line, symbol = *int* symbol}}, ...}, that allows to specify selection data just like in any text editor |
+| *table* | highlights | Table with structure {[*int* lineIndex] = *int* color, ...} that allows to highlight specified lines with specified |
+| *table* | syntaxPatterns | Patterns for syntax highlighting. Only requires if **syntaxHighlight** is enabled |
+| *table* | syntaxColorScheme | Color scheme for syntax highlighting. Only requires if **syntaxHighlight** is enabled |
+| *boolean* | syntaxHighlight | Does code syntax highlighting need to be enabled |
+| *table* | lines | Table with strings that will be displayed |
+
+This object is intended for visual display of the code with line numbers, indentations, selections, scroll bars and optional syntax highlighting.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**lines** | Table with strings displayed by widget |
+| *int* | .**fromLine** | Line to display from |
+| *int* | .**fromSymbol** | Symbol to display from |
+| *table* | .**selections** | Table with selections |
+| *table* | .**highlights** | Table with highlights |
+| *boolean* | .**syntaxHighlight** | Variable to set syntax highlighting |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+local unicode = require("unicode")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+-- Open file and read it's lines
+local lines, maximumLineLength = {}, 1
+for line in io.lines("/lib/advancedLua.lua") do
+	-- Just in case replace tab symbols to 2 whitespaces and Windows line endings to UNIX line endings
+	line = line:gsub("\t", "  "):gsub("\r\n", "\n")
+	maximumLineLength = math.max(maximumLineLength, unicode.len(line))
+	table.insert(lines, line)
+end
+
+-- Add codeView object to main container
+mainContainer:addChild(GUI.codeView(2, 2, 130, 30, 1, 1, maximumLineLength, {}, {}, GUI.LUA_SYNTAX_PATTERNS, GUI.LUA_SYNTAX_COLOR_SCHEME, true, lines))
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](https://i.imgur.com/o1yLMJr.png)
+
+GUI.**chart**( x, y, width, height, axisColor, axisValueColor, axisHelpersColor, chartColor, xAxisValueInterval, yAxisValueInterval, xAxisPostfix, yAxisPostfix, fillChartArea, values ): *table* chart
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* | axisColor | Object axis color |
+| *int* | axisValueColor | Object axis values color |
+| *int* | axisHelpersColor | Object axis helpers color |
+| *int* | chartColor | Object chart color |
+| *float* [0.0; 1.0] | xAxisValueInterval | X-axis values interval |
+| *float* [0.0; 1.0] | yAxisValueInterval | Y-axis values interval |
+| *string* | xAxisPostfix | X-axis values postfix |
+| *string* | yAxisPostfix | Y-axis values postfix |
+| *boolean* | fillChartArea | Does filling chart area is needed |
+| *table* | values | Table with structure {{*float* x, *float* y}, ...} with chart values |
+
+This object is intended for the sorted display of data in the form of a two-dimensional graph with the signed coordinate axis. Both positive and negative values are supported, but the axes are always located on the left and the bottom edges of the object.
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+local chart = mainContainer:addChild(GUI.chart(2, 2, 100, 30, 0xEEEEEE, 0xAAAAAA, 0x888888, 0xFFDB40, 0.25, 0.25, "s", "t", true, {}))
+for i = 1, 100 do
+	table.insert(chart.values, {i, math.random(0, 80)})
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](http://i91.fastpic.ru/big/2017/0402/5b/66ff353492298f6a0c9b01c0fc8a525b.png)
+
+GUI.**brailleCanvas**( x, y, width, height ): *table* brailleCanvas
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+
+This object is inherently similar to a pixel canvas. Its distinctive feature is the use of Braille symbols, which creates an increased resolution in comparison with the standard resolution: each real pixel can hold up to 2x4 "mini-pixels." It's very useful for detailed rendering of small details, with which the mod can't handle. For example, if a BrailleCanvas with a size of 10x10 real pixels is created, it will contain 20x40 braille pixels.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *function* | :**set**( *int* x, *int* y, *boolean* state, [*int* color] )| Set the corresponding pixel value to the local coordinates of the BrailleCanvas. If there is already an existing pixel in this position, the value of its color will be replaced by a new one. If the color argument is not specified, then the pixel color will remain the same |
+| *function* | :**get**( *int* x, *int* y ): *boolean* state, *int* color, *char* symbol | Get the state, color, and the symbol of the current braille pixel |
+| *function* | :**fill**( *int* x, *int* y, *int* width, *int* height, *boolean* state, *int* color ) | Works similarly to the :**set**() method, however it allows editing entire canvas |
+| *function* | :**clear**() | Clear canvas content |
+
+Example of implementation:
+```lua
+local GUI = dofile("/lib/GUI.lua")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x262626))
+
+-- Add a text label for size comparison
+mainContainer:addChild(GUI.label(3, 2, 30, 1, 0xFFFFFF, "Text for size comparison"))
+-- Add BrailleCanvas with 30x15 screen pixels
+local brailleCanvas = mainContainer:addChild(GUI.brailleCanvas(3, 4, 30, 15))
+
+-- Let's draw! First we will create "border" around object with two vertical lines
+local canvasWidthInBraillePixels = brailleCanvas.width * 2
+for i = 1, brailleCanvas.height * 4 do
+	brailleCanvas:set(1, i, true, 0xFFFFFF)
+	brailleCanvas:set(canvasWidthInBraillePixels, i, true, 0xFFFFFF)
+end
+
+-- After that let's add two horizontal lines
+local canvasHeightInBraillePixels = brailleCanvas.height * 4
+for i = 1, brailleCanvas.width * 2 do
+	brailleCanvas:set(i, 1, true, 0xFFFFFF)
+	brailleCanvas:set(i, canvasHeightInBraillePixels, true, 0xFFFFFF)
+end
+
+-- Now we're drawing one red diagonal
+for i = 1, 60 do
+	brailleCanvas:set(i, i, true, 0xFF4940)
+end
+
+-- Drawing yellow rectangle
+brailleCanvas:fill(20, 20, 20, 20, true, 0xFFDB40)
+-- Drawing smaller rectangle, but with pixels state = false
+brailleCanvas:fill(25, 25, 10, 10, false)
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](https://i.imgur.com/FPWbQkv.png)
+
+GUI.**scrollBar**( x, y, width, height, backgroundColor, foregroundColor, minimumValue, maximumValue, value, shownValueCount, onScrollValueIncrement, thinMode ): *table* scrollBar
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* | backgroundColor | Object background color |
+| *int* | foregroundColor | Object text color |
+| *int* | minimumValue | Object minimum value |
+| *int* | maximumValue | Object maximum value |
+| *int* | value | Object current value |
+| *int* | shownValueCount | Object shown value count (per "page") |
+| *int* | onScrollValueIncrement | Value increment on **scroll** event |
+| *boolean* | thinMode | Thin drawing mode |
+
+This object is intended for visual demonstration of the number of displayed objects on the screen. Itself is practically not used, useful in combination with other widgets.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *float* | .**value** | Current object value variable |
+| *callback-function* | .**onTouch**( )| This function is called after touching scrollBar. It's .**value** will be calculated automatically |
+| *callback-function* | .**onScroll**( )| This function is called on scrolling via mouse. Object .**value** will be changed by .**onScrollValueIncrement** |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+-- Add vertical scrollBar to main container
+local verticalScrollBar = mainContainer:addChild(GUI.scrollBar(2, 3, 1, 15, 0x444444, 0x888888, 1, 100, 1, 10, 1, true))
+verticalScrollBar.onTouch = function()
+	GUI.error("Vertical scrollbar was touched")
+end
+
+-- Add horizontal too
+local horizontalScrollBar = mainContainer:addChild(GUI.scrollBar(3, 2, 60, 1, 0x444444, 0x888888, 1, 100, 1, 10, 1, true))
+horizontalScrollBar.onTouch = function()
+	-- Do something on scrollBar touch
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](https://i.imgur.com/XrqDvBk.png)
+
+GUI.**textBox**(x, y, width, height, backgroundColor, textColor, lines, currentLine, horizontalOffset, verticalOffset, autoWrap, autoHeight): *table* textBox
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* or *nil* | backgroundColor | Object background color. Can be **nil** to be ignored |
+| *int* | textColor | Object text color |
+| *table* | lines | Table with textBox strings. There is also alternative option to set line color: line must be a table with structure: {text = *string*, color = *int*}  |
+| *int* | currentLine | Current line to draw with |
+| *int* | horizontalOffset | Horizontal offset from left and right borders |
+| *int* | verticalOffset | Vertical offset from top and bottom borders |
+| [*boolean* | autoWrap] | Optional automatic text wrapping by textBoxWidth |
+| [*boolean* | autoHeight] | Optional automatic object height calculation to fit lines table |
+
+This object is designed to display a large amount of text data in a small container with scroll bars. When using the mouse wheel and activating the **scroll** event, the contents of the textbox will automatically "scroll" in the desired direction. There's also feature of setting desired alignment.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**lines**| Pointer to table with object strings |
+| *int* | .**currentLine**| Current line to draw with |
+| *boolean* | .**autoWrap**| Automatic text wrapping mode |
+| *boolean* | .**autoHeight**| Automatic height calculation mode |
+| *boolean* | .**scrollBarEnabled**| Scrollbar showing state |
+| *function* | :**scrollUp**([*int* count]): *table* textBox| Scroll textBox up to specified about of lines (1 by default) |
+| *function* | :**scrollDown**([*int* count]): *table* textBox| Scroll textBox down to specified about of lines (1 by default) |
+| *function* | :**scrollToStart**(): *table* textBox| Scroll textBox to start |
+| *function* | :**scrollToEnd**(): *table* textBox| Scroll textBox to end |
+| *function* | :**setAlignment**(*enum* horizontalAlignment, *enum* verticalAlignment): *table* textBox| Choose a text display option for textBox boundaries |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+local textBox = mainContainer:addChild(GUI.textBox(2, 2, 32, 16, 0xEEEEEE, 0x2D2D2D, {}, 1, 1, 0))
+table.insert(textBox.lines, {text = "Sample colored line ", color = 0x880000})
+for i = 1, 100 do
+	table.insert(textBox.lines, "Sample line " .. i)
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![enter image description here](http://i89.fastpic.ru/big/2017/0402/ad/01cdcf7aec919051f64ac2b7d9daf0ad.png)
