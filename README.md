@@ -1,13 +1,3 @@
-| Contents |
-| ----- |
-| [About](#about) |
-| [Installation](#installation) |
-| [Containers](#containers) |
-| [Objects](#objects) |
-| [  GUI.panel](#guipanel-x-y-width-height-color-transparency--table-panel) |
-| [  GUI.text](#guitext-x-y-textcolor-text--table-text) |
-| [  GUI.label](#guilabel-x-y-width-height-textcolor-text--table-label) |
-
 About
 ======
 GUI is a multifunctional graphics library, especially designed and optimized for low-performance computers. You can realize all of your most perverted fantasies using it: from habitual buttons, sliders and charts to complex animated interfaces. Extreme performance of the library is achieved through the use of double buffering and complex color grouping and processing algorithms.
@@ -20,6 +10,16 @@ For example, my operating system, IDE and 3D application are fully implemented b
 
 Let the abundance of text below not frighten you: this documentation has many illustrated examples with full working code.
 
+| Contents |
+| ----- |
+| [Installation](#installation) |
+| [Containers](#containers) |
+| [Objects](#objects) |
+| [   GUI.panel](#guipanel-x-y-width-height-color-transparency--table-panel) |
+| [   GUI.text](#guitext-x-y-textcolor-text--table-text) |
+| [   GUI.label](#guilabel-x-y-width-height-textcolor-text--table-label) |
+| [Standalone methods](#objects) |
+
 Installation
 ======
 
@@ -27,7 +27,7 @@ Below is a table of dependencies that are necessary for this library. You can us
 
     pastebin run ryhyXUKZ
 
-| Библиотека | Функционал | Документация |
+| Dependency | Description | Documentation |
 | ------ | ------ | ------ |
 | *[GUI](https://github.com/IgorTimofeev/OpenComputers/blob/master/lib/GUI.lua)* | This library | - | 
 | *[advancedLua](https://github.com/IgorTimofeev/OpenComputers/blob/master/lib/advancedLua.lua)* | Addition to standard Lua libraries with a variety of functions: fast table serialization, text wrapping, binary data processing, etc. | [https://github.com/Igor...](https://github.com/IgorTimofeev/OpenComputers/blob/master/Documentation/advancedLua.md) | 
