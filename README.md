@@ -17,7 +17,7 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [Objects](#objects) |
 | [Constants](#constants) |
 | [Standalone methods](#standalone-methods) |
-| [    GUI.error](#guierror-varargs) |
+| [    GUI.error](#guierrorvarargs) |
 | [    GUI.addPaletteToContainer](#guiaddpalettetocontainerparentcontainer-addpanel-initialcolor-table-palette) |
 | [    GUI.addFilesystemDialogToContainer](#guiaddfilesystemdialogtocontainerparentcontainer-addpanel--table-filesystemdialog) |
 | [Ready-to-use widgets](#ready-to-use-widgets) |
@@ -285,7 +285,7 @@ Still not tired yet? And now think how I fucked up writing them during the libra
 
 ![](https://i.imgur.com/RDg5Qnz.jpg)
 
-Stantalone methods
+Standalone methods
 ======
 
 The library has several methods that can simplify the development of programs. For example, a context menu, an information window or a palette window.
@@ -392,6 +392,51 @@ mainContainer:startEventHandling()
 Result:
 
 ![](https://i.imgur.com/4WqJBVk.gif)
+
+GUI.**addBackgroundContainer**(parentContainer, addPanel, addLayout, title): *table* palette
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *table* | parentContainer | Container to which palette will be added |
+| *boolean* | addPanel | Necessity to add a semi-transparent dark background panel |
+| *boolean* | addLayout | Necessity to add a 3-columned background layout |
+| [*string* | title] | If specified, adds a label to layout as child |
+
+This method creates a new container and adds it as a child to the specified container. If background panel is added, it will already have an event listener: so if you click on panel, this container will be deleted automatically. Personally, I use this object everywhere to quickly create a simple menus with easy closing feature and automated layout calculations.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**panel** | Pointer to background panel object. Doesn't exists if **addPanel** parameter is set to **false** |
+| *table* | .**layout** | Pointer to background layout object. Doesn't exists if **addLayout** parameter is set to **false** |
+| *table* | .**label** | Pointer to title label object. Doesn't exists if **title** parameter is **nil** |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+-- Add a button to main container and .onTouch() method
+mainContainer:addChild(GUI.button(3, 2, 36, 3, 0xE1E1E1, 0x4B4B4B, 0xA5A5A5, 0x0, "Add container")).onTouch = function()
+	-- Add a background container to main container with background panel and layout
+	local container = GUI.addBackgroundContainer(mainContainer, true, true, "Hello world")
+	-- Add a switch and label to it's layout
+	container.layout:addChild(GUI.switchAndLabel(1, 1, 36, 8, 0x66DB80, 0x2D2D2D, 0xE1E1E1, 0x878787, "I like to suck big dicks:", true))
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](https://i.imgur.com/VOX9BzY.gif)
 
 Ready-to-use widgets
 ======
