@@ -49,9 +49,11 @@ Let the abundance of text below not frighten you: this documentation has many il
 Installation
 ======
 
-Below is a table of dependencies that are necessary for this library. You can use following links to download dependencies manually or run an automatic [installer](https://pastebin.com/ryhyXUKZ) that downloads all the necessary files for you:
+The easiest way is to use automatic [installer](https://pastebin.com/ryhyXUKZ) that will download all necessary files for you via single command:
 
     pastebin run ryhyXUKZ
+    
+However, you can download dependencies manually, if required. They are listed in the following table:
 
 | Dependency | Description | Documentation |
 | ------ | ------ | ------ |
