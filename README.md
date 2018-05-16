@@ -325,7 +325,7 @@ GUI.**addPalette**(parentContainer, addPanel, initialColor): *table* palette
 | *boolean* | addPanel | Necessity to add a semi-transparent dark background panel |
 | *int* | initialColor | Initial color that palette open with |
 
-This method creates a palette window in the specified container right at its center and returns the palette object. It is convenient in that you do not need to manually calculate the coordinates of the window, as well as useful to people who do not want to use GUI.**colorSelector**
+This method creates a palette window in the specified container right at its center and returns the palette object. It is convenient in that you do not need to manually calculate the coordinates of the window, as well as useful to people who do not want to use GUI.**colorSelector*
 
 Example of implementation:
 
@@ -366,6 +366,11 @@ GUI.**addFilesystemDialog**(parentContainer, addPanel, ...): *table* filesystemD
 | *varargs* | ... | Multiple parameters that comes to GUI.**fileSystemDialog** starting from **width** |
 
 This method creates a filesystem dialor in specified container with a nice drop-down animation and allows you to work with it in the same way as with a conventional JUI. It is useful for manual work with the file system, if there is no desire to work with GUI.**filesystemChooser**
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**filesystemDialog** | Pointer to internal filesystemDialog object |
+| *function* | :**show**() | This method will update internal file list and start drop-down animation. After that dialog will be available for user interactions |
 
 Example of implementation:
 
