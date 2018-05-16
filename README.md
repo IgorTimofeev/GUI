@@ -16,6 +16,10 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [Containers](#containers) |
 | [Objects](#objects) |
 | [Constants](#constants) |
+| [Standalone methods](#standalone-methods) |
+| [    GUI.error](#guierror-varargs) |
+| [    GUI.addPaletteToContainer](#guiaddpalettetocontainerparentcontainer-addpanel-initialcolor-table-palette) |
+| [    GUI.addFilesystemDialogToContainer](#guiaddfilesystemdialogtocontainerparentcontainer-addpanel--table-filesystemdialog) |
 | [Ready-to-use widgets](#ready-to-use-widgets) |
 | [    GUI.panel](#guipanel-x-y-width-height-color-transparency--table-panel) |
 | [    GUI.text](#guitext-x-y-textcolor-text--table-text) |
@@ -40,7 +44,6 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [    GUI.brailleCanvas](#guibraillecanvas-x-y-width-height--table-braillecanvas) |
 | [    GUI.scrollBar](#guiscrollbar-x-y-width-height-backgroundcolor-foregroundcolor-minimumvalue-maximumvalue-value-shownvaluecount-onscrollvalueincrement-thinhorizontalmode--table-scrollbar) |
 | [    GUI.textBox](#guitextbox-x-y-width-height-backgroundcolor-textcolor-lines-currentline-horizontaloffset-verticaloffset-autowrap-autoheight-table-textbox) |
-| [Standalone methods](#objects) |
 
 Installation
 ======
@@ -281,6 +284,114 @@ This is a rather boring section of the documentation, but it is still necessary 
 Still not tired yet? And now think how I fucked up writing them during the library development. Shitty constants...
 
 ![](https://i.imgur.com/RDg5Qnz.jpg)
+
+Stantalone methods
+======
+
+The library has several methods that can simplify the development of programs. For example, a context menu, an information window or a palette window.
+
+GUI.**error**(...varargs)
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *varargs* | ... | A lot of parameters having any type that need to be displayed in a window |
+
+This method displays a debug window with text information. The line that is too long will be automatically wrapped. If parameter is a table, then it will be automatically serialized. To close the window, you must hit the Return key or click on the "OK" button.
+
+Example of implementation:
+
+```lua
+local buffer = require("doubleBuffering")
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+buffer.clear(0x2D2D2D)
+GUI.error("Something went wrong here, my friend")
+```
+
+Result:
+
+![Imgur](http://i.imgur.com/s8mA2FL.png?1)
+
+GUI.**addPaletteToContainer**(parentContainer, addPanel, initialColor): *table* palette
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *table* | parentContainer | Container to which palette will be added |
+| *boolean* | addPanel | Necessity to add a semi-transparent dark background panel |
+| *int* | initialColor | Initial color that palette open with |
+
+This method creates a palette window in the specified container right at its center and returns the palette object. It is convenient in that you do not need to manually calculate the coordinates of the window, as well as useful to people who do not want to use GUI.**colorSelector**
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+-- Create "main" container
+local mainContainer = GUI.fullScreenContainer()
+-- Add gray background panel
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+-- Add palette window
+local palette = GUI.addPaletteToContainer(mainContainer, false, 0x9900FF)
+-- Do something after color selection
+palette.onSubmit = function()
+	GUI.error("This color was selected: " .. string.format("0x%06X", palette.color.integer))
+	mainContainer:drawOnScreen()
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](https://i.imgur.com/GvVbn1b.gif)
+
+GUI.**addFilesystemDialogToContainer**(parentContainer, addPanel, ...): *table* filesystemDialog
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *table* | parentContainer | Container to which palette will be added |
+| *boolean* | addPanel | Necessity to add a semi-transparent dark background panel |
+| *varargs* | ... | Multiple parameters that comes to GUI.**fileSystemDialog** starting from **width** |
+
+This method creates a filesystem dialor in specified container with a nice drop-down animation and allows you to work with it in the same way as with a conventional JUI. It is useful for manual work with the file system, if there is no desire to work with GUI.**filesystemChooser**
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+local filesystemDialog = GUI.addFilesystemDialogToContainer(mainContainer, false, 50, math.floor(mainContainer.height * 0.8), "Open", "Cancel", "File name", "/")
+filesystemDialog:setMode(GUI.IO_MODE_OPEN, GUI.IO_MODE_FILE)
+filesystemDialog:addExtensionFilter(".pic")
+filesystemDialog.onSubmit = function(path)
+	GUI.error("This path was selected: " .. path)
+end
+
+filesystemDialog:show()
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](https://i.imgur.com/4WqJBVk.gif)
 
 Ready-to-use widgets
 ======
