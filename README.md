@@ -446,6 +446,52 @@ Result:
 
 ![](https://i.imgur.com/VOX9BzY.gif)
 
+GUI.**highlightString**(x, y, width, fromSymbol, indentationWidth, syntaxPatterns, syntaxColorScheme, data): *table* palette
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Coordinate by x-axis to draw from |
+| *int* | y | Coordinate by y-axis to draw from |
+| *int* | width | Width of highlighting area  |
+| *int* | fromSymbol | Symbol index to draw from |
+| *int* | indentationWidth | Width of indentation that will be added instead on whitespace symbols in string starting |
+| *table* | syntaxPatterns | Patterns for syntax highlighting |
+| *table* | syntaxColorScheme | Color scheme for syntax highlighting |
+| *string* | data | String to highlight |
+
+This method allows you to highlight specified string and draw the result to screen buffer using specified syntax patterns and specified color scheme. This library already comes with a set of patterns and color scheme for Lua syntax (see **Constants**), however you can easily write your own for any other programming language if you wish.
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+local buffer = require("doubleBuffering")
+
+--------------------------------------------------------------------------------
+
+buffer.clear(0x1E1E1E)
+
+-- Open file and read it's lines
+local y = 1
+for line in io.lines("/lib/advancedLua.lua") do
+	-- Replace tab symbols to 2 whitespaces and Windows line endings to UNIX line endings
+	line = line:gsub("\t", "  "):gsub("\r\n", "")
+	-- Highlight result
+	GUI.highlightString(3, y, buffer.getWidth(), 1, 2, GUI.LUA_SYNTAX_PATTERNS, GUI.LUA_SYNTAX_COLOR_SCHEME, line)
+	
+	y = y + 1
+	if y > buffer.getHeight() then
+		break
+	end
+end
+
+buffer.draw(true)
+```
+
+Result:
+
+![](https://i.imgur.com/kYRHeMu.png)
+
 Ready-to-use widgets
 ======
 
@@ -1394,8 +1440,8 @@ GUI.**codeView**( x, y, width, height, fromSymbol, fromLine, maximumLineLength, 
 | *int* | maximumLineLength | Length of the biggest line form **lines** table |
 | *table* | selections | Table with structure {{from = {line = *int* line, symbol = *int* symbol}, to = {line = *int* line, symbol = *int* symbol}}, ...}, that allows to specify selection data just like in any text editor |
 | *table* | highlights | Table with structure {[*int* lineIndex] = *int* color, ...} that allows to highlight specified lines with specified |
-| *table* | syntaxPatterns | Patterns for syntax highlighting. Only requires if **syntaxHighlight** is enabled |
-| *table* | syntaxColorScheme | Color scheme for syntax highlighting. Only requires if **syntaxHighlight** is enabled |
+| *table* | syntaxPatterns | Patterns for syntax highlighting |
+| *table* | syntaxColorScheme | Color scheme for syntax highlighting |
 | *boolean* | syntaxHighlight | Does code syntax highlighting need to be enabled |
 | *table* | lines | Table with strings that will be displayed |
 
@@ -1419,19 +1465,24 @@ local unicode = require("unicode")
 --------------------------------------------------------------------------------
 
 local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
-
--- Open file and read it's lines
-local lines, maximumLineLength = {}, 1
-for line in io.lines("/lib/advancedLua.lua") do
-	-- Just in case replace tab symbols to 2 whitespaces and Windows line endings to UNIX line endings
-	line = line:gsub("\t", "  "):gsub("\r\n", "\n")
-	maximumLineLength = math.max(maximumLineLength, unicode.len(line))
-	table.insert(lines, line)
-end
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x0))
 
 -- Add codeView object to main container
-mainContainer:addChild(GUI.codeView(2, 2, 130, 30, 1, 1, maximumLineLength, {}, {}, GUI.LUA_SYNTAX_PATTERNS, GUI.LUA_SYNTAX_COLOR_SCHEME, true, lines))
+local codeView = mainContainer:addChild(GUI.codeView(2, 2, 72, 22, 1, 1, 1, {}, {}, GUI.LUA_SYNTAX_PATTERNS, GUI.LUA_SYNTAX_COLOR_SCHEME, true, {}))
+
+-- Open file and read it's lines
+local counter = 1
+for line in io.lines("/lib/advancedLua.lua") do
+	-- Replace tab symbols to 2 whitespaces and Windows line endings to UNIX line endings
+	line = line:gsub("\t", "  "):gsub("\r\n", "\n")
+	codeView.maximumLineLength = math.max(codeView.maximumLineLength, unicode.len(line))
+	table.insert(codeView.lines, line)
+
+	counter = counter + 1
+	if counter > codeView.height then
+		break
+	end
+end
 
 --------------------------------------------------------------------------------
 
@@ -1441,7 +1492,7 @@ mainContainer:startEventHandling()
 
 Result:
 
-![](https://i.imgur.com/o1yLMJr.png)
+![](https://i.imgur.com/UQJxhCn.png)
 
 GUI.**chart**( x, y, width, height, axisColor, axisValueColor, axisHelpersColor, chartColor, xAxisValueInterval, yAxisValueInterval, xAxisPostfix, yAxisPostfix, fillChartArea, values ): *table* chart
 ------------------------------------------------------------------------
