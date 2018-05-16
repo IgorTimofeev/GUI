@@ -17,97 +17,96 @@ local buffer = require("doubleBuffering")
 
 -----------------------------------------------------------------------
 
-local GUI = {}
+local GUI = {
+	ALIGNMENT_HORIZONTAL_LEFT = 1,
+	ALIGNMENT_HORIZONTAL_CENTER = 2,
+	ALIGNMENT_HORIZONTAL_RIGHT = 3,
+	ALIGNMENT_VERTICAL_TOP = 4,
+	ALIGNMENT_VERTICAL_CENTER = 5,
+	ALIGNMENT_VERTICAL_BOTTOM = 6,
 
-GUI.DIRECTION_HORIZONTAL = 1
-GUI.DIRECTION_VERTICAL = 2
+	DIRECTION_HORIZONTAL = 7,
+	DIRECTION_VERTICAL = 8,
 
-GUI.ALIGNMENT_HORIZONTAL_LEFT = 3
-GUI.ALIGNMENT_HORIZONTAL_CENTER = 4
-GUI.ALIGNMENT_HORIZONTAL_RIGHT = 5
-GUI.ALIGNMENT_VERTICAL_TOP = 6
-GUI.ALIGNMENT_VERTICAL_CENTER = 7
-GUI.ALIGNMENT_VERTICAL_BOTTOM = 8
+	SIZE_POLICY_ABSOLUTE = 9,
+	SIZE_POLICY_RELATIVE = 10,
 
-GUI.SIZE_POLICY_ABSOLUTE = 9
-GUI.SIZE_POLICY_RELATIVE = 10
+	IO_MODE_FILE = 11,
+	IO_MODE_DIRECTORY = 12,
+	IO_MODE_BOTH = 13,
+	IO_MODE_OPEN = 14,
+	IO_MODE_SAVE = 15,
 
-GUI.IO_MODE_FILE = 11
-GUI.IO_MODE_DIRECTORY = 12
-GUI.IO_MODE_BOTH = 13
-GUI.IO_MODE_OPEN = 14
-GUI.IO_MODE_SAVE = 15
+	COLOR_CONTEXT_MENU_SEPARATOR = 0x878787,
+	COLOR_CONTEXT_MENU_DISABLED = 0x878787,
+	COLOR_CONTEXT_MENU_DEFAULT_BACKGROUND = 0xFFFFFF,
+	COLOR_CONTEXT_MENU_DEFAULT_TEXT = 0x2D2D2D,
+	COLOR_CONTEXT_MENU_PRESSED_BACKGROUND = 0x3366CC,
+	COLOR_CONTEXT_MENU_PRESSED_TEXT = 0xFFFFFF,
+	COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND = 0.24,
+	COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW = 0.4,
 
-GUI.LUA_SYNTAX_COLOR_SCHEME = {
-	background = 0x1E1E1E,
-	text = 0xE1E1E1,
-	strings = 0x99FF80,
-	loops = 0xFFFF98,
-	comments = 0x898989,
-	boolean = 0xFFDB40,
-	logic = 0xFFCC66,
-	numbers = 0x66DBFF,
-	functions = 0xFFCC66,
-	compares = 0xFFCC66,
-	lineNumbersBackground = 0x2D2D2D,
-	lineNumbersText = 0xC3C3C3,
-	scrollBarBackground = 0x2D2D2D,
-	scrollBarForeground = 0x5A5A5A,
-	selection = 0x4B4B4B,
-	indentation = 0x2D2D2D
+	COLOR_BACKGROUND_CONTAINER_TITLE = 0xE1E1E1,
+	COLOR_BACKGROUND_CONTAINER_TRANSPARENCY = 0.3,
+	COLOR_WINDOWS_SHADOW_TRANSPARENCY = 0.5,
+
+	PALETTE_CONFIG_PATH = "/lib/.palette.cfg",
+
+	LUA_SYNTAX_COLOR_SCHEME = {
+		background = 0x1E1E1E,
+		text = 0xE1E1E1,
+		strings = 0x99FF80,
+		loops = 0xFFFF98,
+		comments = 0x898989,
+		boolean = 0xFFDB40,
+		logic = 0xFFCC66,
+		numbers = 0x66DBFF,
+		functions = 0xFFCC66,
+		compares = 0xFFCC66,
+		lineNumbersBackground = 0x2D2D2D,
+		lineNumbersText = 0xC3C3C3,
+		scrollBarBackground = 0x2D2D2D,
+		scrollBarForeground = 0x5A5A5A,
+		selection = 0x4B4B4B,
+		indentation = 0x2D2D2D
+	},
+
+	LUA_SYNTAX_PATTERNS = {
+		"[%.%,%>%<%=%~%+%-%*%/%^%#%%%&]", "compares", 0, 0,
+		"[^%a%d][%.%d]+[^%a%d]", "numbers", 1, 1,
+		"[^%a%d][%.%d]+$", "numbers", 1, 0,
+		"0x%w+", "numbers", 0, 0,
+		" not ", "logic", 0, 1,
+		" or ", "logic", 0, 1,
+		" and ", "logic", 0, 1,
+		"function%(", "functions", 0, 1,
+		"function%s[^%s%(%)%{%}%[%]]+%(", "functions", 9, 1,
+		"nil", "boolean", 0, 0,
+		"false", "boolean", 0, 0,
+		"true", "boolean", 0, 0,
+		" break$", "loops", 0, 0,
+		"elseif ", "loops", 0, 1,
+		"else[%s%;]", "loops", 0, 1,
+		"else$", "loops", 0, 0,
+		"function ", "loops", 0, 1,
+		"local ", "loops", 0, 1,
+		"return", "loops", 0, 0,
+		"until ", "loops", 0, 1,
+		"then", "loops", 0, 0,
+		"if ", "loops", 0, 1,
+		"repeat$", "loops", 0, 0,
+		" in ", "loops", 0, 1,
+		"for ", "loops", 0, 1,
+		"end[%s%;]", "loops", 0, 1,
+		"end$", "loops", 0, 0,
+		"do ", "loops", 0, 1,
+		"do$", "loops", 0, 0,
+		"while ", "loops", 0, 1,
+		"\'[^\']+\'", "strings", 0, 0,
+		"\"[^\"]+\"", "strings", 0, 0,
+		"%-%-.+", "comments", 0, 0,
+	},
 }
-
-GUI.LUA_SYNTAX_PATTERNS = {
-	"[%.%,%>%<%=%~%+%-%*%/%^%#%%%&]", "compares", 0, 0,
-	"[^%a%d][%.%d]+[^%a%d]", "numbers", 1, 1,
-	"[^%a%d][%.%d]+$", "numbers", 1, 0,
-	"0x%w+", "numbers", 0, 0,
-	" not ", "logic", 0, 1,
-	" or ", "logic", 0, 1,
-	" and ", "logic", 0, 1,
-	"function%(", "functions", 0, 1,
-	"function%s[^%s%(%)%{%}%[%]]+%(", "functions", 9, 1,
-	"nil", "boolean", 0, 0,
-	"false", "boolean", 0, 0,
-	"true", "boolean", 0, 0,
-	" break$", "loops", 0, 0,
-	"elseif ", "loops", 0, 1,
-	"else[%s%;]", "loops", 0, 1,
-	"else$", "loops", 0, 0,
-	"function ", "loops", 0, 1,
-	"local ", "loops", 0, 1,
-	"return", "loops", 0, 0,
-	"until ", "loops", 0, 1,
-	"then", "loops", 0, 0,
-	"if ", "loops", 0, 1,
-	"repeat$", "loops", 0, 0,
-	" in ", "loops", 0, 1,
-	"for ", "loops", 0, 1,
-	"end[%s%;]", "loops", 0, 1,
-	"end$", "loops", 0, 0,
-	"do ", "loops", 0, 1,
-	"do$", "loops", 0, 0,
-	"while ", "loops", 0, 1,
-	"\'[^\']+\'", "strings", 0, 0,
-	"\"[^\"]+\"", "strings", 0, 0,
-	"%-%-.+", "comments", 0, 0,
-}
-
-GUI.PALETTE_CONFIG_PATH = "/lib/.palette.cfg"
-
-GUI.COLOR_CONTEXT_MENU_SEPARATOR = 0x878787
-GUI.COLOR_CONTEXT_MENU_DISABLED = 0x878787
-GUI.COLOR_CONTEXT_MENU_DEFAULT_BACKGROUND = 0xFFFFFF
-GUI.COLOR_CONTEXT_MENU_DEFAULT_TEXT = 0x2D2D2D
-GUI.COLOR_CONTEXT_MENU_PRESSED_BACKGROUND = 0x3366CC
-GUI.COLOR_CONTEXT_MENU_PRESSED_TEXT = 0xFFFFFF
-GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND = 0.24
-GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW = 0.4
-
-GUI.COLOR_BACKGROUND_CONTAINER_TITLE = 0xE1E1E1
-GUI.COLOR_BACKGROUND_CONTAINER_TRANSPARENCY = 0.3
-
-GUI.COLOR_WINDOWS_SHADOW_TRANSPARENCY = 0.5
 
 -----------------------------------------------------------------------
 
