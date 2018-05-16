@@ -1,6 +1,6 @@
 
 -- Detailed documentation can be found here:
--- https://github.com/IgorTimofeev/OpenComputers/blob/master/Documentation/GUI.md
+-- https://github.com/IgorTimofeev/GUI/blob/master/README.md
 
 -----------------------------------------------------------------------
 
@@ -19,131 +19,99 @@ local buffer = require("doubleBuffering")
 
 local GUI = {}
 
-GUI.alignment = {
-	horizontal = enum(
-		"left",
-		"center",
-		"right"
-	),
-	vertical = enum(
-		"top",
-		"center",
-		"bottom"
-	)
+GUI.DIRECTION_HORIZONTAL = 1
+GUI.DIRECTION_VERTICAL = 2
+
+GUI.ALIGNMENT_HORIZONTAL_LEFT = 3
+GUI.ALIGNMENT_HORIZONTAL_CENTER = 4
+GUI.ALIGNMENT_HORIZONTAL_RIGHT = 5
+GUI.ALIGNMENT_VERTICAL_TOP = 6
+GUI.ALIGNMENT_VERTICAL_CENTER = 7
+GUI.ALIGNMENT_VERTICAL_BOTTOM = 8
+
+GUI.SIZE_POLICY_ABSOLUTE = 9
+GUI.SIZE_POLICY_RELATIVE = 10
+
+GUI.IO_MODE_FILE = 11
+GUI.IO_MODE_DIRECTORY = 12
+GUI.IO_MODE_BOTH = 13
+GUI.IO_MODE_OPEN = 14
+GUI.IO_MODE_SAVE = 15
+
+GUI.LUA_SYNTAX_COLOR_SCHEME = {
+	background = 0x1E1E1E,
+	text = 0xE1E1E1,
+	strings = 0x99FF80,
+	loops = 0xFFFF98,
+	comments = 0x898989,
+	boolean = 0xFFDB40,
+	logic = 0xFFCC66,
+	numbers = 0x66DBFF,
+	functions = 0xFFCC66,
+	compares = 0xFFCC66,
+	lineNumbersBackground = 0x2D2D2D,
+	lineNumbersText = 0xC3C3C3,
+	scrollBarBackground = 0x2D2D2D,
+	scrollBarForeground = 0x5A5A5A,
+	selection = 0x4B4B4B,
+	indentation = 0x2D2D2D
 }
 
-GUI.directions = enum(
-	"horizontal",
-	"vertical"
-)
-
-GUI.sizePolicies = enum(
-	"percentage",
-	"absolute"
-)
-
-GUI.dropDownMenuItemTypes = enum(
-	"default",
-	"separator"
-)
-
-GUI.filesystemModes = enum(
-	"file",
-	"directory",
-	"both",
-	"open",
-	"save"
-)
-
-GUI.colors = {
-	disabled = {
-		background = 0x878787,
-		text = 0xA5A5A5
-	},
-	contextMenu = {
-		separator = 0x878787,
-		default = {
-			background = 0xFFFFFF,
-			text = 0x2D2D2D
-		},
-		disabled = 0x878787,
-		pressed = {
-			background = 0x3366CC,
-			text = 0xFFFFFF
-		},
-		transparency = {
-			background = 0.24,
-			shadow = 0.4
-		}
-	},
-	fadeContainer = {
-		transparency = 0.3,
-		title = 0xE1E1E1
-	},
-	windows = {
-		shadowTransparency = 0.5
-	},
-	syntaxHighlighting = {
-		background = 0x1E1E1E,
-		text = 0xE1E1E1,
-		strings = 0x99FF80,
-		loops = 0xFFFF98,
-		comments = 0x898989,
-		boolean = 0xFFDB40,
-		logic = 0xFFCC66,
-		numbers = 0x66DBFF,
-		functions = 0xFFCC66,
-		compares = 0xFFCC66,
-		lineNumbersBackground = 0x2D2D2D,
-		lineNumbersText = 0xC3C3C3,
-		scrollBarBackground = 0x2D2D2D,
-		scrollBarForeground = 0x5A5A5A,
-		selection = 0x4B4B4B,
-		indentation = 0x2D2D2D,
-	}
+GUI.LUA_SYNTAX_PATTERNS = {
+	"[%.%,%>%<%=%~%+%-%*%/%^%#%%%&]", "compares", 0, 0,
+	"[^%a%d][%.%d]+[^%a%d]", "numbers", 1, 1,
+	"[^%a%d][%.%d]+$", "numbers", 1, 0,
+	"0x%w+", "numbers", 0, 0,
+	" not ", "logic", 0, 1,
+	" or ", "logic", 0, 1,
+	" and ", "logic", 0, 1,
+	"function%(", "functions", 0, 1,
+	"function%s[^%s%(%)%{%}%[%]]+%(", "functions", 9, 1,
+	"nil", "boolean", 0, 0,
+	"false", "boolean", 0, 0,
+	"true", "boolean", 0, 0,
+	" break$", "loops", 0, 0,
+	"elseif ", "loops", 0, 1,
+	"else[%s%;]", "loops", 0, 1,
+	"else$", "loops", 0, 0,
+	"function ", "loops", 0, 1,
+	"local ", "loops", 0, 1,
+	"return", "loops", 0, 0,
+	"until ", "loops", 0, 1,
+	"then", "loops", 0, 0,
+	"if ", "loops", 0, 1,
+	"repeat$", "loops", 0, 0,
+	" in ", "loops", 0, 1,
+	"for ", "loops", 0, 1,
+	"end[%s%;]", "loops", 0, 1,
+	"end$", "loops", 0, 0,
+	"do ", "loops", 0, 1,
+	"do$", "loops", 0, 0,
+	"while ", "loops", 0, 1,
+	"\'[^\']+\'", "strings", 0, 0,
+	"\"[^\"]+\"", "strings", 0, 0,
+	"%-%-.+", "comments", 0, 0,
 }
 
-GUI.luaSyntaxPatterns = {
-	{"[%.%,%>%<%=%~%+%-%*%/%^%#%%%&]", "compares", 0, 0},
-	{"[^%a%d][%.%d]+[^%a%d]", "numbers", 1, 1},
-	{"[^%a%d][%.%d]+$", "numbers", 1, 0},
-	{"0x%w+", "numbers", 0, 0},
-	{" not ", "logic", 0, 1},
-	{" or ", "logic", 0, 1},
-	{" and ", "logic", 0, 1},
-	{"function%(", "functions", 0, 1},
-	{"function%s[^%s%(%)%{%}%[%]]+%(", "functions", 9, 1},
-	{"nil", "boolean", 0, 0},
-	{"false", "boolean", 0, 0},
-	{"true", "boolean", 0, 0},
-	{" break%s?", "loops", 0, 0},
-	{"elseif ", "loops", 0, 1},
-	{"else[%s%;]", "loops", 0, 1},
-	{"else$", "loops", 0, 0},
-	{"function ", "loops", 0, 1},
-	{"local ", "loops", 0, 1},
-	{"return", "loops", 0, 0},
-	{"until ", "loops", 0, 1},
-	{"then", "loops", 0, 0},
-	{"if ", "loops", 0, 1},
-	{"repeat$", "loops", 0, 0},
-	{" in ", "loops", 0, 1},
-	{"for ", "loops", 0, 1},
-	{"end[%s%;]", "loops", 0, 1},
-	{"end$", "loops", 0, 0},
-	{"do ", "loops", 0, 1},
-	{"do$", "loops", 0, 0},
-	{"while ", "loops", 0, 1},
-	{"\'[^\']+\'", "strings", 0, 0},
-	{"\"[^\"]+\"", "strings", 0, 0},
-	{"%-%-.+", "comments", 0, 0},
-}
+GUI.PALETTE_CONFIG_PATH = "/lib/.palette.cfg"
 
-GUI.paletteConfigPath = "/lib/.palette.cfg"
+GUI.COLOR_CONTEXT_MENU_SEPARATOR = 0x878787
+GUI.COLOR_CONTEXT_MENU_DISABLED = 0x878787
+GUI.COLOR_CONTEXT_MENU_DEFAULT_BACKGROUND = 0xFFFFFF
+GUI.COLOR_CONTEXT_MENU_DEFAULT_TEXT = 0x2D2D2D
+GUI.COLOR_CONTEXT_MENU_PRESSED_BACKGROUND = 0x3366CC
+GUI.COLOR_CONTEXT_MENU_PRESSED_TEXT = 0xFFFFFF
+GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND = 0.24
+GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW = 0.4
+
+GUI.COLOR_BACKGROUND_CONTAINER_TITLE = 0xE1E1E1
+GUI.COLOR_BACKGROUND_CONTAINER_TRANSPARENCY = 0.3
+
+GUI.COLOR_WINDOWS_SHADOW_TRANSPARENCY = 0.5
 
 -----------------------------------------------------------------------
 
-local function objectIsPointInside(object, x, y)
+function GUI.isPointInside(object, x, y)
 	return
 		x >= object.x and
 		x <= object.x + object.width - 1 and
@@ -161,60 +129,48 @@ function GUI.object(x, y, width, height)
 		y = y,
 		width = width,
 		height = height,
-		draw = objectDraw,
-		isPointInside = objectIsPointInside,
+		draw = objectDraw
 	}
 end
 
 -----------------------------------------------------------------------
 
 function GUI.setAlignment(object, horizontalAlignment, verticalAlignment)
-	object.alignment = {
-		horizontal = horizontalAlignment,
-		vertical = verticalAlignment
-	}
-
+	object.horizontalAlignment, object.verticalAlignment = horizontalAlignment, verticalAlignment
 	return object
 end
 
-function GUI.getAlignmentCoordinates(object, subObject)
-	local x, y
-	if object.alignment.horizontal == GUI.alignment.horizontal.left then
-		x = object.x
-	elseif object.alignment.horizontal == GUI.alignment.horizontal.center then
-		x = object.x + object.width / 2 - subObject.width / 2
-	elseif object.alignment.horizontal == GUI.alignment.horizontal.right then
-		x = object.x + object.width - subObject.width
-	else
-		error("Unknown horizontal alignment: " .. tostring(object.alignment.horizontal))
+function GUI.getAlignmentCoordinates(x, y, width1, height1, horizontalAlignment, verticalAlignment, width2, height2)
+	if horizontalAlignment == GUI.ALIGNMENT_HORIZONTAL_CENTER then
+		x = x + width1 / 2 - width2 / 2
+	elseif horizontalAlignment == GUI.ALIGNMENT_HORIZONTAL_RIGHT then
+		x = x + width1 - width2
+	elseif horizontalAlignment ~= GUI.ALIGNMENT_HORIZONTAL_LEFT then
+		error("Unknown horizontal alignment: " .. tostring(horizontalAlignment))
 	end
 
-	if object.alignment.vertical == GUI.alignment.vertical.top then
-		y = object.y
-	elseif object.alignment.vertical == GUI.alignment.vertical.center then
-		y = object.y + object.height / 2 - subObject.height / 2
-	elseif object.alignment.vertical == GUI.alignment.vertical.bottom then
-		y = object.y + object.height - subObject.height
-	else
-		error("Unknown vertical alignment: " .. tostring(object.alignment.vertical))
+	if verticalAlignment == GUI.ALIGNMENT_VERTICAL_CENTER then
+		y = y + height1 / 2 - height2 / 2
+	elseif verticalAlignment == GUI.ALIGNMENT_VERTICAL_BOTTOM then
+		y = y + height1 - height2
+	elseif verticalAlignment ~= GUI.ALIGNMENT_VERTICAL_TOP then
+		error("Unknown vertical alignment: " .. tostring(verticalAlignment))
 	end
 
 	return x, y
 end
 
-function GUI.getMarginCoordinates(object)
-	local x, y = object.x, object.y
-
-	if object.alignment.horizontal == GUI.alignment.horizontal.left then
-		x = x + object.margin.horizontal
-	elseif object.alignment.horizontal == GUI.alignment.horizontal.right then
-		x = x - object.margin.horizontal
+function GUI.getMarginCoordinates(x, y, horizontalAlignment, verticalAlignment, horizontalMargin, verticalMargin)
+	if horizontalAlignment == GUI.ALIGNMENT_HORIZONTAL_LEFT then
+		x = x + horizontalMargin
+	elseif horizontalAlignment == GUI.ALIGNMENT_HORIZONTAL_RIGHT then
+		x = x - horizontalMargin
 	end
 
-	if object.alignment.vertical == GUI.alignment.vertical.top then
-		y = y + object.margin.vertical
-	elseif object.alignment.vertical == GUI.alignment.vertical.bottom then
-		y = y - object.margin.vertical
+	if verticalAlignment == GUI.ALIGNMENT_VERTICAL_TOP then
+		y = y + verticalMargin
+	elseif verticalAlignment == GUI.ALIGNMENT_VERTICAL_BOTTOM then
+		y = y - verticalMargin
 	end
 
 	return x, y
@@ -398,7 +354,7 @@ local function containerHandler(isScreenEvent, mainContainer, currentContainer, 
 	if not isScreenEvent or intersectionX1 and e3 >= intersectionX1 and e4 >= intersectionY1 and e3 <= intersectionX2 and e4 <= intersectionY2 then
 		if currentContainer.eventHandler then
 			if isScreenEvent then
-				if currentContainer:isPointInside(e3, e4) and not currentContainer.disabled then
+				if GUI.isPointInside(currentContainer, e3, e4) and not currentContainer.disabled then
 					currentContainer.eventHandler(mainContainer, currentContainer, e1, e2, e3, e4, ...)
 				end
 			else
@@ -427,7 +383,7 @@ local function containerHandler(isScreenEvent, mainContainer, currentContainer, 
 					end
 				else
 					if isScreenEvent then
-						if child:isPointInside(e3, e4) then
+						if GUI.isPointInside(child, e3, e4) then
 							if child.eventHandler and not child.disabled then
 								child.eventHandler(mainContainer, child, e1, e2, e3, e4, ...)
 							end
@@ -678,8 +634,8 @@ local function buttonCreate(x, y, width, height, backgroundColor, textColor, bac
 			text = textPressedColor
 		},
 		disabled = {
-			background = GUI.colors.disabled.background,
-			text = GUI.colors.disabled.text
+			background = 0x878787,
+			text = 0xA5A5A5
 		}
 	}
 	button.animationCurrentBackground = backgroundColor
@@ -758,7 +714,16 @@ end
 -----------------------------------------------------------------------
 
 local function drawLabel(object)
-	local xText, yText = GUI.getAlignmentCoordinates(object, {width = unicode.len(object.text), height = 1})
+	local xText, yText = GUI.getAlignmentCoordinates(
+		object.x,
+		object.y,
+		object.width,
+		object.height,
+		object.horizontalAlignment,
+		object.verticalAlignment,
+		unicode.len(object.text),
+		1
+	)
 	buffer.text(math.floor(xText), math.floor(yText), object.colors.text, object.text)
 	return object
 end
@@ -766,7 +731,7 @@ end
 function GUI.label(x, y, width, height, textColor, text)
 	local object = GUI.object(x, y, width, height)
 	object.setAlignment = GUI.setAlignment
-	object:setAlignment(GUI.alignment.horizontal.left, GUI.alignment.vertical.top)
+	object:setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
 	object.colors = {text = textColor}
 	object.text = text
 	object.draw = drawLabel
@@ -959,7 +924,7 @@ end
 -----------------------------------------------------------------------
 
 local function codeViewDraw(codeView)
-	local toLine, colorScheme = codeView.fromLine + codeView.height - 1, GUI.colors.syntaxHighlighting
+	local toLine, colorScheme, patterns = codeView.fromLine + codeView.height - 1, codeView.syntaxColorScheme, codeView.syntaxPatterns
 	-- Line numbers bar and code area
 	codeView.lineNumbersWidth = unicode.len(tostring(toLine)) + 2
 	codeView.codeAreaPosition = codeView.x + codeView.lineNumbersWidth
@@ -1039,14 +1004,14 @@ local function codeViewDraw(codeView)
 	
 	for i = codeView.fromLine, toLine do
 		if codeView.lines[i] then
-			if codeView.highlightLuaSyntax then
+			if codeView.syntaxHighlight then
 				GUI.highlightString(codeView.codeAreaPosition + 1,
 					y,
 					codeView.fromSymbol,
 					codeView.codeAreaWidth - 2,
 					codeView.indentationWidth,
+					patterns,
 					colorScheme,
-					GUI.luaSyntaxPatterns,
 					codeView.lines[i]
 				)
 			else
@@ -1078,16 +1043,15 @@ local function codeViewDraw(codeView)
 		codeView.horizontalScrollBar.localX = codeView.lineNumbersWidth + 1
 		codeView.horizontalScrollBar.localY = codeView.height
 		codeView.horizontalScrollBar.width = codeView.codeAreaWidth - 1
-		codeView.horizontalScrollBar:draw()
 		codeView.horizontalScrollBar.hidden = false
 	else
 		codeView.horizontalScrollBar.hidden = true
 	end
 
-	codeView:reimplementedDraw()
+	codeView:overrideDraw()
 end
 
-function GUI.codeView(x, y, width, height, lines, fromSymbol, fromLine, maximumLineLength, selections, highlights, highlightLuaSyntax, indentationWidth)	
+function GUI.codeView(x, y, width, height, fromSymbol, fromLine, maximumLineLength, selections, highlights, syntaxPatterns, syntaxColorScheme, syntaxHighlight, lines)	
 	local codeView = GUI.container(x, y, width, height)
 	
 	codeView.lines = lines
@@ -1096,13 +1060,15 @@ function GUI.codeView(x, y, width, height, lines, fromSymbol, fromLine, maximumL
 	codeView.maximumLineLength = maximumLineLength
 	codeView.selections = selections or {}
 	codeView.highlights = highlights or {}
-	codeView.highlightLuaSyntax = highlightLuaSyntax
-	codeView.indentationWidth = indentationWidth
+	codeView.syntaxHighlight = syntaxHighlight
+	codeView.syntaxPatterns = syntaxPatterns
+	codeView.syntaxColorScheme = syntaxColorScheme
+	codeView.indentationWidth = 2
 
 	codeView.verticalScrollBar = codeView:addChild(GUI.scrollBar(1, 1, 1, 1, 0x0, 0x0, 1, 1, 1, 1, 1, true))
 	codeView.horizontalScrollBar = codeView:addChild(GUI.scrollBar(1, 1, 1, 1, 0x0, 0x0, 1, 1, 1, 1, 1, true))
 
-	codeView.reimplementedDraw = codeView.draw
+	codeView.overrideDraw = codeView.draw
 	codeView.draw = codeViewDraw
 
 	return codeView
@@ -1137,13 +1103,11 @@ local function colorSelectorEventHandler(mainContainer, object, e1, ...)
 		local eventData = {...}
 		object.pressed = true
 
-		local palette = GUI.addPaletteWindowToContainer(mainContainer, object.color)
+		local palette = GUI.addPalette(mainContainer, false, object.color)
 		
 		palette.onCancel = function()
 			object.pressed = false
-			palette:delete()
 			mainContainer:drawOnScreen()
-
 			if object.onTouch then
 				object.onTouch(mainContainer, object, e1, table.unpack(eventData))
 			end
@@ -1300,7 +1264,7 @@ end
 local function dropDownMenuItemDraw(item)
 	local yText = item.y + math.floor(item.height / 2)
 
-	if item.type == GUI.dropDownMenuItemTypes.default then
+	if item.type == 1 then
 		local textColor = item.color or item.parent.parent.colors.default.text
 
 		if item.pressed then
@@ -1323,7 +1287,7 @@ end
 
 local function dropDownMenuItemEventHandler(mainContainer, object, e1)
 	if e1 == "touch" then
-		if object.type == GUI.dropDownMenuItemTypes.default then
+		if object.type == 1 then
 			object.pressed = true
 			mainContainer:drawOnScreen()
 
@@ -1355,7 +1319,7 @@ local function dropDownMenuCalculateSizes(menu)
 			menu.itemsContainer.children[i].localY = y
 			
 			y = y + menu.itemsContainer.children[i].height
-			totalHeight = totalHeight + (menu.itemsContainer.children[i].type == GUI.dropDownMenuItemTypes.separator and 1 or menu.itemHeight)
+			totalHeight = totalHeight + (menu.itemsContainer.children[i].type == 2 and 1 or menu.itemHeight)
 		end
 		menu.height = math.min(totalHeight, menu.maximumHeight, buffer.getHeight() - menu.y)
 		menu.itemsContainer.width, menu.itemsContainer.height = menu.width, menu.height
@@ -1376,7 +1340,7 @@ end
 local function dropDownMenuAddItem(menu, text, disabled, shortcut, color)
 	local item = menu.itemsContainer:addChild(GUI.object(1, 1, 1, menu.itemHeight))
 	
-	item.type = GUI.dropDownMenuItemTypes.default
+	item.type = 1
 	item.text = text
 	item.disabled = disabled
 	item.shortcut = shortcut
@@ -1391,7 +1355,7 @@ end
 
 local function dropDownMenuAddSeparator(menu)
 	local item = dropDownMenuAddItem(menu)
-	item.type = GUI.dropDownMenuItemTypes.separator
+	item.type = 2
 	item.height = 1
 
 	return item
@@ -1526,7 +1490,7 @@ end
 local function contextMenuCalculate(menu)
 	local widestItem, widestShortcut = 0, 0
 	for i = 1, #menu.itemsContainer.children do
-		if menu.itemsContainer.children[i].type == GUI.dropDownMenuItemTypes.default then
+		if menu.itemsContainer.children[i].type == 1 then
 			widestItem = math.max(widestItem, unicode.len(menu.itemsContainer.children[i].text))
 			if menu.itemsContainer.children[i].shortcut then
 				widestShortcut = math.max(widestShortcut, unicode.len(menu.itemsContainer.children[i].shortcut))
@@ -1573,18 +1537,18 @@ end
 
 function GUI.contextMenu(x, y, backgroundColor, textColor, backgroundPressedColor, textPressedColor, disabledColor, separatorColor, backgroundTransparency, shadowTransparency)
 	local menu = GUI.dropDownMenu(x, y, 1, math.ceil(buffer.getHeight() * 0.5), 1,
-		backgroundColor or GUI.colors.contextMenu.default.background,
-		textColor or GUI.colors.contextMenu.default.text,
-		backgroundPressedColor or GUI.colors.contextMenu.pressed.background,
-		textPressedColor or GUI.colors.contextMenu.pressed.text,
-		disabledColor or GUI.colors.contextMenu.disabled,
-		separatorColor or GUI.colors.contextMenu.separator,
-		backgroundTransparency or GUI.colors.contextMenu.transparency.background,
-		shadowTransparency or GUI.colors.contextMenu.transparency.shadow
+		backgroundColor or GUI.COLOR_CONTEXT_MENU_DEFAULT_BACKGROUND,
+		textColor or GUI.COLOR_CONTEXT_MENU_DEFAULT_TEXT,
+		backgroundPressedColor or GUI.COLOR_CONTEXT_MENU_PRESSED_BACKGROUND,
+		textPressedColor or GUI.COLOR_CONTEXT_MENU_PRESSED_TEXT,
+		disabledColor or GUI.COLOR_CONTEXT_MENU_DISABLED,
+		separatorColor or GUI.COLOR_CONTEXT_MENU_SEPARATOR,
+		backgroundTransparency or GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND,
+		shadowTransparency or GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW
 	)
 	
-	menu.colors.transparency.background = menu.colors.transparency.background or GUI.colors.contextMenu.transparency.background
-	menu.colors.transparency.shadow = menu.colors.transparency.shadow or GUI.colors.contextMenu.transparency.shadow
+	menu.colors.transparency.background = menu.colors.transparency.background or GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND
+	menu.colors.transparency.shadow = menu.colors.transparency.shadow or GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW
 	
 	menu.show = contextMenuShow
 	menu.addSubMenu = contextMenuAddSubMenu
@@ -1680,8 +1644,8 @@ function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBa
 			text = textColor
 		},
 		pressed = {
-			background = GUI.colors.contextMenu.pressed.background,
-			text = GUI.colors.contextMenu.pressed.text
+			background = GUI.COLOR_CONTEXT_MENU_PRESSED_BACKGROUND,
+			text = GUI.COLOR_CONTEXT_MENU_PRESSED_TEXT
 		},
 		arrow = {
 			background = arrowBackgroundColor,
@@ -1694,10 +1658,10 @@ function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBa
 		object.colors.default.text, 
 		object.colors.pressed.background,
 		object.colors.pressed.text,
-		GUI.colors.contextMenu.disabled,
-		GUI.colors.contextMenu.separator,
-		GUI.colors.contextMenu.transparency.background, 
-		GUI.colors.contextMenu.transparency.shadow
+		GUI.COLOR_CONTEXT_MENU_DISABLED,
+		GUI.COLOR_CONTEXT_MENU_SEPARATOR,
+		COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND, 
+		COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW
 	)
 	object.selectedItem = 1
 	object.addItem = comboBoxAddItem
@@ -1880,7 +1844,7 @@ end
 local function layoutGetAbsoluteTotalSize(array)
 	local absoluteTotalSize = 0
 	for i = 1, #array do
-		if array[i].sizePolicy == GUI.sizePolicies.absolute then
+		if array[i].sizePolicy == GUI.SIZE_POLICY_ABSOLUTE then
 			absoluteTotalSize = absoluteTotalSize + array[i].size
 		end
 	end
@@ -1888,7 +1852,7 @@ local function layoutGetAbsoluteTotalSize(array)
 end
 
 local function layoutGetCalculatedSize(array, index, dependency)
-	if array[index].sizePolicy == GUI.sizePolicies.percentage then
+	if array[index].sizePolicy == GUI.SIZE_POLICY_RELATIVE then
 		array[index].calculatedSize = array[index].size * dependency
 	else
 		array[index].calculatedSize = array[index].size
@@ -1917,15 +1881,16 @@ local function layoutUpdate(layout)
 			if layoutRow >= 1 and layoutRow <= #layout.rowSizes and layoutColumn >= 1 and layoutColumn <= #layout.columnSizes then
 				cell = layout.cells[layoutRow][layoutColumn]
 				-- Авто-фиттинг объектов
-				if cell.fitting.horizontal then
-					child.width = math.round(layout.columnSizes[layoutColumn].calculatedSize - cell.fitting.horizontalRemove)
+				if cell.horizontalFitting then
+					child.width = math.round(layout.columnSizes[layoutColumn].calculatedSize - cell.horizontalFittingRemove)
 				end
-				if cell.fitting.vertical then
-					child.height = math.round(layout.rowSizes[layoutRow].calculatedSize - cell.fitting.verticalRemove)
+
+				if cell.verticalFitting then
+					child.height = math.round(layout.rowSizes[layoutRow].calculatedSize - cell.verticalFittingRemove)
 				end
 
 				-- Направление и расчет размеров
-				if cell.direction == GUI.directions.horizontal then
+				if cell.direction == GUI.DIRECTION_HORIZONTAL then
 					cell.width = cell.width + child.width + cell.spacing
 					cell.height = math.max(cell.height, child.height)
 				else
@@ -1944,22 +1909,26 @@ local function layoutUpdate(layout)
 		for column = 1, #layout.columnSizes do
 			cell = layout.cells[row][column]
 			cell.x, cell.y = GUI.getAlignmentCoordinates(
-				{
-					x = x,
-					y = y,
-					width = layout.columnSizes[column].calculatedSize,
-					height = layout.rowSizes[row].calculatedSize,
-					alignment = cell.alignment,
-				},
-				{
-					width = cell.width - (cell.direction == GUI.directions.horizontal and cell.spacing or 0),
-					height = cell.height - (cell.direction == GUI.directions.vertical and cell.spacing or 0),
-				}
+				x,
+				y,
+				layout.columnSizes[column].calculatedSize,
+				layout.rowSizes[row].calculatedSize,
+				cell.horizontalAlignment,
+				cell.verticalAlignment,
+				cell.width - (cell.direction == GUI.DIRECTION_HORIZONTAL and cell.spacing or 0),
+				cell.height - (cell.direction == GUI.DIRECTION_VERTICAL and cell.spacing or 0)
 			)
 
 			-- Учитываем отступы от краев ячейки
-			if cell.margin then
-				cell.x, cell.y = GUI.getMarginCoordinates(cell)
+			if cell.horizontalMargin or cell.verticalMargin then
+				cell.x, cell.y = GUI.getMarginCoordinates(
+					cell.x,
+					cell.y,
+					cell.horizontalAlignment,
+					cell.verticalAlignment,
+					cell.horizontalMargin,
+					cell.verticalMargin
+				)
 			end
 
 			x = x + layout.columnSizes[column].calculatedSize
@@ -1975,9 +1944,18 @@ local function layoutUpdate(layout)
 		if not child.hidden then
 			cell = layout.cells[child.layoutRow][child.layoutColumn]
 			
-			child.localX, cell.localY = GUI.getAlignmentCoordinates(cell, child)
+			child.localX, cell.localY = GUI.getAlignmentCoordinates(
+				cell.x,
+				cell.y,
+				cell.width,
+				cell.height,
+				cell.horizontalAlignment,
+				cell.verticalAlignment,
+				child.width,
+				child.height
+			)
 
-			if cell.direction == GUI.directions.horizontal then
+			if cell.direction == GUI.DIRECTION_HORIZONTAL then
 				child.localX, child.localY = math.floor(cell.x), math.floor(cell.localY)
 				cell.x = cell.x + child.width + cell.spacing
 			else
@@ -2012,39 +1990,33 @@ end
 
 local function layoutSetCellAlignment(layout, column, row, horizontalAlignment, verticalAlignment)
 	layoutCheckCell(layout, column, row)
-	layout.cells[row][column].alignment.horizontal, layout.cells[row][column].alignment.vertical = horizontalAlignment, verticalAlignment
+	layout.cells[row][column].horizontalAlignment, layout.cells[row][column].verticalAlignment = horizontalAlignment, verticalAlignment
 
 	return layout
 end
 
 local function layoutSetCellMargin(layout, column, row, horizontalMargin, verticalMargin)
 	layoutCheckCell(layout, column, row)
-	layout.cells[row][column].margin = {
-		horizontal = horizontalMargin,
-		vertical = verticalMargin
-	}
+	layout.cells[row][column].horizontalMargin = horizontalMargin
+	layout.cells[row][column].verticalMargin = verticalMargin
 
 	return layout
 end
 
 local function layoutNewCell()
 	return {
-		alignment = {
-			horizontal = GUI.alignment.horizontal.center,
-			vertical = GUI.alignment.vertical.center
-		},
-		direction = GUI.directions.vertical,
-		fitting = {
-		horizontal = false, vertical = false},
-		spacing = 1,
+		horizontalAlignment = GUI.ALIGNMENT_HORIZONTAL_CENTER,
+		verticalAlignment = GUI.ALIGNMENT_VERTICAL_CENTER,
+		direction = GUI.DIRECTION_VERTICAL,
+		spacing = 1
 	}
 end
 
 local function layoutCalculatePercentageSize(changingExistent, array, index)
-	if array[index].sizePolicy == GUI.sizePolicies.percentage then
+	if array[index].sizePolicy == GUI.SIZE_POLICY_RELATIVE then
 		local allPercents, beforeFromIndexPercents = 0, 0
 		for i = 1, #array do
-			if array[i].sizePolicy == GUI.sizePolicies.percentage then
+			if array[i].sizePolicy == GUI.SIZE_POLICY_RELATIVE then
 				allPercents = allPercents + array[i].size
 
 				if i <= index then
@@ -2064,7 +2036,7 @@ local function layoutCalculatePercentageSize(changingExistent, array, index)
 		end
 
 		for i = changingExistent and index + 1 or 1, #array do
-			if array[i].sizePolicy == GUI.sizePolicies.percentage and i ~= index then
+			if array[i].sizePolicy == GUI.SIZE_POLICY_RELATIVE and i ~= index then
 				array[i].size = modifyer * array[i].size
 			end
 		end
@@ -2149,11 +2121,11 @@ local function layoutSetGridSize(layout, columnCount, rowCount)
 
 	local rowSize, columnSize = 1 / rowCount, 1 / columnCount
 	for i = 1, rowCount do
-		layoutAddRow(layout, GUI.sizePolicies.percentage, 1 / i)
+		layoutAddRow(layout, GUI.SIZE_POLICY_RELATIVE, 1 / i)
 	end
 
 	for i = 1, columnCount do
-		layoutAddColumn(layout, GUI.sizePolicies.percentage, 1 / i)
+		layoutAddColumn(layout, GUI.SIZE_POLICY_RELATIVE, 1 / i)
 	end
 
 	return layout
@@ -2186,7 +2158,7 @@ local function layoutFitToChildrenSize(layout, column, row)
 
 	for i = 1, #layout.children do
 		if not layout.children[i].hidden then
-			if layout.cells[row][column].direction == GUI.directions.horizontal then
+			if layout.cells[row][column].direction == GUI.DIRECTION_HORIZONTAL then
 				layout.width = layout.width + layout.children[i].width + layout.cells[row][column].spacing
 				layout.height = math.max(layout.height, layout.children[i].height)
 			else
@@ -2196,7 +2168,7 @@ local function layoutFitToChildrenSize(layout, column, row)
 		end
 	end
 
-	if layout.cells[row][column].direction == GUI.directions.horizontal then
+	if layout.cells[row][column].direction == GUI.DIRECTION_HORIZONTAL then
 		layout.width = layout.width - layout.cells[row][column].spacing
 	else
 		layout.height = layout.height - layout.cells[row][column].spacing
@@ -2205,14 +2177,12 @@ local function layoutFitToChildrenSize(layout, column, row)
 	return layout
 end
 
-local function layoutSetCellFitting(layout, column, row, horizontal, vertical, horizontalRemove, verticalRemove )
+local function layoutSetCellFitting(layout, column, row, horizontal, vertical, horizontalRemove, verticalRemove)
 	layoutCheckCell(layout, column, row)
-	layout.cells[row][column].fitting = {
-		horizontal = horizontal,
-		vertical = vertical,
-		horizontalRemove = horizontalRemove or 0,
-		verticalRemove = verticalRemove or 0,
-	}
+	layout.cells[row][column].horizontalFitting = horizontal
+	layout.cells[row][column].verticalFitting = vertical
+	layout.cells[row][column].horizontalFittingRemove = horizontalRemove or 0
+	layout.cells[row][column].verticalFittingRemove = verticalRemove or 0
 
 	return layout
 end
@@ -2267,7 +2237,7 @@ local function filesystemDialogDraw(filesystemDialog)
 		filesystemDialog.input.width = filesystemDialog.extensionComboBox.localX - 3
 	end
 
-	if filesystemDialog.IOMode == GUI.filesystemModes.save then
+	if filesystemDialog.IOMode == GUI.IO_MODE_SAVE then
 		filesystemDialog.submitButton.disabled = not filesystemDialog.input.text or filesystemDialog.input.text == ""
 	else
 		filesystemDialog.input.text = filesystemDialog.filesystemTree.selectedItem or ""
@@ -2275,7 +2245,7 @@ local function filesystemDialogDraw(filesystemDialog)
 	end
 	
 	GUI.drawContainerContent(filesystemDialog)
-	GUI.windowShadow(filesystemDialog.x, filesystemDialog.y, filesystemDialog.width, filesystemDialog.height, GUI.colors.contextMenu.transparency.shadow, true)
+	GUI.windowShadow(filesystemDialog.x, filesystemDialog.y, filesystemDialog.width, filesystemDialog.height, GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW, true)
 
 	return filesystemDialog
 end
@@ -2284,18 +2254,18 @@ local function filesystemDialogSetMode(filesystemDialog, IOMode, filesystemMode)
 	filesystemDialog.IOMode = IOMode
 	filesystemDialog.filesystemMode = filesystemMode
 
-	if filesystemDialog.IOMode == GUI.filesystemModes.save then
-		filesystemDialog.filesystemTree.showMode = GUI.filesystemModes.directory
-		filesystemDialog.filesystemTree.selectionMode = GUI.filesystemModes.directory
+	if filesystemDialog.IOMode == GUI.IO_MODE_SAVE then
+		filesystemDialog.filesystemTree.showMode = GUI.IO_MODE_DIRECTORY
+		filesystemDialog.filesystemTree.selectionMode = GUI.IO_MODE_DIRECTORY
 		filesystemDialog.input.disabled = false
-		filesystemDialog.extensionComboBox.hidden = filesystemDialog.filesystemMode ~= GUI.filesystemModes.file or not filesystemDialog.filesystemTree.extensionFilters
+		filesystemDialog.extensionComboBox.hidden = filesystemDialog.filesystemMode ~= GUI.IO_MODE_FILE or not filesystemDialog.filesystemTree.extensionFilters
 	else
-		if filesystemDialog.filesystemMode == GUI.filesystemModes.file then
-			filesystemDialog.filesystemTree.showMode = GUI.filesystemModes.both
-			filesystemDialog.filesystemTree.selectionMode = GUI.filesystemModes.file
+		if filesystemDialog.filesystemMode == GUI.IO_MODE_FILE then
+			filesystemDialog.filesystemTree.showMode = GUI.IO_MODE_BOTH
+			filesystemDialog.filesystemTree.selectionMode = GUI.IO_MODE_FILE
 		else
-			filesystemDialog.filesystemTree.showMode = GUI.filesystemModes.directory
-			filesystemDialog.filesystemTree.selectionMode = GUI.filesystemModes.directory
+			filesystemDialog.filesystemTree.showMode = GUI.IO_MODE_DIRECTORY
+			filesystemDialog.filesystemTree.selectionMode = GUI.IO_MODE_DIRECTORY
 		end
 
 		filesystemDialog.input.disabled = true
@@ -2339,7 +2309,7 @@ function GUI.filesystemDialog(x, y, width, height, submitButtonText, cancelButto
 	filesystemDialog.addExtensionFilter = filesystemDialogAddExtensionFilter
 
 	filesystemDialog.expandPath = filesystemDialogExpandPath
-	filesystemDialog:setMode(GUI.filesystemModes.open, GUI.filesystemModes.file)
+	filesystemDialog:setMode(GUI.IO_MODE_OPEN, GUI.IO_MODE_FILE)
 
 	return filesystemDialog
 end
@@ -2360,10 +2330,10 @@ end
 
 -----------------------------------------------------------------------
 
-function GUI.addFilesystemDialogToContainer(parentContainer, width, height, addPanel, ...)
-	local container = GUI.addFadeContainer(parentContainer, addPanel, false, nil)
+function GUI.addFilesystemDialog(parentContainer, addPanel, ...)
+	local container = GUI.addBackgroundContainer(parentContainer, addPanel, false, nil)
 
-	local filesystemDialog = container:addChild(GUI.filesystemDialog(1, 1, width, height, ...))
+	local filesystemDialog = container:addChild(GUI.filesystemDialog(1, 1, ...))
 	filesystemDialog.localX = math.floor(container.width / 2 - filesystemDialog.width / 2)
 	filesystemDialog.localY = -filesystemDialog.height
 
@@ -2385,10 +2355,10 @@ function GUI.addFilesystemDialogToContainer(parentContainer, width, height, addP
 		onAnyTouch()
 		
 		local path = filesystemDialog.filesystemTree.selectedItem or filesystemDialog.filesystemTree.workPath or "/"
-		if filesystemDialog.IOMode == GUI.filesystemModes.save then
+		if filesystemDialog.IOMode == GUI.IO_MODE_SAVE then
 			path = path .. filesystemDialog.input.text
 			
-			if filesystemDialog.filesystemMode == GUI.filesystemModes.file then
+			if filesystemDialog.filesystemMode == GUI.IO_MODE_FILE then
 				local selectedItem = filesystemDialog.extensionComboBox:getItem(filesystemDialog.extensionComboBox.selectedItem)
 				path = path .. (selectedItem and selectedItem.text or "")
 			else
@@ -2434,7 +2404,7 @@ local function filesystemChooserEventHandler(mainContainer, object, e1)
 		object.pressed = true
 		mainContainer:drawOnScreen()
 
-		local filesystemDialog = GUI.addFilesystemDialogToContainer(mainContainer, 50, math.floor(mainContainer.height * 0.8), false, object.submitButtonText, object.cancelButtonText, object.placeholderText, object.filesystemDialogPath)		
+		local filesystemDialog = GUI.addFilesystemDialog(mainContainer, false, 50, math.floor(mainContainer.height * 0.8), object.submitButtonText, object.cancelButtonText, object.placeholderText, object.filesystemDialogPath)
 		
 		for key in pairs(object.extensionFilters) do
 			filesystemDialog:addExtensionFilter(key)
@@ -2444,9 +2414,9 @@ local function filesystemChooserEventHandler(mainContainer, object, e1)
 
 		if object.path and #object.path > 0 then
 			-- local path = object.path:gsub("/+", "/")
-			filesystemDialog.filesystemTree.selectedItem = object.IOMode == GUI.filesystemModes.open and object.path or fs.path(object.path)
+			filesystemDialog.filesystemTree.selectedItem = object.IOMode == GUI.IO_MODE_OPEN and object.path or fs.path(object.path)
 			filesystemDialog.input.text = fs.name(object.path)
-			filesystemDialog:expandPath(object.IOMode == GUI.filesystemModes.open and fs.path(object.path) or fs.path(fs.path(object.path)))
+			filesystemDialog:expandPath(object.IOMode == GUI.IO_MODE_OPEN and fs.path(object.path) or fs.path(fs.path(object.path)))
 		end
 		
 		filesystemDialog.onCancel = function()
@@ -2483,8 +2453,8 @@ function GUI.filesystemChooser(x, y, width, height, backgroundColor, textColor, 
 	object.pressed = false
 	object.path = path
 	object.filesystemDialogPath = filesystemDialogPath
-	object.filesystemMode = GUI.filesystemModes.file
-	object.IOMode = GUI.filesystemModes.open
+	object.filesystemMode = GUI.IO_MODE_FILE
+	object.IOMode = GUI.IO_MODE_OPEN
 	object.extensionFilters = {}
 
 	object.draw = filesystemChooserDraw
@@ -2747,7 +2717,7 @@ local function treeEventHandler(mainContainer, tree, e1, e2, e3, e4, e5, ...)
 			if
 				tree.items[i].expandable and
 				(
-					tree.selectionMode == GUI.filesystemModes.file or
+					tree.selectionMode == GUI.IO_MODE_FILE or
 					e3 >= tree.x + tree.items[i].offset - 1 and e3 <= tree.x + tree.items[i].offset + 1
 				)
 			then
@@ -2763,9 +2733,9 @@ local function treeEventHandler(mainContainer, tree, e1, e2, e3, e4, e5, ...)
 			else
 				if
 					(
-						tree.selectionMode == GUI.filesystemModes.both or
-						tree.selectionMode == GUI.filesystemModes.directory and tree.items[i].expandable or
-						tree.selectionMode == GUI.filesystemModes.file
+						tree.selectionMode == GUI.IO_MODE_BOTH or
+						tree.selectionMode == GUI.IO_MODE_DIRECTORY and tree.items[i].expandable or
+						tree.selectionMode == GUI.IO_MODE_FILE
 					) and not tree.items[i].disabled
 				then
 					tree.selectedItem = tree.items[i].definition
@@ -2865,7 +2835,7 @@ local function filesystemTreeUpdateFileListRecursively(tree, path, offset)
 	table.sort(expandables, function(a, b) return unicode.lower(a) < unicode.lower(b) end)
 	table.sort(list, function(a, b) return unicode.lower(a) < unicode.lower(b) end)
 
-	if tree.showMode == GUI.filesystemModes.both or tree.showMode == GUI.filesystemModes.directory then
+	if tree.showMode == GUI.IO_MODE_BOTH or tree.showMode == GUI.IO_MODE_DIRECTORY then
 		for i = 1, #expandables do
 			tree:addItem(fs.name(expandables[i]), path .. expandables[i], offset, true)
 
@@ -2875,7 +2845,7 @@ local function filesystemTreeUpdateFileListRecursively(tree, path, offset)
 		end
 	end
 
-	if tree.showMode == GUI.filesystemModes.both or tree.showMode == GUI.filesystemModes.file then
+	if tree.showMode == GUI.IO_MODE_BOTH or tree.showMode == GUI.IO_MODE_FILE then
 		for i = 1, #list do
 			tree:addItem(list[i], path .. list[i], offset, false, tree.extensionFilters and not tree.extensionFilters[fs.extension(path .. list[i], true)] or false)
 		end
@@ -2966,18 +2936,16 @@ local function textBoxDraw(object)
 			end
 
 			x = GUI.getAlignmentCoordinates(
-				{
-					x = object.x + object.offset.horizontal,
-					y = 1,
-					width = object.textWidth,
-					height = 1,
-					alignment = object.alignment
-				},
-				{
-					width = unicode.len(text),
-					height = 1
-				}
+				object.x + object.offset.horizontal,
+				1,
+				object.textWidth,
+				1,
+				object.horizontalAlignment,
+				object.verticalAlignment,
+				unicode.len(text),
+				1
 			)
+
 			buffer.text(math.floor(x), y, textColor, text)
 			y = y + 1
 		else
@@ -3048,7 +3016,7 @@ function GUI.textBox(x, y, width, height, backgroundColor, textColor, lines, cur
 		background = backgroundColor
 	}
 	object.setAlignment = GUI.setAlignment
-	object:setAlignment(GUI.alignment.horizontal.left, GUI.alignment.vertical.top)
+	object:setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
 	object.lines = lines
 	object.currentLine = currentLine or 1
 	object.draw = textBoxDraw
@@ -3146,7 +3114,7 @@ local function inputDraw(input)
 
 	if input.autoCompleteEnabled then
 		input.autoComplete.x = input.x
-		if input.autoCompleteVerticalAlignment == GUI.alignment.vertical.top then
+		if input.autoCompleteVerticalAlignment == GUI.ALIGNMENT_VERTICAL_TOP then
 			input.autoComplete.y = input.y - input.autoComplete.height
 		else
 			input.autoComplete.y = input.y + input.height
@@ -3184,12 +3152,12 @@ local function inputStartInput(input)
 		e1, e2, e3, e4, e5, e6 = event.pull(input.cursorBlinkDelay)
 		
 		if e1 == "touch" or e1 == "drag" then
-			if input:isPointInside(e3, e4) then
+			if GUI.isPointInside(input, e3, e4) then
 				input:setCursorPosition(input.textCutFrom + e3 - input.x - input.textOffset)
 				
 				input.cursorBlinkState = true
 				mainContainer:drawOnScreen()
-			elseif input.autoComplete:isPointInside(e3, e4) then
+			elseif GUI.isPointInside(input.autoComplete, e3, e4) then
 				input.autoComplete.eventHandler(mainContainer, input.autoComplete, e1, e2, e3, e4, e5, e6)
 			else
 				input.cursorBlinkState = false
@@ -3377,7 +3345,7 @@ function GUI.input(x, y, width, height, backgroundColor, textColor, placeholderT
 
 	input.autoComplete = GUI.autoComplete(1, 1, 30, 7, 0xE1E1E1, 0x969696, 0x3C3C3C, 0x3C3C3C, 0x969696, 0xE1E1E1, 0xC3C3C3, 0x4B4B4B)
 	input.autoCompleteEnabled = false
-	input.autoCompleteVerticalAlignment = GUI.alignment.vertical.bottom
+	input.autoCompleteVerticalAlignment = GUI.ALIGNMENT_VERTICAL_BOTTOM
 
 	return input
 end
@@ -3635,10 +3603,10 @@ local function paletteShow(palette)
 	local mainContainer = GUI.fullScreenContainer()
 	mainContainer:addChild(palette)
 
-	palette.onSubmit = function()
+	palette.submitButton.onTouch = function()
 		mainContainer:stopEventHandling()
 	end
-	palette.cancelButton.onTouch = palette.onSubmit
+	palette.cancelButton.onTouch = palette.submitButton.onTouch
 
 	mainContainer:drawOnScreen()
 	mainContainer:startEventHandling()	
@@ -3679,17 +3647,8 @@ function GUI.palette(x, y, startColor)
 	end
 
 	local colorPanel = palette:addChild(GUI.panel(58, 2, 12, 3, 0x0))
-	palette:addChild(GUI.roundedButton(58, 6, 12, 1, 0x4B4B4B, 0xFFFFFF, 0x2D2D2D, 0xFFFFFF, "OK")).onTouch = function()
-		if palette.onSubmit then
-			palette.onSubmit()
-		end
-	end
-
-	palette:addChild(GUI.roundedButton(58, 8, 12, 1, 0xFFFFFF, 0x696969, 0x2D2D2D, 0xFFFFFF, "Cancel")).onTouch = function()
-		if palette.onCancel then
-			palette.onCancel()
-		end
-	end
+	palette.submitButton = palette:addChild(GUI.roundedButton(58, 6, 12, 1, 0x4B4B4B, 0xFFFFFF, 0x2D2D2D, 0xFFFFFF, "OK"))
+	palette.cancelButton = palette:addChild(GUI.roundedButton(58, 8, 12, 1, 0xFFFFFF, 0x696969, 0x2D2D2D, 0xFFFFFF, "Cancel"))
 
 	local function paletteRefreshBigImage()
 		local saturationStep, brightnessStep, saturation, brightness = 1 / bigImage.width, 1 / bigImage.height, 0, 1
@@ -3814,12 +3773,12 @@ function GUI.palette(x, y, startColor)
 	end
 	
 	local favourites
-	if fs.exists(GUI.paletteConfigPath) then
-		favourites = table.fromFile(GUI.paletteConfigPath)
+	if fs.exists(GUI.PALETTE_CONFIG_PATH) then
+		favourites = table.fromFile(GUI.PALETTE_CONFIG_PATH)
 	else
 		favourites = {}
 		for i = 1, 6 do favourites[i] = color.HSBToInteger(math.random(0, 360), 1, 1) end
-		table.toFile(GUI.paletteConfigPath, favourites)
+		table.toFile(GUI.PALETTE_CONFIG_PATH, favourites)
 	end
 
 	local favouritesContainer = palette:addChild(GUI.container(58, 24, 12, 1))
@@ -3849,7 +3808,7 @@ function GUI.palette(x, y, startColor)
 				favouritesContainer.children[i].colors.pressed.background = 0x0
 			end
 			
-			table.toFile(GUI.paletteConfigPath, favourites)
+			table.toFile(GUI.PALETTE_CONFIG_PATH, favourites)
 
 			mainContainer:drawOnScreen()
 		end
@@ -3910,11 +3869,11 @@ end
 
 -----------------------------------------------------------------------
 
-function GUI.addFadeContainer(parentContainer, addPanel, addLayout, title)
+function GUI.addBackgroundContainer(parentContainer, addPanel, addLayout, title)
 	local container = parentContainer:addChild(GUI.container(1, 1, parentContainer.width, parentContainer.height))
 	
 	if addPanel then
-		container.panel = container:addChild(GUI.panel(1, 1, container.width, container.height, 0x0, GUI.colors.fadeContainer.transparency))
+		container.panel = container:addChild(GUI.panel(1, 1, container.width, container.height, 0x0, GUI.COLOR_BACKGROUND_CONTAINER_TRANSPARENCY))
 		container.panel.eventHandler = function(parentContainer, object, e1)
 			if e1 == "touch" then
 				container:delete()
@@ -3926,13 +3885,13 @@ function GUI.addFadeContainer(parentContainer, addPanel, addLayout, title)
 	if addLayout then
 		container.layout = container:addChild(GUI.layout(1, 1, container.width, container.height, 3, 1))
 		container.layout.defaultColumn = 2
-		container.layout:setColumnWidth(1, GUI.sizePolicies.percentage, 0.375)
-		container.layout:setColumnWidth(2, GUI.sizePolicies.percentage, 0.25)
-		container.layout:setColumnWidth(3, GUI.sizePolicies.percentage, 0.375)
+		container.layout:setColumnWidth(1, GUI.SIZE_POLICY_RELATIVE, 0.375)
+		container.layout:setColumnWidth(2, GUI.SIZE_POLICY_RELATIVE, 0.25)
+		container.layout:setColumnWidth(3, GUI.SIZE_POLICY_RELATIVE, 0.375)
 		container.layout:setCellFitting(2, 1, true, false)
 
 		if title then
-			container.label = container.layout:addChild(GUI.label(1, 1, 1, 1, GUI.colors.fadeContainer.title, title)):setAlignment(GUI.alignment.horizontal.center, GUI.alignment.vertical.top)
+			container.label = container.layout:addChild(GUI.label(1, 1, 1, 1, GUI.COLOR_BACKGROUND_CONTAINER_TITLE, title)):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
 		end
 	end
 
@@ -3941,9 +3900,30 @@ end
 
 -----------------------------------------------------------------------
 
-function GUI.addPaletteWindowToContainer(parentContainer, color)
-	local palette = parentContainer:addChild(GUI.windowFromContainer(GUI.palette(1, 1, color or 0x9900FF)))
-	palette.localX, palette.localY = math.floor(parentContainer.width / 2 - palette.width / 2), math.floor(parentContainer.height / 2 - palette.height / 2)
+function GUI.addPalette(parentContainer, addPanel, color)
+	local container = GUI.addBackgroundContainer(parentContainer, addPanel, false, nil)
+
+	local palette = container:addChild(GUI.windowFromContainer(GUI.palette(1, 1, color or 0x9900FF)))
+	palette.localX, palette.localY = math.floor(container.width / 2 - palette.width / 2), math.floor(container.height / 2 - palette.height / 2)
+
+	local function onAnyTouch()
+		container:delete()
+		palette:getFirstParent():drawOnScreen()
+	end
+
+	palette.cancelButton.onTouch = function()
+		onAnyTouch()
+		if palette.onCancel then
+			palette.onCancel()
+		end
+	end
+
+	palette.submitButton.onTouch = function()
+		onAnyTouch()
+		if palette.onSubmit then
+			palette.onSubmit()
+		end
+	end
 
 	return palette
 end
@@ -3971,7 +3951,7 @@ local function listUpdate(object)
 		child.colors.pressed, step = object.colors.pressed, not step
 		
 		-- Размеры хуйни
-		if object.itemsLayout.cells[1][1].direction == GUI.directions.horizontal then
+		if object.itemsLayout.cells[1][1].direction == GUI.DIRECTION_HORIZONTAL then
 			if object.offsetMode then
 				child.width, child.height = object.itemSize * 2 + unicode.len(child.text), object.height
 			else
@@ -4081,70 +4061,18 @@ function GUI.list(x, y, width, height, itemSize, spacing, backgroundColor, textC
 	object.setSpacing = listSetSpacing
 	object.setDirection = listSetDirection
 
-	object:setAlignment(GUI.alignment.horizontal.left, GUI.alignment.vertical.top)
+	object:setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
 	object:setSpacing(spacing)
-	object:setDirection(GUI.directions.vertical)
+	object:setDirection(GUI.DIRECTION_VERTICAL)
 
 	return object
-end
-
-------------------------------------------------------------------------------------------
-
-function GUI.highlightString(x, y, fromChar, limit, indentationWidth, colorScheme, patterns, s)
-	fromChar = fromChar or 1
-	
-	local counter, symbols, colors, stringLength, bufferIndex, newFrameBackgrounds, newFrameForegrounds, newFrameSymbols, searchFrom, starting, ending = indentationWidth, {}, {}, unicode.len(s), buffer.getIndex(x, y), buffer.getNewFrameTables()
-	local toChar = math.min(stringLength, fromChar + limit - 1)
-
-	for i = 1, stringLength do
-		symbols[i] = unicode.sub(s, i, i)
-	end
-
-	for j = 1, #patterns do
-		searchFrom = 1
-		
-		while true do
-			starting, ending = string.unicodeFind(s, patterns[j][1], searchFrom)
-			
-			if starting then
-				for i = starting + patterns[j][3], ending - patterns[j][4] do
-					colors[i] = colorScheme[patterns[j][2]]
-				end
-			else
-				break
-			end
-
-			searchFrom = ending + 1 - patterns[j][4]
-		end
-	end
-
-	-- Ебошим индентейшны
-	for i = fromChar, toChar do
-		if symbols[i] == " " then
-			colors[i] = colorScheme.indentation
-			
-			if counter == indentationWidth then
-				symbols[i], counter = "│", 0
-			end
-
-			counter = counter + 1
-		else
-			break
-		end
-	end
-
-	-- А тута уже сам текст
-	for i = fromChar, toChar do
-		newFrameForegrounds[bufferIndex], newFrameSymbols[bufferIndex] = colors[i] or colorScheme.text, symbols[i] or " "
-		bufferIndex = bufferIndex + 1
-	end
 end
 
 -----------------------------------------------------------------------
 
 function windowDraw(window)
 	GUI.drawContainerContent(window)
-	GUI.windowShadow(window.x, window.y, window.width, window.height, GUI.colors.windows.shadowTransparency, true)
+	GUI.windowShadow(window.x, window.y, window.width, window.height, GUI.COLOR_WINDOW_SHADOW_TRANSPARENCY, true)
 
 	return window
 end
@@ -4158,7 +4086,7 @@ local function windowCheck(window, x, y)
 			if windowCheck(child, x, y) then
 				return true
 			end
-		elseif child.eventHandler and not child.hidden and not child.disabled and child:isPointInside(x, y) then
+		elseif child.eventHandler and not child.hidden and not child.disabled and GUI.isPointInside(child, x, y) then
 			return true
 		end
 	end
@@ -4240,6 +4168,65 @@ function GUI.keyAndValue(x, y, keyColor, valueColor, key, value)
 
 	return object
 end
+
+------------------------------------------------------------------------------------------
+
+function GUI.highlightString(x, y, fromChar, limit, indentationWidth, patterns, colorScheme, s)
+	fromChar = fromChar or 1
+	
+	local counter, symbols, colors, stringLength, bufferIndex, newFrameBackgrounds, newFrameForegrounds, newFrameSymbols, searchFrom, starting, ending = indentationWidth, {}, {}, unicode.len(s), buffer.getIndex(x, y), buffer.getNewFrameTables()
+	local toChar = math.min(stringLength, fromChar + limit - 1)
+
+	for i = 1, stringLength do
+		symbols[i] = unicode.sub(s, i, i)
+	end
+
+	for j = 1, #patterns, 4 do
+		searchFrom = 1
+		
+		while true do
+			starting, ending = string.unicodeFind(s, patterns[j], searchFrom)
+			
+			if starting then
+				for i = starting + patterns[j + 2], ending - patterns[j + 3] do
+					colors[i] = colorScheme[patterns[j + 1]]
+				end
+			else
+				break
+			end
+
+			searchFrom = ending + 1 - patterns[j + 3]
+		end
+	end
+
+	-- Ебошим индентейшны
+	for i = fromChar, toChar do
+		if symbols[i] == " " then
+			colors[i] = colorScheme.indentation
+			
+			if counter == indentationWidth then
+				symbols[i], counter = "│", 0
+			end
+
+			counter = counter + 1
+		else
+			break
+		end
+	end
+
+	-- А тута уже сам текст
+	for i = fromChar, toChar do
+		newFrameForegrounds[bufferIndex], newFrameSymbols[bufferIndex] = colors[i] or colorScheme.text, symbols[i] or " "
+		bufferIndex = bufferIndex + 1
+	end
+end
+
+------------------------------------------------------------------------------------------
+
+-- buffer.flush()
+-- buffer.clear(0x2D2D2D)
+-- GUI.highlightString(3, 2, 1, buffer.getWidth(), 2, GUI.LUA_SYNTAX_COLORS, GUI.LUA_SYNTAX_PATTERNS, "for i = 1, 10 do print(123, i) end")
+-- buffer.draw(true)
 
 ------------------------------------------------------------------------------------------
 
