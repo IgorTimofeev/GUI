@@ -180,10 +180,10 @@ GUI.**object**( x, y, width, height ): *table* object
 -----------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
-| *int* | x | Object's coordinate by x-axis |
-| *int* | y | Object's coordinate by y-axis |
-| *int* | width | Object's width |
-| *int* | height | Object's height |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
 
 In addition to the coordinates and size, any object has several universal properties:
 
@@ -200,7 +200,7 @@ After adding an object to the container using the :**addChild()** method, it acq
 | *table* | .**parent** | A pointer to the parent container of the object |
 | *int* | .**localX** | Local position on the x-axis in the parent container |
 | *int* | .**localY** | Local position on the y-axis in the parent container |
-| *function* | :**indexOf**() | Get the index of this object in the parent container (iterative method, works slowly) |
+| *function* | :**indexOf**() | Get the index of this object in the parent container (iterative method) |
 | *function* | :**moveForward**() | Move the object "back" in the container children hierarchy |
 | *function* | :**moveBackward**() | Move the object "forward" in the container children hierarchy |
 | *function* | :**moveToFront**() | Move the object to the end of the container children hierarchy |
@@ -279,11 +279,11 @@ GUI.**panel**( x, y, width, height, color, [transparency] ): *table* panel
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
-| *int* | x | Object's coordinate by x-axis |
-| *int* | y | Object's coordinate by y-axis |
-| *int* | width | Object's width |
-| *int* | height | Object's height |
-| *int* | color | Object's color |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* | color | Object color |
 | [*int* | transparency] | Optional transparency of the object |
 
 The simplest object is a colored decorative panel. However, paradoxically, it is used quite often to create beautiful interface elements.
@@ -316,12 +316,12 @@ GUI.**text**( x, y, textColor, text ): *table* text
 --------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
-| *int* | x | Object's coordinate by x-axis |
-| *int* | y | Object's coordinate by y-axis |
-| *int* | width | Object's width |
-| *int* | height | Object's height |
-| *int* | textColor | Object's text color |
-| *string* | text | Object's text |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* | textColor | Object text color |
+| *string* | text | Object text |
 
 Another simpliest object is text. If you need to quickly display something in text form, then this widget is created for you. When you change the text, its width is automatically calculated to the desired value.
 
@@ -351,12 +351,12 @@ GUI.**label**( x, y, width, height, textColor, text ): *table* label
 --------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
-| *int* | x | Object's coordinate by x-axis |
-| *int* | y | Object's coordinate by y-axis |
-| *int* | width | Object's width |
-| *int* | height | Object's height |
-| *int* | textColor | Object's text color |
-| *string* | text | Object's text |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* | textColor | Object text color |
+| *string* | text | Object text |
 
 A text label is an advanced version of the GUI.**text** that supports various alignment options.
 
@@ -398,8 +398,8 @@ GUI.**image**( x, y, loadedImage ): *table* image
 -------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
-| *int* | x | Object's coordinate by x-axis |
-| *int* | y | Object's coordinate by y-axis |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
 | *table* | loadedImage | The image that was loaded by image.**load**() method |
 
 To display beautiful things on the screen, plain text is not enough. GUI.**image** exists for this purpose.
@@ -436,15 +436,15 @@ GUI.**button**( x, y, width, height, buttonColor, textColor, buttonPressedColor,
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
-| *int* | x | Object's coordinate by x-axis |
-| *int* | y | Object's coordinate by y-axis |
-| *int* | width | Object's width |
-| *int* | height | Object's height |
-| *int* | buttonColor | Object's default background color |
-| *int* | textColor | Object's default text color |
-| *int* | buttonPressedColor |  Object's pressed background color |
-| *int* | textPressedColor | Object's pressed text color |
-| *string* | text | Object's text |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* | buttonColor | Object default background color |
+| *int* | textColor | Object default text color |
+| *int* | buttonPressedColor |  Object pressed background color |
+| *int* | textPressedColor | Object pressed text color |
+| *string* | text | Object text |
 
 What can be more familiar and convenient than a beautiful animated button? Click on it and enjoy. If you want to assign an action to a button after clicking, create a .**onTouch** method for it.
 
@@ -526,8 +526,8 @@ GUI.**actionButtons**( x, y, fat ): *table* actionButtons
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
-| *int* | x | Object's coordinate by x-axis |
-| *int* | y | Object's coordinate by y-axis |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
 | [ *boolean* | fat ] | The option of drawing buttons with a large size |
 
 This object is a container containing three round buttons. Basically, it is used to control the state of windows: to close, minimize, and so on.
@@ -569,16 +569,16 @@ GUI.**input**( x, y, width, height, backgroundColor, textColor, placeholderTextC
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
-| *int* | x | Object's coordinate by x-axis |
-| *int* | y | Object's coordinate by y-axis |
-| *int* | width | Object's width |
-| *int* | height | Object's height |
-| *int* | backgroundColor | Object's default background color |
-| *int* | textColor | Object's default text color |
-| *int* | placeholderTextColor | Object's **placeholder** color |
-| *int* | backgroundFocusedColor | Object's focused background color |
-| *int* | textFocusedColor | Object's focused text color |
-| *string* | text | Object's text value |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* | backgroundColor | Object default background color |
+| *int* | textColor | Object default text color |
+| *int* | placeholderTextColor | Object **placeholder** color |
+| *int* | backgroundFocusedColor | Object focused background color |
+| *int* | textFocusedColor | Object focused text color |
+| *string* | text | Object text value |
 | [*string* | placeholderText] | Text to be displayed, provided that the entered text is empty |
 | [*boolean* | eraseTextOnFocus] | Delete text when the input is focused |
 | [*char* | textMask] | A mask character for the text to be entered. Convenient for creating a password entry field |
@@ -620,16 +620,16 @@ GUI.**slider**( x, y, width, primaryColor, secondaryColor, pipeColor, valueColor
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
-| *int* | x | Object's coordinate by x-axis |
-| *int* | y | Object's coordinate by y-axis |
-| *int* | width | Object's width |
-| *int* | primaryColor | Object's primary color |
-| *int* | secondaryColor | Object's secondary color |
-| *int* | pipeColor | Object's "pipe" color |
-| *int* | valueColor | Object's text value color |
-| *float* | minimumValue | Object's minimum value |
-| *float* | maximumValue | Object's maximum value |
-| *float* | value | Object's current value |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | primaryColor | Object primary color |
+| *int* | secondaryColor | Object secondary color |
+| *int* | pipeColor | Object "pipe" color |
+| *int* | valueColor | Object text value color |
+| *float* | minimumValue | Object minimum value |
+| *float* | maximumValue | Object maximum value |
+| *float* | value | Object current value |
 | [*bool* | showCornerValues] | Do min/max values are needed to be shown at slider's corners |
 | [*string* | currentValuePrefix] | Prefix for value displaying |
 | [*string* | currentValuePostfix] | Postfix for value displaying |
@@ -672,13 +672,13 @@ GUI.**switch**( x, y, width, primaryColor, secondaryColor, pipeColor, state ): *
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
-| *int* | x | Object's coordinate by x-axis |
-| *int* | y | Object's coordinate by y-axis |
-| *int* | width | Object's width |
-| *int* | primaryColor | Object's primary color |
-| *int* | secondaryColor | Object's secondary color |
-| *int* | pipeColor | Object's "pipe" color |
-| *boolean* | state | Object's state |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | primaryColor | Object primary color |
+| *int* | secondaryColor | Object secondary color |
+| *int* | pipeColor | Object "pipe" color |
+| *boolean* | state | Object state |
 
 This is one of my favorite widgets. An animated switch is designed to change the state of anything from true to false and vice versa.
 
@@ -718,8 +718,8 @@ GUI.**switchAndLabel**( x, y, width, switchWidth, primaryColor, secondaryColor, 
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
-| *int* | x | Object's coordinate by x-axis |
-| *int* | y | Object's coordinate by y-axis |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
 | *int* | width | Total width |
 | *int* | switchWidth | Switch width |
 | *int* | primaryColor | Switch primary color |
@@ -757,3 +757,325 @@ mainContainer:startEventHandling()
 Result:
 
 ![Imgur](http://i.imgur.com/4zKOla9.gif)
+
+GUI.**colorSelector**( x, y, width, height, color, text ): *table* colorSelector
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* | color | Current selected color |
+| *string* | text | Object text |
+
+The choice of colors is almost the most difficult task on such inconvenient devices as computers from OpenComputers. ColorSelector will do everything for you: just click and choose the desired color from a palette.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *callback-function* | .**onTouch**() | This function will be called after choosing color from palette |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+mainContainer:addChild(GUI.colorSelector(2, 2, 30, 3, 0xFF55FF, "Choose color")).onTouch = function()
+	-- Do something after choosing color
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](http://i.imgur.com/QVxu2N0.gif)
+
+GUI.**list**( x, y, width, height, itemSize, spacing, backgroundColor, textColor, alternateBackgroundColor, alternateTextColor, backgroundSelectedColor, textSelectedColor [, offsetMode] ): *table* list
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* | itemSize | Item size by selected direction |
+| *int* | spacing | Space between items |
+| *int* | backgroundColor | Object background color |
+| *int* | textColor | Object text color |
+| *int* | alternateBackgroundColor | Object alternate background color |
+| *int* | alternateTextColor | Object alternate text color |
+| *int* | backgroundSelectedColor | Object selection background color |
+| *int* | textSelectedColor | Object selection text color |
+| [*boolean* | offsetMode] | Optional mode, in which the items size are created based on the pixel offset from their texts |
+
+This object is used to select items from the list. It resembles a single-column Excel table with the ability to change the orientation. List is universal object and is used as a inherited source for many other widgets.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *int* | .**selectedItem** | Index of currently selected item |
+| *function* | :**addItem**(*string* text): *table* item| Add new item to object. You can specify .**onTouch**() function to if desired |
+| *function* | :**getItem**(*int* index): *table* item| Get item by it's index |
+| *function* | :**select**(*int* index): *table* list| Select item from List by it's index |
+| *function* | :**deselect**(): *table* list| Deselect selected elements |
+| *function* | :**setAlignment**(*enum* horizontalAlignment, *enum* verticalAlignment): *table* list| Установить вариант выравнивания элементов List. По умолчанию вырванивание идет по левому верхнему углу |
+| *function* | :**setDirection**(*enum* direction): *table* list| Choose an items display option for List boundaries. The default alignment is **left** and **top** |
+| *function* | :**setSpacing**(*int* spacing): *table* list| Set spacing between List items |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+-- Create vertically oriented list
+local verticalList = mainContainer:addChild(GUI.list(3, 2, 25, 30, 3, 0, 0xE1E1E1, 0x4B4B4B, 0xD2D2D2, 0x4B4B4B, 0x3366CC, 0xFFFFFF, false))
+verticalList:addItem("Hello world")
+verticalList:addItem("This is test").onTouch = function()
+	GUI.error("Selected item: " .. verticalList.selectedItem)
+end
+verticalList:addItem("Beautiful")
+verticalList:addItem("Like a shit")
+
+-- Create horizontally oriented list
+local horizontalList = mainContainer:addChild(GUI.list(34, 2, 100, 3, 2, 0, 0xE1E1E1, 0x4B4B4B, 0xE1E1E1, 0x4B4B4B, 0x696969, 0xFFFFFF, true))
+horizontalList:setDirection(GUI.DIRECTION_HORIZONTAL)
+horizontalList:setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
+horizontalList:addItem("Applications")
+horizontalList:addItem("Libraries")
+horizontalList:addItem("Scripts")
+horizontalList:addItem("Wallpapers")
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](https://i.imgur.com/lYzufn2.gif)
+
+GUI.**menu**( x, y, width, backgroundColor, textColor, backgroundPressedColor, textPressedColor, backgroundTransparency ): *table* menu
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | backgroundColor | Object background color |
+| *int* | textColor | Object text color |
+| *int* | backgroundPressedColor | Object background pressed color |
+| *int* | textPressedColor | Object text pressed color |
+| [*int* | backgroundTransparency]  | Optional background transparency |
+
+The menu object allows you to select items from the set of listed options. For the most part it is used in structures like "**File - Edit - View - Help**", etc.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *function* | :**addItem**(*string* text, *int* color): *table* item | Add a new item to Menu. You can specify .**onTouch**() function to item if desired |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+local menu = mainContainer:addChild(GUI.menu(1, 1, mainContainer.width, 0xEEEEEE, 0x666666, 0x3366CC, 0xFFFFFF, nil))
+menu:addItem("MineCode IDE", 0x0)
+local item = menu:addItem("File")
+item.onTouch = function()
+	local contextMenu = GUI.contextMenu(item.x, item.y + 1)
+	contextMenu:addItem("New")
+	contextMenu:addItem("Open").onTouch = function()
+		GUI.error("Open was pressed")
+	end
+	contextMenu:addSeparator()
+	contextMenu:addItem("Save")
+	contextMenu:addItem("Save as")
+	contextMenu:show()
+end
+menu:addItem("Edit")
+menu:addItem("View")
+menu:addItem("About")
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](http://i.imgur.com/b1Tmge5.gif)
+
+GUI.**comboBox**( x, y, width, elementHeight, backgroundColor, textColor, arrowBackgroundColor, arrowTextColor ): *table* comboBox
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | elementHeight | Object item height |
+| *int* | backgroundColor | Object background color |
+| *int* | textColor | Object text color |
+| *int* | arrowBackgroundColor | Object arrow background color |
+| *int* | arrowTextColor | Object arrow text color |
+
+The combo box is designed to select one of the big set of items from the compact drop-down menu.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *int* | .**selectedItem** | Index of selected element |
+| *function* | :**addItem**(*string* text, *boolean* disabled, *string* shortcut, *int* color): *table* item| Add a new item to ComboBox. If **disabled** parameter is specified, this item will not react to mouse clicking. You can specify .**onTouch**() function to item if desired |
+| *function* | :**addSeparator**()| Add a new visual separator |
+| *function* | :**removeItem**( *int*  index) | Remove item by it's index |
+| *function* | :**getItem**( *int* index ): *table* item| Get item by it's index |
+| *function* | :**indexOfItem**( *string* itemText ): *int* index | Get index of item by it's text (iterative method) |
+| *function* | :**clear**()| Remove all items |
+| *function* | :**count**(): *int* count| Get items count |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+local comboBox = mainContainer:addChild(GUI.comboBox(3, 2, 30, 3, 0xEEEEEE, 0x2D2D2D, 0xCCCCCC, 0x888888))
+comboBox:addItem(".PNG")
+comboBox:addItem(".JPG").onTouch = function()
+	-- Do something when .JPG was selected
+end
+comboBox:addItem(".GIF")
+comboBox:addItem(".PIC")
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](http://i.imgur.com/6ROzLAc.gif)
+
+GUI.**resizer**( x, y, width, height, resizerColor, arrowColor ): *table* resizer
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | height | Object height |
+| *int* | resizerColor | Resizer bar color |
+| *int* | arrowColor |  Arrow color, it will be shown on **touch/drag/drop** events |
+
+This object is designed to automate the resizing of any objects. When you move the mouse pointer with the left button pressed, the resizer will call the corresponding callback methods.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *callback-function* | .**onResize**(*int* dragWidth, *int* dragHeight) | 
+This function is called while moving the mouse pointer with the left button pressed on the resizer. Two parameters are the distance traveled by the mouse pointer |
+| *callback-function* | .**onResizeFinished**() | This function is called after you stop moving the mouse pointer over the resizer |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+-- Add a panel that symbolizes the system window, the size of which we will change
+local panel = mainContainer:addChild(GUI.panel(3, 2, 30, 10, 0xE1E1E1))
+-- Add a resizer, by default located in the right part of the window. Make the width of the resizer at least 3 to handle the drag/drop events in both directions
+local resizer = mainContainer:addChild(GUI.resizer(panel.localX + panel.width - 2, panel.localY + math.floor(panel.height / 2 - 2), 3, 4, 0xAAAAAA, 0x0))
+
+-- This function will be called during the "drag" event, when the user moves over the resizer
+resizer.onResize = function(mainContainer, resizer, dragWidth, dragHeight)
+	panel.width = panel.width + dragWidth
+	resizer.localX = resizer.localX + dragWidth
+
+	mainContainer:drawOnScreen()
+end
+
+-- This function will be called on "drop" event
+resizer.onResizeFinished = function(mainContainer, resizer, dragWidth, dragHeight)
+	GUI.error("Resize finished!")
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](https://i.imgur.com/PvARN8j.gif)
+
+GUI.**progressBar**( x, y, width, primaryColor, secondaryColor, valueColor, value, [thin, showValue, valuePrefix, valuePostfix] ): *table* progressBar
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *int* | width | Object width |
+| *int* | primaryColor | Object primary color |
+| *int* | secondaryColor | Object secondary color |
+| *int* | valueColor | Object value text color |
+| *int* [0; 100] | value | Object value |
+| [*bool* | thin] | Thin drawing mode |
+| [*bool* | showValue] | Show value mode |
+| [*string* | valuePrefix] | Object value prefix |
+| [*string* | valuePostfix] | Object value postfix  |
+
+This object is very often used when downloading files, scanning areas, blah blah blah. To whom do I tell this? You're a smart guy (girl?), aren't you?
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *int* | .**value**| Current progressbar value |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+mainContainer:addChild(GUI.progressBar(2, 2, 80, 0x3366CC, 0xEEEEEE, 0xEEEEEE, 80, true, true, "Value prefix: ", " value postfix"))
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](http://i89.fastpic.ru/big/2017/0402/f1/ef1da27531ccf899eb9eb59c010180f1.png)
