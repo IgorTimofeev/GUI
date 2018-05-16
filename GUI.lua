@@ -111,7 +111,7 @@ GUI.COLOR_WINDOWS_SHADOW_TRANSPARENCY = 0.5
 
 -----------------------------------------------------------------------
 
-function GUI.isPointInside(object, x, y)
+local function objectIsPointInside(object, x, y)
 	return
 		x >= object.x and
 		x <= object.x + object.width - 1 and
@@ -129,7 +129,8 @@ function GUI.object(x, y, width, height)
 		y = y,
 		width = width,
 		height = height,
-		draw = objectDraw
+		draw = objectDraw,
+		isPointInside = objectIsPointInside
 	}
 end
 
@@ -271,7 +272,7 @@ local function containerObjectAddAnimation(object, frameHandler, onFinish)
 	return animation
 end
 
-function GUI.addChildToContainer(container, object, atIndex)
+function containerAddChild(container, object, atIndex)
 	object.localX = object.x
 	object.localY = object.y
 	object.indexOf = containerObjectIndexOf
@@ -293,7 +294,7 @@ function GUI.addChildToContainer(container, object, atIndex)
 	return object
 end
 
-local function deleteContainersContent(container, from, to)
+local function containerDeleteChildren(container, from, to)
 	from = from or 1
 	for objectIndex = from, to or #container.children do
 		table.remove(container.children, from)
@@ -312,7 +313,7 @@ local function getRectangleIntersection(R1X1, R1Y1, R1X2, R1Y2, R2X1, R2Y1, R2X2
 	end
 end
 
-function GUI.drawContainerContent(container)
+function containerDraw(container)
 	local R1X1, R1Y1, R1X2, R1Y2, child = buffer.getDrawLimit()
 	local intersectionX1, intersectionY1, intersectionX2, intersectionY2 = getRectangleIntersection(
 		R1X1,
@@ -354,7 +355,13 @@ local function containerHandler(isScreenEvent, mainContainer, currentContainer, 
 	if not isScreenEvent or intersectionX1 and e3 >= intersectionX1 and e4 >= intersectionY1 and e3 <= intersectionX2 and e4 <= intersectionY2 then
 		if currentContainer.eventHandler then
 			if isScreenEvent then
-				if GUI.isPointInside(currentContainer, e3, e4) and not currentContainer.disabled then
+				if
+					e3 >= currentContainer.x and
+					e3 <= currentContainer.x + currentContainer.width - 1 and
+					e4 >= currentContainer.y and
+					e4 <= currentContainer.y + currentContainer.height - 1 and
+					not currentContainer.disabled
+				then
 					currentContainer.eventHandler(mainContainer, currentContainer, e1, e2, e3, e4, ...)
 				end
 			else
@@ -383,7 +390,12 @@ local function containerHandler(isScreenEvent, mainContainer, currentContainer, 
 					end
 				else
 					if isScreenEvent then
-						if GUI.isPointInside(child, e3, e4) then
+						if
+							e3 >= child.x and
+							e3 <= child.x + child.width - 1 and
+							e4 >= child.y and
+							e4 <= child.y + child.height - 1
+						then
 							if child.eventHandler and not child.disabled then
 								child.eventHandler(mainContainer, child, e1, e2, e3, e4, ...)
 							end
@@ -476,10 +488,10 @@ function GUI.container(x, y, width, height)
 	local container = GUI.object(x, y, width, height)
 
 	container.children = {}
-	container.draw = GUI.drawContainerContent
+	container.draw = containerDraw
 	container.drawOnScreen = containerDrawOnScreen
-	container.deleteChildren = deleteContainersContent
-	container.addChild = GUI.addChildToContainer
+	container.deleteChildren = containerDeleteChildren
+	container.addChild = containerAddChild
 	container.returnData = containerReturnData
 	container.startEventHandling = containerStartEventHandling
 	container.stopEventHandling = containerStopEventHandling
@@ -1007,8 +1019,8 @@ local function codeViewDraw(codeView)
 			if codeView.syntaxHighlight then
 				GUI.highlightString(codeView.codeAreaPosition + 1,
 					y,
-					codeView.fromSymbol,
 					codeView.codeAreaWidth - 2,
+					codeView.fromSymbol,
 					codeView.indentationWidth,
 					patterns,
 					colorScheme,
@@ -1401,7 +1413,7 @@ local function dropDownMenuDraw(menu)
 	end
 
 	buffer.square(menu.x, menu.y, menu.width, menu.height, menu.colors.default.background, menu.colors.default.text, " ", menu.colors.transparency.background)
-	GUI.drawContainerContent(menu)
+	containerDraw(menu)
 	GUI.windowShadow(menu.x, menu.y, menu.width, menu.height, menu.colors.transparency.shadow, true)
 
 	return menu
@@ -2133,7 +2145,7 @@ end
 
 local function layoutDraw(layout)
 	layoutUpdate(layout)
-	GUI.drawContainerContent(layout)
+	containerDraw(layout)
 	
 	if layout.showGrid then
 		local x, y = layout.x, layout.y
@@ -2190,7 +2202,7 @@ end
 local function layoutAddChild(layout, object, ...)
 	object.layoutRow = layout.defaultRow
 	object.layoutColumn = layout.defaultColumn
-	GUI.addChildToContainer(layout, object, ...)
+	containerAddChild(layout, object, ...)
 
 	return object
 end
@@ -2244,7 +2256,7 @@ local function filesystemDialogDraw(filesystemDialog)
 		filesystemDialog.submitButton.disabled = not filesystemDialog.filesystemTree.selectedItem
 	end
 	
-	GUI.drawContainerContent(filesystemDialog)
+	containerDraw(filesystemDialog)
 	GUI.windowShadow(filesystemDialog.x, filesystemDialog.y, filesystemDialog.width, filesystemDialog.height, GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW, true)
 
 	return filesystemDialog
@@ -2405,7 +2417,7 @@ local function filesystemChooserEventHandler(mainContainer, object, e1)
 		mainContainer:drawOnScreen()
 
 		local filesystemDialog = GUI.addFilesystemDialog(mainContainer, false, 50, math.floor(mainContainer.height * 0.8), object.submitButtonText, object.cancelButtonText, object.placeholderText, object.filesystemDialogPath)
-		
+
 		for key in pairs(object.extensionFilters) do
 			filesystemDialog:addExtensionFilter(key)
 		end
@@ -3152,12 +3164,12 @@ local function inputStartInput(input)
 		e1, e2, e3, e4, e5, e6 = event.pull(input.cursorBlinkDelay)
 		
 		if e1 == "touch" or e1 == "drag" then
-			if GUI.isPointInside(input, e3, e4) then
+			if input:isPointInside(e3, e4) then
 				input:setCursorPosition(input.textCutFrom + e3 - input.x - input.textOffset)
 				
 				input.cursorBlinkState = true
 				mainContainer:drawOnScreen()
-			elseif GUI.isPointInside(input.autoComplete, e3, e4) then
+			elseif input.autoComplete:isPointInside(e3, e4) then
 				input.autoComplete.eventHandler(mainContainer, input.autoComplete, e1, e2, e3, e4, e5, e6)
 			else
 				input.cursorBlinkState = false
@@ -4071,7 +4083,7 @@ end
 -----------------------------------------------------------------------
 
 function windowDraw(window)
-	GUI.drawContainerContent(window)
+	containerDraw(window)
 	GUI.windowShadow(window.x, window.y, window.width, window.height, GUI.COLOR_WINDOW_SHADOW_TRANSPARENCY, true)
 
 	return window
@@ -4086,7 +4098,7 @@ local function windowCheck(window, x, y)
 			if windowCheck(child, x, y) then
 				return true
 			end
-		elseif child.eventHandler and not child.hidden and not child.disabled and GUI.isPointInside(child, x, y) then
+		elseif child.eventHandler and not child.hidden and not child.disabled and child:isPointInside(x, y) then
 			return true
 		end
 	end
@@ -4171,11 +4183,11 @@ end
 
 ------------------------------------------------------------------------------------------
 
-function GUI.highlightString(x, y, fromChar, limit, indentationWidth, patterns, colorScheme, s)
+function GUI.highlightString(x, y, width, fromChar, indentationWidth, patterns, colorScheme, s)
 	fromChar = fromChar or 1
 	
 	local counter, symbols, colors, stringLength, bufferIndex, newFrameBackgrounds, newFrameForegrounds, newFrameSymbols, searchFrom, starting, ending = indentationWidth, {}, {}, unicode.len(s), buffer.getIndex(x, y), buffer.getNewFrameTables()
-	local toChar = math.min(stringLength, fromChar + limit - 1)
+	local toChar = math.min(stringLength, fromChar + width - 1)
 
 	for i = 1, stringLength do
 		symbols[i] = unicode.sub(s, i, i)
@@ -4220,13 +4232,6 @@ function GUI.highlightString(x, y, fromChar, limit, indentationWidth, patterns, 
 		bufferIndex = bufferIndex + 1
 	end
 end
-
-------------------------------------------------------------------------------------------
-
--- buffer.flush()
--- buffer.clear(0x2D2D2D)
--- GUI.highlightString(3, 2, 1, buffer.getWidth(), 2, GUI.LUA_SYNTAX_COLORS, GUI.LUA_SYNTAX_PATTERNS, "for i = 1, 10 do print(123, i) end")
--- buffer.draw(true)
 
 ------------------------------------------------------------------------------------------
 

@@ -18,10 +18,10 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [Constants](#constants) |
 | [Standalone methods](#standalone-methods) |
 | [    GUI.error](#guierrorvarargs) |
+| [    GUI.highlightString](#guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
 | [    GUI.addPalette](#guiaddpaletteparentcontainer-addpanel-initialcolor-table-palette) |
 | [    GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel--table-filesystemdialog) |
 | [    GUI.addBackgroundContainer](#guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title-table-palette) |
-| [    GUI.highlightString](#guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
 | [Ready-to-use widgets](#ready-to-use-widgets) |
 | [    GUI.panel](#guipanel-x-y-width-height-color-transparency--table-panel) |
 | [    GUI.text](#guitext-x-y-textcolor-text--table-text) |
@@ -210,6 +210,7 @@ In addition to the coordinates and size, any object has several universal proper
 | ------ | ------ | ------ |
 | *boolean* | .**hidden** | Whether the object is hidden. If the object is hidden, then its rendering and analysis of system events are ignored |
 | *boolean* | .**disabled** | Whether the object is disabled. If the object is disabled, then it can be rendered, but all system events are ignored |
+| *function* | :**isPointInside**() | A method that allows you to determine whether a specified point is inside the geometry of a specified object |
 | *function* | :**draw**() | Mandatory method that is called to render the widget on the screen. It can be defined by the user in any convenient way |
 
 After adding an object to the container using the :**addChild()** method, it acquires additional properties for ease of use:
@@ -317,6 +318,55 @@ GUI.error("Something went wrong here, my friend")
 Result:
 
 ![Imgur](http://i.imgur.com/s8mA2FL.png?1)
+
+GUI.**highlightString**(x, y, width, fromSymbol, indentationWidth, syntaxPatterns, syntaxColorScheme, data)
+------------------------------------------------------------------------
+
+GUI.**highlightString**(x, y, width, fromSymbol, indentationWidth, syntaxPatterns, syntaxColorScheme, data)
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Coordinate by x-axis to draw from |
+| *int* | y | Coordinate by y-axis to draw from |
+| *int* | width | Width of highlighting area  |
+| *int* | fromSymbol | Symbol index to draw from |
+| *int* | indentationWidth | Width of indentation that will be added instead on whitespace symbols in string starting |
+| *table* | syntaxPatterns | Patterns for syntax highlighting |
+| *table* | syntaxColorScheme | Color scheme for syntax highlighting |
+| *string* | data | String to highlight |
+
+This method allows you to highlight specified string and draw the result to screen buffer using specified syntax patterns and specified color scheme. This library already comes with a set of patterns and color scheme for Lua syntax (see **Constants**), however you can easily write your own for any other programming language if you wish.
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+local buffer = require("doubleBuffering")
+
+--------------------------------------------------------------------------------
+
+buffer.clear(0x1E1E1E)
+
+-- Open file and read it's lines
+local y = 1
+for line in io.lines("/lib/advancedLua.lua") do
+	-- Replace tab symbols to 2 whitespaces and Windows line endings to UNIX line endings
+	line = line:gsub("\t", "  "):gsub("\r\n", "")
+	-- Highlight result
+	GUI.highlightString(3, y, buffer.getWidth(), 1, 2, GUI.LUA_SYNTAX_PATTERNS, GUI.LUA_SYNTAX_COLOR_SCHEME, line)
+	
+	y = y + 1
+	if y > buffer.getHeight() then
+		break
+	end
+end
+
+buffer.draw(true)
+```
+
+Result:
+
+![](https://i.imgur.com/kYRHeMu.png)
 
 GUI.**addPalette**(parentContainer, addPanel, initialColor): *table* palette
 ------------------------------------------------------------------------
@@ -446,52 +496,6 @@ mainContainer:startEventHandling()
 Result:
 
 ![](https://i.imgur.com/VOX9BzY.gif)
-
-GUI.**highlightString**(x, y, width, fromSymbol, indentationWidth, syntaxPatterns, syntaxColorScheme, data)
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *int* | x | Coordinate by x-axis to draw from |
-| *int* | y | Coordinate by y-axis to draw from |
-| *int* | width | Width of highlighting area  |
-| *int* | fromSymbol | Symbol index to draw from |
-| *int* | indentationWidth | Width of indentation that will be added instead on whitespace symbols in string starting |
-| *table* | syntaxPatterns | Patterns for syntax highlighting |
-| *table* | syntaxColorScheme | Color scheme for syntax highlighting |
-| *string* | data | String to highlight |
-
-This method allows you to highlight specified string and draw the result to screen buffer using specified syntax patterns and specified color scheme. This library already comes with a set of patterns and color scheme for Lua syntax (see **Constants**), however you can easily write your own for any other programming language if you wish.
-
-Example of implementation:
-
-```lua
-local GUI = require("GUI")
-local buffer = require("doubleBuffering")
-
---------------------------------------------------------------------------------
-
-buffer.clear(0x1E1E1E)
-
--- Open file and read it's lines
-local y = 1
-for line in io.lines("/lib/advancedLua.lua") do
-	-- Replace tab symbols to 2 whitespaces and Windows line endings to UNIX line endings
-	line = line:gsub("\t", "  "):gsub("\r\n", "")
-	-- Highlight result
-	GUI.highlightString(3, y, buffer.getWidth(), 1, 2, GUI.LUA_SYNTAX_PATTERNS, GUI.LUA_SYNTAX_COLOR_SCHEME, line)
-	
-	y = y + 1
-	if y > buffer.getHeight() then
-		break
-	end
-end
-
-buffer.draw(true)
-```
-
-Result:
-
-![](https://i.imgur.com/kYRHeMu.png)
 
 Ready-to-use widgets
 ======
