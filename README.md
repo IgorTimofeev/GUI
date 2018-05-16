@@ -248,7 +248,7 @@ local mainContainer = GUI.fullScreenContainer()
 local myObject = mainContainer:addChild(GUI.object(3, 2, 50, 10))
 -- Create own :draw() method and make it render green rectangle
 myObject.draw = function(object)
-	buffer.square(object.x, object.y, object.width, object.height, 0x33FF80, 0x0, " ")
+	buffer.drawRectangle(object.x, object.y, object.width, object.height, 0x33FF80, 0x0, " ")
 end
 
 --------------------------------------------------------------------------------
@@ -375,7 +375,7 @@ for line in io.lines("/lib/advancedLua.lua") do
 	end
 end
 
-buffer.draw(true)
+buffer.drawChanges(true)
 ```
 
 Result:

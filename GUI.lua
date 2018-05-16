@@ -1,21 +1,16 @@
 
--- Detailed documentation can be found here:
--- https://github.com/IgorTimofeev/GUI/blob/master/README.md
-
------------------------------------------------------------------------
-
 require("advancedLua")
 local component = require("component")
 local computer = require("computer")
 local keyboard = require("keyboard")
-local fs = require("filesystem")
+local filesystem = require("filesystem")
 local unicode = require("unicode")
 local event = require("event")
 local color = require("color")
 local image = require("image")
 local buffer = require("doubleBuffering")
 
------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
 
 local GUI = {
 	ALIGNMENT_HORIZONTAL_LEFT = 1,
@@ -108,7 +103,7 @@ local GUI = {
 	},
 }
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function objectDraw(object)
 	return object
@@ -124,7 +119,7 @@ function GUI.object(x, y, width, height)
 	}
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 function GUI.isPointInside(object, x, y)
 	return
@@ -133,7 +128,6 @@ function GUI.isPointInside(object, x, y)
 		y >= object.y and
 		y <= object.y + object.height - 1
 end
-
 
 function GUI.setAlignment(object, horizontalAlignment, verticalAlignment)
 	object.horizontalAlignment, object.verticalAlignment = horizontalAlignment, verticalAlignment
@@ -176,7 +170,7 @@ function GUI.getMarginCoordinates(x, y, horizontalAlignment, verticalAlignment, 
 	return x, y
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function containerObjectIndexOf(object)
 	if not object.parent then error("Object doesn't have a parent container") end
@@ -233,7 +227,7 @@ local function containerObjectSelfDelete(object)
 	table.remove(object.parent.children, containerObjectIndexOf(object))
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function containerObjectAnimationStart(animation, duration)
 	animation.position = 0
@@ -345,7 +339,7 @@ end
 
 local function containerDrawOnScreen(container, ...)
 	container:draw()
-	buffer.draw(...)
+	buffer.drawChanges(...)
 end
 
 local function containerHandler(isScreenEvent, mainContainer, currentContainer, intersectionX1, intersectionY1, intersectionX2, intersectionY2, e1, e2, e3, e4, ...)
@@ -502,7 +496,7 @@ function GUI.fullScreenContainer()
 	return GUI.container(1, 1, buffer.getResolution())
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function buttonPlayAnimation(button, onFinish)
 	button.animationStarted = true
@@ -587,13 +581,13 @@ local function buttonGetColors(button)
 end
 
 local function buttonDrawText(button, textColor)
-	buffer.text(math.floor(button.x + button.width / 2 - unicode.len(button.text) / 2), math.floor(button.y + button.height / 2), textColor, button.text)
+	buffer.drawText(math.floor(button.x + button.width / 2 - unicode.len(button.text) / 2), math.floor(button.y + button.height / 2), textColor, button.text)
 end
 
 local function buttonDraw(button)
 	local backgroundColor, textColor = buttonGetColors(button)
 	if backgroundColor then
-		buffer.square(button.x, button.y, button.width, button.height, backgroundColor, textColor, " ", button.colors.transparency)
+		buffer.drawRectangle(button.x, button.y, button.width, button.height, backgroundColor, textColor, " ", button.colors.transparency)
 	end
 
 	buttonDrawText(button, textColor)
@@ -602,7 +596,7 @@ end
 local function framedButtonDraw(button)
 	local backgroundColor, textColor = buttonGetColors(button)
 	if backgroundColor then
-		buffer.frame(button.x, button.y, button.width, button.height, backgroundColor)
+		buffer.drawFrame(button.x, button.y, button.width, button.height, backgroundColor)
 	end
 
 	buttonDrawText(button, textColor)
@@ -614,17 +608,17 @@ local function roundedButtonDraw(button)
 	if backgroundColor then
 		local x2, y2 = button.x + button.width - 1, button.y + button.height - 1
 		if button.height > 1 then
-			buffer.text(button.x + 1, button.y, backgroundColor, string.rep("▄", button.width - 2))
-			buffer.text(button.x, button.y, backgroundColor, "⣠")
-			buffer.text(x2, button.y, backgroundColor, "⣄")
+			buffer.drawText(button.x + 1, button.y, backgroundColor, string.rep("▄", button.width - 2))
+			buffer.drawText(button.x, button.y, backgroundColor, "⣠")
+			buffer.drawText(x2, button.y, backgroundColor, "⣄")
 			
-			buffer.square(button.x, button.y + 1, button.width, button.height - 2, backgroundColor, textColor, " ")
+			buffer.drawRectangle(button.x, button.y + 1, button.width, button.height - 2, backgroundColor, textColor, " ")
 			
-			buffer.text(button.x + 1, y2, backgroundColor, string.rep("▀", button.width - 2))
-			buffer.text(button.x, y2, backgroundColor, "⠙")
-			buffer.text(x2, y2, backgroundColor, "⠋")
+			buffer.drawText(button.x + 1, y2, backgroundColor, string.rep("▀", button.width - 2))
+			buffer.drawText(button.x, y2, backgroundColor, "⠙")
+			buffer.drawText(x2, y2, backgroundColor, "⠋")
 		else
-			buffer.square(button.x, button.y, button.width, button.height, backgroundColor, textColor, " ")
+			buffer.drawRectangle(button.x, button.y, button.width, button.height, backgroundColor, textColor, " ")
 			GUI.roundedCorners(button.x, button.y, button.width, button.height, backgroundColor)
 		end
 	end
@@ -703,10 +697,10 @@ function GUI.adaptiveRoundedButton(...)
 	return button
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function drawPanel(object)
-	buffer.square(object.x, object.y, object.width, object.height, object.colors.background, 0x000000, " ", object.colors.transparency)
+	buffer.drawRectangle(object.x, object.y, object.width, object.height, object.colors.background, 0x000000, " ", object.colors.transparency)
 	return object
 end
 
@@ -722,7 +716,7 @@ function GUI.panel(x, y, width, height, color, transparency)
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function drawLabel(object)
 	local xText, yText = GUI.getAlignmentCoordinates(
@@ -735,7 +729,7 @@ local function drawLabel(object)
 		unicode.len(object.text),
 		1
 	)
-	buffer.text(math.floor(xText), math.floor(yText), object.colors.text, object.text)
+	buffer.drawText(math.floor(xText), math.floor(yText), object.colors.text, object.text)
 	return object
 end
 
@@ -751,10 +745,10 @@ function GUI.label(x, y, width, height, textColor, text)
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function drawImage(object)
-	buffer.image(object.x, object.y, object.image)
+	buffer.drawImage(object.x, object.y, object.image)
 	return object
 end
 
@@ -765,7 +759,7 @@ function GUI.image(x, y, image)
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 function GUI.actionButtons(x, y, fatSymbol)
 	local symbol = fatSymbol and "⬤" or "●"
@@ -778,10 +772,10 @@ function GUI.actionButtons(x, y, fatSymbol)
 	return container
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function menuDraw(menu)
-	buffer.square(menu.x, menu.y, menu.width, 1, menu.colors.default.background, menu.colors.default.text, " ", menu.colors.transparency)
+	buffer.drawRectangle(menu.x, menu.y, menu.width, 1, menu.colors.default.background, menu.colors.default.text, " ", menu.colors.transparency)
 	menu:reimplementedDraw()
 end
 
@@ -829,21 +823,21 @@ function GUI.menu(x, y, width, backgroundColor, textColor, backgroundPressedColo
 	return menu
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function drawProgressBar(object)
 	local activeWidth = math.floor(math.min(object.value, 100) / 100 * object.width)
 	if object.thin then
-		buffer.text(object.x, object.y, object.colors.passive, string.rep("━", object.width))
-		buffer.text(object.x, object.y, object.colors.active, string.rep("━", activeWidth))
+		buffer.drawText(object.x, object.y, object.colors.passive, string.rep("━", object.width))
+		buffer.drawText(object.x, object.y, object.colors.active, string.rep("━", activeWidth))
 	else
-		buffer.square(object.x, object.y, object.width, object.height, object.colors.passive, 0x0, " ")
-		buffer.square(object.x, object.y, activeWidth, object.height, object.colors.active, 0x0, " ")
+		buffer.drawRectangle(object.x, object.y, object.width, object.height, object.colors.passive, 0x0, " ")
+		buffer.drawRectangle(object.x, object.y, activeWidth, object.height, object.colors.active, 0x0, " ")
 	end
 
 	if object.showValue then
 		local stringValue = (object.valuePrefix or "") .. object.value .. (object.valuePostfix or "")
-		buffer.text(math.floor(object.x + object.width / 2 - unicode.len(stringValue) / 2), object.y + 1, object.colors.value, stringValue)
+		buffer.drawText(math.floor(object.x + object.width / 2 - unicode.len(stringValue) / 2), object.y + 1, object.colors.value, stringValue)
 	end
 
 	return object
@@ -863,25 +857,25 @@ function GUI.progressBar(x, y, width, activeColor, passiveColor, valueColor, val
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 function GUI.windowShadow(x, y, width, height, transparency, thin)
 	if thin then
-		buffer.square(x + width, y + 1, 1, height - 1, 0x000000, 0x000000, " ", transparency)
-		buffer.text(x + 1, y + height, 0x000000, string.rep("▀", width), transparency)
-		buffer.text(x + width, y, 0x000000, "▄", transparency)
+		buffer.drawRectangle(x + width, y + 1, 1, height - 1, 0x000000, 0x000000, " ", transparency)
+		buffer.drawText(x + 1, y + height, 0x000000, string.rep("▀", width), transparency)
+		buffer.drawText(x + width, y, 0x000000, "▄", transparency)
 	else
-		buffer.square(x + width, y + 1, 2, height, 0x000000, 0x000000, " ", transparency)
-		buffer.square(x + 2, y + height, width - 2, 1, 0x000000, 0x000000, " ", transparency)
+		buffer.drawRectangle(x + width, y + 1, 2, height, 0x000000, 0x000000, " ", transparency)
+		buffer.drawRectangle(x + 2, y + height, width - 2, 1, 0x000000, 0x000000, " ", transparency)
 	end
 end
 
 function GUI.roundedCorners(x, y, width, height, color, transparency)
-	buffer.text(x - 1, y, color, "⠰", transparency)
-	buffer.text(x + width, y, color, "⠆", transparency)
+	buffer.drawText(x - 1, y, color, "⠰", transparency)
+	buffer.drawText(x + width, y, color, "⠆", transparency)
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 function GUI.error(...)
 	local args = {...}
@@ -920,7 +914,7 @@ function GUI.error(...)
 	button.onTouch = function()
 		mainContainer:stopEventHandling()
 		buffer.paste(mainContainer.x, mainContainer.y, oldPixels)
-		buffer.draw()
+		buffer.drawChanges()
 	end
 
 	mainContainer.eventHandler = function(mainContainer, object, e1, e2, e3, e4, ...)
@@ -934,7 +928,7 @@ function GUI.error(...)
 	mainContainer:startEventHandling()
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function codeViewDraw(codeView)
 	local toLine, colorScheme, patterns = codeView.fromLine + codeView.height - 1, codeView.syntaxColorScheme, codeView.syntaxPatterns
@@ -943,19 +937,19 @@ local function codeViewDraw(codeView)
 	codeView.codeAreaPosition = codeView.x + codeView.lineNumbersWidth
 	codeView.codeAreaWidth = codeView.width - codeView.lineNumbersWidth
 	-- Line numbers 
-	buffer.square(codeView.x, codeView.y, codeView.lineNumbersWidth, codeView.height, colorScheme.lineNumbersBackground, colorScheme.lineNumbersText, " ")	
+	buffer.drawRectangle(codeView.x, codeView.y, codeView.lineNumbersWidth, codeView.height, colorScheme.lineNumbersBackground, colorScheme.lineNumbersText, " ")	
 	-- Background
-	buffer.square(codeView.codeAreaPosition, codeView.y, codeView.codeAreaWidth, codeView.height, colorScheme.background, colorScheme.text, " ")
+	buffer.drawRectangle(codeView.codeAreaPosition, codeView.y, codeView.codeAreaWidth, codeView.height, colorScheme.background, colorScheme.text, " ")
 	-- Line numbers texts
 	local y = codeView.y
 	for line = codeView.fromLine, toLine do
 		if codeView.lines[line] then
 			local text = tostring(line)
 			if codeView.highlights[line] then
-				buffer.square(codeView.x, y, codeView.lineNumbersWidth, 1, codeView.highlights[line], colorScheme.text, " ", 0.3)
-				buffer.square(codeView.codeAreaPosition, y, codeView.codeAreaWidth, 1, codeView.highlights[line], colorScheme.text, " ")
+				buffer.drawRectangle(codeView.x, y, codeView.lineNumbersWidth, 1, codeView.highlights[line], colorScheme.text, " ", 0.3)
+				buffer.drawRectangle(codeView.codeAreaPosition, y, codeView.codeAreaWidth, 1, codeView.highlights[line], colorScheme.text, " ")
 			end
-			buffer.text(codeView.codeAreaPosition - unicode.len(text) - 1, y, colorScheme.lineNumbersText, text)
+			buffer.drawText(codeView.codeAreaPosition - unicode.len(text) - 1, y, colorScheme.lineNumbersText, text)
 			y = y + 1
 		else
 			break
@@ -963,7 +957,7 @@ local function codeViewDraw(codeView)
 	end
 
 	local function drawUpperSelection(y, selectionIndex)
-		buffer.square(
+		buffer.drawRectangle(
 			codeView.codeAreaPosition + codeView.selections[selectionIndex].from.symbol - codeView.fromSymbol + 1,
 			y + codeView.selections[selectionIndex].from.line - codeView.fromLine,
 			codeView.codeAreaWidth - codeView.selections[selectionIndex].from.symbol + codeView.fromSymbol - 1,
@@ -973,7 +967,7 @@ local function codeViewDraw(codeView)
 	end
 
 	local function drawLowerSelection(y, selectionIndex)
-		buffer.square(
+		buffer.drawRectangle(
 			codeView.codeAreaPosition,
 			y + codeView.selections[selectionIndex].from.line - codeView.fromLine,
 			codeView.selections[selectionIndex].to.symbol - codeView.fromSymbol + 2,
@@ -990,7 +984,7 @@ local function codeViewDraw(codeView)
 			y = codeView.y
 			local dy = codeView.selections[selectionIndex].to.line - codeView.selections[selectionIndex].from.line
 			if dy == 0 then
-				buffer.square(
+				buffer.drawRectangle(
 					codeView.codeAreaPosition + codeView.selections[selectionIndex].from.symbol - codeView.fromSymbol + 1,
 					y + codeView.selections[selectionIndex].from.line - codeView.fromLine,
 					codeView.selections[selectionIndex].to.symbol - codeView.selections[selectionIndex].from.symbol + 1,
@@ -1003,7 +997,7 @@ local function codeViewDraw(codeView)
 			else
 				drawUpperSelection(y, selectionIndex); y = y + 1
 				for i = 1, dy - 1 do
-					buffer.square(codeView.codeAreaPosition, y + codeView.selections[selectionIndex].from.line - codeView.fromLine, codeView.codeAreaWidth, 1, codeView.selections[selectionIndex].color or colorScheme.selection, colorScheme.text, " "); y = y + 1
+					buffer.drawRectangle(codeView.codeAreaPosition, y + codeView.selections[selectionIndex].from.line - codeView.fromLine, codeView.codeAreaWidth, 1, codeView.selections[selectionIndex].color or colorScheme.selection, colorScheme.text, " "); y = y + 1
 				end
 
 				drawLowerSelection(y, selectionIndex)
@@ -1028,7 +1022,7 @@ local function codeViewDraw(codeView)
 					codeView.lines[i]
 				)
 			else
-				buffer.text(codeView.codeAreaPosition - codeView.fromSymbol + 2, y, colorScheme.text, codeView.lines[i])
+				buffer.drawText(codeView.codeAreaPosition - codeView.fromSymbol + 2, y, colorScheme.text, codeView.lines[i])
 			end
 
 			y = y + 1
@@ -1087,12 +1081,12 @@ function GUI.codeView(x, y, width, height, fromSymbol, fromLine, maximumLineLeng
 	return codeView
 end 
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function colorSelectorDraw(colorSelector)
 	local overlayColor = colorSelector.color < 0x7FFFFF and 0xFFFFFF or 0x000000
 		
-	buffer.square(
+	buffer.drawRectangle(
 		colorSelector.x,
 		colorSelector.y,
 		colorSelector.width,
@@ -1103,10 +1097,10 @@ local function colorSelectorDraw(colorSelector)
 	)
 	
 	if colorSelector.height > 1 and colorSelector.drawLine then
-		buffer.text(colorSelector.x, colorSelector.y + colorSelector.height - 1, overlayColor, string.rep("▄", colorSelector.width), 0.8)
+		buffer.drawText(colorSelector.x, colorSelector.y + colorSelector.height - 1, overlayColor, string.rep("▄", colorSelector.width), 0.8)
 	end
 	
-	buffer.text(colorSelector.x + 1, colorSelector.y + math.floor(colorSelector.height / 2), overlayColor, string.limit(colorSelector.text, colorSelector.width - 2))
+	buffer.drawText(colorSelector.x + 1, colorSelector.y + math.floor(colorSelector.height / 2), overlayColor, string.limit(colorSelector.text, colorSelector.width - 2))
 	
 	return colorSelector
 end
@@ -1147,7 +1141,7 @@ function GUI.colorSelector(x, y, width, height, color, text)
 	return colorSelector
 end 
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function getAxisValue(number, postfix, roundValues)
 	if roundValues then
@@ -1196,9 +1190,9 @@ local function drawChart(object)
 	local chartX = object.x + object.width - chartWidth
 	for i = 1, #yAxisValues do
 		if object.showYAxisValues then
-			buffer.text(chartX - unicode.len(yAxisValues[i].value) - 2, yAxisValues[i].y, object.colors.axisValue, yAxisValues[i].value)
+			buffer.drawText(chartX - unicode.len(yAxisValues[i].value) - 2, yAxisValues[i].y, object.colors.axisValue, yAxisValues[i].value)
 		end
-		buffer.text(chartX, yAxisValues[i].y, object.colors.helpers, string.rep("─", chartWidth))
+		buffer.drawText(chartX, yAxisValues[i].y, object.colors.helpers, string.rep("─", chartWidth))
 	end
 
 	-- x axis values
@@ -1206,18 +1200,18 @@ local function drawChart(object)
 		value = xMin
 		for x = chartX, chartX + chartWidth - 2, chartWidth * object.xAxisValueInterval do
 			local stringValue = getAxisValue(value, object.xAxisPostfix, object.roundValues)
-			buffer.text(math.floor(x - unicode.len(stringValue) / 2), object.y + object.height - 1, object.colors.axisValue, stringValue)
+			buffer.drawText(math.floor(x - unicode.len(stringValue) / 2), object.y + object.height - 1, object.colors.axisValue, stringValue)
 			value = value + dx * object.xAxisValueInterval
 		end
 		local value = getAxisValue(xMax, object.xAxisPostfix, object.roundValues)
-		buffer.text(object.x + object.width - unicode.len(value), object.y + object.height - 1, object.colors.axisValue, value)
+		buffer.drawText(object.x + object.width - unicode.len(value), object.y + object.height - 1, object.colors.axisValue, value)
 	end
 
 	-- Axis lines
 	for y = object.y, object.y + chartHeight - 1 do
-		buffer.text(chartX - 1, y, object.colors.axis, "┨")
+		buffer.drawText(chartX - 1, y, object.colors.axis, "┨")
 	end
-	buffer.text(chartX - 1, object.y + chartHeight, object.colors.axis, "┗" .. string.rep("┯━", math.floor(chartWidth / 2)))
+	buffer.drawText(chartX - 1, object.y + chartHeight, object.colors.axis, "┗" .. string.rep("┯━", math.floor(chartWidth / 2)))
 
 	local function fillVerticalPart(x1, y1, x2, y2)
 		local dx, dy = x2 - x1, y2 - y1
@@ -1226,14 +1220,14 @@ local function drawChart(object)
 			local step, y = dy / absdx, y1
 			for x = x1, x2, (x1 < x2 and 1 or -1) do
 				local yFloor = math.floor(y)
-				buffer.semiPixelSquare(math.floor(x), yFloor, 1, math.floor(object.y + chartHeight) * 2 - yFloor - 1, object.colors.chart)
+				buffer.drawSemiPixelRectangle(math.floor(x), yFloor, 1, math.floor(object.y + chartHeight) * 2 - yFloor - 1, object.colors.chart)
 				y = y + step
 			end
 		else
 			local step, x = dx / absdy, x1
 			for y = y1, y2, (y1 < y2 and 1 or -1) do
 				local yFloor = math.floor(y)
-				buffer.semiPixelSquare(math.floor(x), yFloor, 1, math.floor(object.y + chartHeight) * 2 - yFloor - 1, object.colors.chart)
+				buffer.drawSemiPixelRectangle(math.floor(x), yFloor, 1, math.floor(object.y + chartHeight) * 2 - yFloor - 1, object.colors.chart)
 				x = x + step
 			end
 		end
@@ -1248,7 +1242,7 @@ local function drawChart(object)
 		if object.fillChartArea then
 			fillVerticalPart(x, y, xNext, yNext)
 		else
-			buffer.semiPixelLine(x, y, xNext, yNext, object.colors.chart)
+			buffer.drawSemiPixelLine(x, y, xNext, yNext, object.colors.chart)
 		end
 	end
 
@@ -1272,7 +1266,7 @@ function GUI.chart(x, y, width, height, axisColor, axisValueColor, axisHelpersCo
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function dropDownMenuItemDraw(item)
 	local yText = item.y + math.floor(item.height / 2)
@@ -1282,17 +1276,17 @@ local function dropDownMenuItemDraw(item)
 
 		if item.pressed then
 			textColor = item.parent.parent.colors.pressed.text
-			buffer.square(item.x, item.y, item.width, item.height, item.parent.parent.colors.pressed.background, textColor, " ")
+			buffer.drawRectangle(item.x, item.y, item.width, item.height, item.parent.parent.colors.pressed.background, textColor, " ")
 		elseif item.disabled then
 			textColor = item.parent.parent.colors.disabled.text
 		end
 
-		buffer.text(item.x + 1, yText, textColor, item.text)
+		buffer.drawText(item.x + 1, yText, textColor, item.text)
 		if item.shortcut then
-			buffer.text(item.x + item.width - unicode.len(item.shortcut) - 1, yText, textColor, item.shortcut)
+			buffer.drawText(item.x + item.width - unicode.len(item.shortcut) - 1, yText, textColor, item.shortcut)
 		end
 	else
-		buffer.text(item.x, yText, item.parent.parent.colors.separator, string.rep("─", item.width))
+		buffer.drawText(item.x, yText, item.parent.parent.colors.separator, string.rep("─", item.width))
 	end
 
 	return item
@@ -1381,7 +1375,7 @@ local function dropDownMenuScrollDown(menu)
 		end
 	end
 	menu:draw()
-	buffer.draw()
+	buffer.drawChanges()
 end
 
 local function dropDownMenuScrollUp(menu)
@@ -1391,7 +1385,7 @@ local function dropDownMenuScrollUp(menu)
 		end
 	end
 	menu:draw()
-	buffer.draw()
+	buffer.drawChanges()
 end
 
 local function dropDownMenuEventHandler(mainContainer, object, e1, e2, e3, e4, e5)
@@ -1413,7 +1407,7 @@ local function dropDownMenuDraw(menu)
 		menu.oldPixels = buffer.copy(menu.x, menu.y, menu.width + 1, menu.height + 1)
 	end
 
-	buffer.square(menu.x, menu.y, menu.width, menu.height, menu.colors.default.background, menu.colors.default.text, " ", menu.colors.transparency.background)
+	buffer.drawRectangle(menu.x, menu.y, menu.width, menu.height, menu.colors.default.background, menu.colors.default.text, " ", menu.colors.transparency.background)
 	containerDraw(menu)
 	GUI.windowShadow(menu.x, menu.y, menu.width, menu.height, menu.colors.transparency.shadow, true)
 
@@ -1427,7 +1421,7 @@ local function dropDownMenuShow(menu)
 	mainContainer:addChild(GUI.object(1, 1, mainContainer.width, mainContainer.height)).eventHandler = function(mainContainer, object, e1)
 		if e1 == "touch" then
 			buffer.paste(menu.x, menu.y, menu.oldPixels)
-			buffer.draw()
+			buffer.drawChanges()
 			mainContainer:stopEventHandling()
 		end
 	end
@@ -1441,7 +1435,7 @@ local function dropDownMenuShow(menu)
 		
 		if not item.subMenu then
 			buffer.paste(menu.x, menu.y, menu.oldPixels)
-			buffer.draw()
+			buffer.drawChanges()
 		end
 		menu.oldPixels = nil
 
@@ -1498,7 +1492,7 @@ function GUI.dropDownMenu(x, y, width, maximumHeight, itemHeight, backgroundColo
 	return menu
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function contextMenuCalculate(menu)
 	local widestItem, widestShortcut = 0, 0
@@ -1571,12 +1565,12 @@ function GUI.contextMenu(x, y, backgroundColor, textColor, backgroundPressedColo
 	return menu
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function drawComboBox(object)
-	buffer.square(object.x, object.y, object.width, object.height, object.colors.default.background, object.colors.default.text, " ")
+	buffer.drawRectangle(object.x, object.y, object.width, object.height, object.colors.default.background, object.colors.default.text, " ")
 	if object.dropDownMenu.itemsContainer.children[object.selectedItem] then
-		buffer.text(object.x + 1, math.floor(object.y + object.height / 2), object.colors.default.text, string.limit(object.dropDownMenu.itemsContainer.children[object.selectedItem].text, object.width - object.height - 2, "right"))
+		buffer.drawText(object.x + 1, math.floor(object.y + object.height / 2), object.colors.default.text, string.limit(object.dropDownMenu.itemsContainer.children[object.selectedItem].text, object.width - object.height - 2, "right"))
 	end
 	GUI.button(object.x + object.width - object.height * 2 + 1, object.y, object.height * 2 - 1, object.height, object.colors.arrow.background, object.colors.arrow.text, 0x0, 0x0, object.pressed and "▲" or "▼"):draw()
 
@@ -1624,7 +1618,7 @@ local function comboBoxSelect(object)
 	object.selectedItem = selectedItem or object.selectedItem
 	object.pressed = false
 	object:draw()
-	buffer.draw()
+	buffer.drawChanges()
 
 	return object
 end
@@ -1690,7 +1684,7 @@ function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBa
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function switchAndLabelDraw(switchAndLabel)
 	switchAndLabel.label.width = switchAndLabel.width
@@ -1715,7 +1709,7 @@ function GUI.switchAndLabel(x, y, width, switchWidth, activeColor, passiveColor,
 	return switchAndLabel 
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function sliderDraw(object)
 	-- На всякий случай делаем значение не меньше минимального и не больше максимального
@@ -1723,19 +1717,19 @@ local function sliderDraw(object)
 	
 	if object.showMaximumAndMinimumValues then
 		local stringMaximumValue, stringMinimumValue = tostring(object.roundValues and math.floor(object.maximumValue) or math.roundToDecimalPlaces(object.maximumValue, 2)), tostring(object.roundValues and math.floor(object.minimumValue) or math.roundToDecimalPlaces(object.minimumValue, 2))
-		buffer.text(object.x - unicode.len(stringMinimumValue) - 1, object.y, object.colors.value, stringMinimumValue)
-		buffer.text(object.x + object.width + 1, object.y, object.colors.value, stringMaximumValue)
+		buffer.drawText(object.x - unicode.len(stringMinimumValue) - 1, object.y, object.colors.value, stringMinimumValue)
+		buffer.drawText(object.x + object.width + 1, object.y, object.colors.value, stringMaximumValue)
 	end
 
 	if object.currentValuePrefix or object.currentValuePostfix then
 		local stringCurrentValue = (object.currentValuePrefix or "") .. (object.roundValues and math.floor(object.value) or math.roundToDecimalPlaces(object.value, 2)) .. (object.currentValuePostfix or "")
-		buffer.text(math.floor(object.x + object.width / 2 - unicode.len(stringCurrentValue) / 2), object.y + 1, object.colors.value, stringCurrentValue)
+		buffer.drawText(math.floor(object.x + object.width / 2 - unicode.len(stringCurrentValue) / 2), object.y + 1, object.colors.value, stringCurrentValue)
 	end
 
 	local activeWidth = math.round((object.value - object.minimumValue) / (object.maximumValue - object.minimumValue) * object.width)
-	buffer.text(object.x, object.y, object.colors.passive, string.rep("━", object.width))
-	buffer.text(object.x, object.y, object.colors.active, string.rep("━", activeWidth))
-	buffer.text(activeWidth >= object.width and object.x + activeWidth - 1 or object.x + activeWidth, object.y, object.colors.pipe, "⬤")
+	buffer.drawText(object.x, object.y, object.colors.passive, string.rep("━", object.width))
+	buffer.drawText(object.x, object.y, object.colors.active, string.rep("━", activeWidth))
+	buffer.drawText(activeWidth >= object.width and object.x + activeWidth - 1 or object.x + activeWidth, object.y, object.colors.pipe, "⬤")
 
 	return object
 end
@@ -1777,19 +1771,19 @@ function GUI.slider(x, y, width, activeColor, passiveColor, pipeColor, valueColo
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function switchDraw(switch)
-	buffer.text(switch.x - 1, switch.y, switch.colors.passive, "⠰")
-	buffer.square(switch.x, switch.y, switch.width, 1, switch.colors.passive, 0x000000, " ")
-	buffer.text(switch.x + switch.width, switch.y, switch.colors.passive, "⠆")
+	buffer.drawText(switch.x - 1, switch.y, switch.colors.passive, "⠰")
+	buffer.drawRectangle(switch.x, switch.y, switch.width, 1, switch.colors.passive, 0x000000, " ")
+	buffer.drawText(switch.x + switch.width, switch.y, switch.colors.passive, "⠆")
 
-	buffer.text(switch.x - 1, switch.y, switch.colors.active, "⠰")
-	buffer.square(switch.x, switch.y, switch.pipePosition - 1, 1, switch.colors.active, 0x000000, " ")
+	buffer.drawText(switch.x - 1, switch.y, switch.colors.active, "⠰")
+	buffer.drawRectangle(switch.x, switch.y, switch.pipePosition - 1, 1, switch.colors.active, 0x000000, " ")
 
-	buffer.text(switch.x + switch.pipePosition - 2, switch.y, switch.colors.pipe, "⠰")
-	buffer.square(switch.x + switch.pipePosition - 1, switch.y, 2, 1, switch.colors.pipe, 0x000000, " ")
-	buffer.text(switch.x + switch.pipePosition + 1, switch.y, switch.colors.pipe, "⠆")
+	buffer.drawText(switch.x + switch.pipePosition - 2, switch.y, switch.colors.pipe, "⠰")
+	buffer.drawRectangle(switch.x + switch.pipePosition - 1, switch.y, 2, 1, switch.colors.pipe, 0x000000, " ")
+	buffer.drawText(switch.x + switch.pipePosition + 1, switch.y, switch.colors.pipe, "⠆")
 	
 	return switch
 end
@@ -1846,7 +1840,7 @@ function GUI.switch(x, y, width, activeColor, passiveColor, pipeColor, state)
 	return switch
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function layoutCheckCell(layout, column, row)
 	if column < 1 or column > #layout.columnSizes or row < 1 or row > #layout.rowSizes then
@@ -2152,7 +2146,7 @@ local function layoutDraw(layout)
 		local x, y = layout.x, layout.y
 		for j = 1, #layout.columnSizes do
 			for i = 1, #layout.rowSizes do
-				buffer.frame(
+				buffer.drawFrame(
 					math.round(x),
 					math.round(y),
 					math.round(layout.columnSizes[j].calculatedSize),
@@ -2241,7 +2235,7 @@ function GUI.layout(x, y, width, height, columnCount, rowCount)
 	return layout
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function filesystemDialogDraw(filesystemDialog)
 	if filesystemDialog.extensionComboBox.hidden then
@@ -2341,7 +2335,7 @@ local function filesystemDialogShow(filesystemDialog)
 	return filesystemDialog
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 function GUI.addFilesystemDialog(parentContainer, addPanel, ...)
 	local container = GUI.addBackgroundContainer(parentContainer, addPanel, false, nil)
@@ -2389,16 +2383,16 @@ function GUI.addFilesystemDialog(parentContainer, addPanel, ...)
 	return filesystemDialog
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function filesystemChooserDraw(object)
 	local tipWidth = object.height * 2 - 1
 	local y = math.floor(object.y + object.height / 2)
 	
-	buffer.square(object.x, object.y, object.width - tipWidth, object.height, object.colors.background, object.colors.text, " ")
-	buffer.square(object.x + object.width - tipWidth, object.y, tipWidth, object.height, object.pressed and object.colors.tipText or object.colors.tipBackground, object.pressed and object.colors.tipBackground or object.colors.tipText, " ")
-	buffer.text(object.x + object.width - math.floor(tipWidth / 2) - 1, y, object.pressed and object.colors.tipBackground or object.colors.tipText, "…")
-	buffer.text(object.x + 1, y, object.colors.text, string.limit(object.path or object.placeholderText, object.width - tipWidth - 2, "left"))
+	buffer.drawRectangle(object.x, object.y, object.width - tipWidth, object.height, object.colors.background, object.colors.text, " ")
+	buffer.drawRectangle(object.x + object.width - tipWidth, object.y, tipWidth, object.height, object.pressed and object.colors.tipText or object.colors.tipBackground, object.pressed and object.colors.tipBackground or object.colors.tipText, " ")
+	buffer.drawText(object.x + object.width - math.floor(tipWidth / 2) - 1, y, object.pressed and object.colors.tipBackground or object.colors.tipText, "…")
+	buffer.drawText(object.x + 1, y, object.colors.text, string.limit(object.path or object.placeholderText, object.width - tipWidth - 2, "left"))
 
 	return filesystemChooser
 end
@@ -2427,9 +2421,9 @@ local function filesystemChooserEventHandler(mainContainer, object, e1)
 
 		if object.path and #object.path > 0 then
 			-- local path = object.path:gsub("/+", "/")
-			filesystemDialog.filesystemTree.selectedItem = object.IOMode == GUI.IO_MODE_OPEN and object.path or fs.path(object.path)
-			filesystemDialog.input.text = fs.name(object.path)
-			filesystemDialog:expandPath(object.IOMode == GUI.IO_MODE_OPEN and fs.path(object.path) or fs.path(fs.path(object.path)))
+			filesystemDialog.filesystemTree.selectedItem = object.IOMode == GUI.IO_MODE_OPEN and object.path or filesystem.path(object.path)
+			filesystemDialog.input.text = filesystem.name(object.path)
+			filesystemDialog:expandPath(object.IOMode == GUI.IO_MODE_OPEN and filesystem.path(object.path) or filesystem.path(filesystem.path(object.path)))
 		end
 		
 		filesystemDialog.onCancel = function()
@@ -2478,16 +2472,16 @@ function GUI.filesystemChooser(x, y, width, height, backgroundColor, textColor, 
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function resizerDraw(object)
 	local horizontalMode, x, y, symbol = object.width >= object.height
 
 	if horizontalMode then
-		buffer.text(object.x, math.floor(object.y + object.height / 2), object.colors.helper, string.rep("━", object.width))
+		buffer.drawText(object.x, math.floor(object.y + object.height / 2), object.colors.helper, string.rep("━", object.width))
 		
 		if object.lastTouchX then
-			buffer.text(object.lastTouchX, object.lastTouchY, object.colors.arrow, "↑")
+			buffer.drawText(object.lastTouchX, object.lastTouchY, object.colors.arrow, "↑")
 		end
 	else
 		local x = math.floor(object.x + object.width / 2)
@@ -2501,7 +2495,7 @@ local function resizerDraw(object)
 		end
 
 		if object.lastTouchX then
-			buffer.text(object.lastTouchX - 1, object.lastTouchY, object.colors.arrow, "←→")
+			buffer.drawText(object.lastTouchX - 1, object.lastTouchY, object.colors.arrow, "←→")
 		end
 	end
 end
@@ -2541,7 +2535,7 @@ function GUI.resizer(x, y, width, height, helperColor, arrowColor)
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function scrollBarDraw(scrollBar)
 	local isVertical = scrollBar.height > scrollBar.width
@@ -2565,8 +2559,8 @@ local function scrollBarDraw(scrollBar)
 				buffer.set(scrollBar.x, y, background, y >= y1 and y <= y2 and scrollBar.colors.foreground or scrollBar.colors.background, "┃")
 			end
 		else
-			buffer.square(scrollBar.x, scrollBar.y, scrollBar.width, scrollBar.height, scrollBar.colors.background, scrollBar.colors.foreground, " ")
-			buffer.square(
+			buffer.drawRectangle(scrollBar.x, scrollBar.y, scrollBar.width, scrollBar.height, scrollBar.colors.background, scrollBar.colors.foreground, " ")
+			buffer.drawRectangle(
 				scrollBar.x,
 				math.floor(scrollBar.ghostPosition.y + part * scrollBar.ghostPosition.height - halfBarSize),
 				scrollBar.width,
@@ -2591,8 +2585,8 @@ local function scrollBarDraw(scrollBar)
 				buffer.set(x, scrollBar.y, background, x >= x1 and x <= x2 and scrollBar.colors.foreground or scrollBar.colors.background, "⠤")
 			end
 		else
-			buffer.square(scrollBar.x, scrollBar.y, scrollBar.width, scrollBar.height, scrollBar.colors.background, scrollBar.colors.foreground, " ")
-			buffer.square(
+			buffer.drawRectangle(scrollBar.x, scrollBar.y, scrollBar.width, scrollBar.height, scrollBar.colors.background, scrollBar.colors.foreground, " ")
+			buffer.drawRectangle(
 				math.floor(scrollBar.ghostPosition.x + part * scrollBar.ghostPosition.width - halfBarSize),
 				scrollBar.y,
 				barSize,
@@ -2668,14 +2662,14 @@ function GUI.scrollBar(x, y, width, height, backgroundColor, foregroundColor, mi
 	return scrollBar
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function treeDraw(tree)	
 	local y, yEnd, showScrollBar = tree.y, tree.y + tree.height - 1, #tree.items > tree.height
 	local textLimit = tree.width - (showScrollBar and 1 or 0)
 
 	if tree.colors.default.background then
-		buffer.square(tree.x, tree.y, tree.width, tree.height, tree.colors.default.background, tree.colors.default.expandable, " ")
+		buffer.drawRectangle(tree.x, tree.y, tree.width, tree.height, tree.colors.default.background, tree.colors.default.expandable, " ")
 	end
 
 	for i = tree.fromItem, #tree.items do
@@ -2683,7 +2677,7 @@ local function treeDraw(tree)
 
 		if tree.selectedItem == tree.items[i].definition then
 			textColor, arrowColor = tree.colors.selected.any, tree.colors.selected.arrow
-			buffer.square(tree.x, y, tree.width, 1, tree.colors.selected.background, textColor, " ")
+			buffer.drawRectangle(tree.x, y, tree.width, 1, tree.colors.selected.background, textColor, " ")
 		else
 			if tree.items[i].expandable then
 				textColor = tree.colors.default.expandable
@@ -2693,10 +2687,10 @@ local function treeDraw(tree)
 		end
 
 		if tree.items[i].expandable then
-			buffer.text(tree.x + tree.items[i].offset, y, arrowColor, tree.expandedItems[tree.items[i].definition] and "▽" or "▷")
+			buffer.drawText(tree.x + tree.items[i].offset, y, arrowColor, tree.expandedItems[tree.items[i].definition] and "▽" or "▷")
 		end
 
-		buffer.text(tree.x + tree.items[i].offset + 2, y, textColor, unicode.sub(text .. tree.items[i].name, 1, textLimit - tree.items[i].offset - 2))
+		buffer.drawText(tree.x + tree.items[i].offset + 2, y, textColor, unicode.sub(text .. tree.items[i].name, 1, textLimit - tree.items[i].offset - 2))
 
 		y = y + 1
 		if y > yEnd then break end
@@ -2827,17 +2821,17 @@ function GUI.tree(x, y, width, height, backgroundColor, expandableColor, notExpa
 	return tree
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function filesystemTreeUpdateFileListRecursively(tree, path, offset)
 	local list = {}
-	for file in fs.list(path) do
+	for file in filesystem.list(path) do
 		table.insert(list, file)
 	end
 
 	local i, expandables = 1, {}
 	while i <= #list do
-		if fs.isDirectory(path .. list[i]) then
+		if filesystem.isDirectory(path .. list[i]) then
 			table.insert(expandables, list[i])
 			table.remove(list, i)
 		else
@@ -2850,7 +2844,7 @@ local function filesystemTreeUpdateFileListRecursively(tree, path, offset)
 
 	if tree.showMode == GUI.IO_MODE_BOTH or tree.showMode == GUI.IO_MODE_DIRECTORY then
 		for i = 1, #expandables do
-			tree:addItem(fs.name(expandables[i]), path .. expandables[i], offset, true)
+			tree:addItem(filesystem.name(expandables[i]), path .. expandables[i], offset, true)
 
 			if tree.expandedItems[path .. expandables[i]] then
 				filesystemTreeUpdateFileListRecursively(tree, path .. expandables[i], offset + 2)
@@ -2860,7 +2854,7 @@ local function filesystemTreeUpdateFileListRecursively(tree, path, offset)
 
 	if tree.showMode == GUI.IO_MODE_BOTH or tree.showMode == GUI.IO_MODE_FILE then
 		for i = 1, #list do
-			tree:addItem(list[i], path .. list[i], offset, false, tree.extensionFilters and not tree.extensionFilters[fs.extension(path .. list[i], true)] or false)
+			tree:addItem(list[i], path .. list[i], offset, false, tree.extensionFilters and not tree.extensionFilters[filesystem.extension(path .. list[i], true)] or false)
 		end
 	end
 end
@@ -2897,7 +2891,7 @@ function GUI.filesystemTree(...)
 	return tree
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function textBoxCalculate(object)
 	local doubleVerticalOffset = object.offset.vertical * 2
@@ -2932,7 +2926,7 @@ local function textBoxDraw(object)
 	textBoxCalculate(object)
 
 	if object.colors.background then
-		buffer.square(object.x, object.y, object.width, object.height, object.colors.background, object.colors.text, " ", object.colors.transparency)
+		buffer.drawRectangle(object.x, object.y, object.width, object.height, object.colors.background, object.colors.text, " ", object.colors.transparency)
 	end
 
 	local x, y = nil, object.y + object.offset.vertical
@@ -2959,7 +2953,7 @@ local function textBoxDraw(object)
 				1
 			)
 
-			buffer.text(math.floor(x), y, textColor, text)
+			buffer.drawText(math.floor(x), y, textColor, text)
 			y = y + 1
 		else
 			break
@@ -3048,7 +3042,7 @@ function GUI.textBox(x, y, width, height, backgroundColor, textColor, lines, cur
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function inputSetCursorPosition(input, newPosition)
 	if newPosition < 1 then
@@ -3069,7 +3063,7 @@ local function inputSetCursorPosition(input, newPosition)
 end
 
 local function inputTextDrawMethod(x, y, color, text)
-	buffer.text(x, y, color, text)
+	buffer.drawText(x, y, color, text)
 end
 
 local function inputDraw(input)
@@ -3103,7 +3097,7 @@ local function inputDraw(input)
 	end
 
 	if background then
-		buffer.square(input.x, input.y, input.width, input.height, background, foreground, " ", transparency)
+		buffer.drawRectangle(input.x, input.y, input.width, input.height, background, foreground, " ", transparency)
 	end
 
 	local y = input.y + math.floor(input.height / 2)
@@ -3363,22 +3357,22 @@ function GUI.input(x, y, width, height, backgroundColor, textColor, placeholderT
 	return input
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function autoCompleteDraw(object)
 	local y, yEnd = object.y, object.y + object.height - 1
 
-	buffer.square(object.x, object.y, object.width, object.height, object.colors.default.background, object.colors.default.text, " ")
+	buffer.drawRectangle(object.x, object.y, object.width, object.height, object.colors.default.background, object.colors.default.text, " ")
 
 	for i = object.fromItem, object.itemCount do
 		local textColor, textMatchColor = object.colors.default.text, object.colors.default.textMatch
 		if i == object.selectedItem then
-			buffer.square(object.x, y, object.width, 1, object.colors.selected.background, object.colors.selected.text, " ")
+			buffer.drawRectangle(object.x, y, object.width, 1, object.colors.selected.background, object.colors.selected.text, " ")
 			textColor, textMatchColor = object.colors.selected.text, object.colors.selected.textMatch
 		end
 
-		buffer.text(object.x + 1, y, textMatchColor, unicode.sub(object.matchText, 1, object.width - 2))
-		buffer.text(object.x + object.matchTextLength + 1, y, textColor, unicode.sub(object.items[i], object.matchTextLength + 1, object.matchTextLength + object.width - object.matchTextLength - 2))
+		buffer.drawText(object.x + 1, y, textMatchColor, unicode.sub(object.matchText, 1, object.width - 2))
+		buffer.drawText(object.x + object.matchTextLength + 1, y, textColor, unicode.sub(object.items[i], object.matchTextLength + 1, object.matchTextLength + object.width - object.matchTextLength - 2))
 
 		y = y + 1
 		if y > yEnd then
@@ -3536,7 +3530,7 @@ function GUI.autoComplete(x, y, width, maximumHeight, backgroundColor, textColor
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function brailleCanvasDraw(brailleCanvas)
 	local index, background, foreground, symbol
@@ -3610,7 +3604,7 @@ function GUI.brailleCanvas(x, y, width, height)
 	return brailleCanvas
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function paletteShow(palette)
 	local mainContainer = GUI.fullScreenContainer()
@@ -3655,8 +3649,8 @@ function GUI.palette(x, y, startColor)
 	
 	local miniCrest = palette:addChild(GUI.object(52, 1, 5, 1))
 	miniCrest.draw = function(object)
-		buffer.text(object.x, object.y, 0x0, ">")
-		buffer.text(object.x + 4, object.y, 0x0, "<")
+		buffer.drawText(object.x, object.y, 0x0, ">")
+		buffer.drawText(object.x + 4, object.y, 0x0, "<")
 	end
 
 	local colorPanel = palette:addChild(GUI.panel(58, 2, 12, 3, 0x0))
@@ -3786,7 +3780,7 @@ function GUI.palette(x, y, startColor)
 	end
 	
 	local favourites
-	if fs.exists(GUI.PALETTE_CONFIG_PATH) then
+	if filesystem.exists(GUI.PALETTE_CONFIG_PATH) then
 		favourites = table.fromFile(GUI.PALETTE_CONFIG_PATH)
 	else
 		favourites = {}
@@ -3855,7 +3849,7 @@ function GUI.palette(x, y, startColor)
 	return palette
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function textUpdate(object)
 	object.width = unicode.len(object.text)
@@ -3864,7 +3858,7 @@ end
 
 local function textDraw(object)
 	object:update()
-	buffer.text(object.x, object.y, object.color, object.text)
+	buffer.drawText(object.x, object.y, object.color, object.text)
 	return object
 end
 
@@ -3880,7 +3874,7 @@ function GUI.text(x, y, color, text)
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 function GUI.addBackgroundContainer(parentContainer, addPanel, addLayout, title)
 	local container = parentContainer:addChild(GUI.container(1, 1, parentContainer.width, parentContainer.height))
@@ -3911,7 +3905,7 @@ function GUI.addBackgroundContainer(parentContainer, addPanel, addLayout, title)
 	return container
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 function GUI.addPalette(parentContainer, addPanel, color)
 	local container = GUI.addBackgroundContainer(parentContainer, addPanel, false, nil)
@@ -3941,7 +3935,7 @@ function GUI.addPalette(parentContainer, addPanel, color)
 	return palette
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function listUpdate(object)
 	object.backgroundPanel.width, object.backgroundPanel.height = object.width, object.height
@@ -4081,7 +4075,7 @@ function GUI.list(x, y, width, height, itemSize, spacing, backgroundColor, textC
 	return object
 end
 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 function windowDraw(window)
 	containerDraw(window)
@@ -4151,7 +4145,7 @@ function GUI.window(x, y, width, height)
 	return window
 end
 
-------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 
 local function keyAndValueUpdate(object)
 	object.keyLength, object.valueLength = unicode.len(object.key), unicode.len(object.value)
@@ -4160,8 +4154,8 @@ end
 
 local function keyAndValueDraw(object)
 	keyAndValueUpdate(object)
-	buffer.text(object.x, object.y, object.colors.key, object.key)
-	buffer.text(object.x + object.keyLength, object.y, object.colors.value, object.value)
+	buffer.drawText(object.x, object.y, object.colors.key, object.key)
+	buffer.drawText(object.x + object.keyLength, object.y, object.colors.value, object.value)
 end
 
 function GUI.keyAndValue(x, y, keyColor, valueColor, key, value)
@@ -4182,7 +4176,7 @@ function GUI.keyAndValue(x, y, keyColor, valueColor, key, value)
 	return object
 end
 
-------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 
 function GUI.highlightString(x, y, width, fromChar, indentationWidth, patterns, colorScheme, s)
 	fromChar = fromChar or 1
@@ -4234,6 +4228,6 @@ function GUI.highlightString(x, y, width, fromChar, indentationWidth, patterns, 
 	end
 end
 
-------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 
 return GUI
