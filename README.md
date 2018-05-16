@@ -17,8 +17,11 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [Objects](#objects) |
 | [Constants](#constants) |
 | [Standalone methods](#standalone-methods) |
-| [    GUI.error](#guierrorvarargs) |
+| [    GUI.isPointInside](#guiispointinsideobject-x-y-boolean-result) |
+| [    GUI.getAlignmentCoordinates](#guigetalignmentcoordinatesfirstobjectx-firstobjecty-firstobjectwidth-firstobjectheight-firstobjecthorizontalalignment-firstobjectverticalalignment-secondobjectwidth-secondobjectheight-int-x-int-y) |
+| [    GUI.getMarginCoordinates](#guigetalignmentcoordinatesx-y-horizontalalignment-verticalalignment-horizontalmargin-verticalmargin-int-x-int-y) |
 | [    GUI.highlightString](#guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
+| [    GUI.error](#guierrorvarargs) |
 | [    GUI.addPalette](#guiaddpaletteparentcontainer-addpanel-initialcolor-table-palette) |
 | [    GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel--table-filesystemdialog) |
 | [    GUI.addBackgroundContainer](#guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title-table-palette) |
@@ -295,30 +298,6 @@ Standalone methods
 
 The library has several methods that can simplify the development of programs. For example, a context menu, an information window or a palette window.
 
-GUI.**error**(...varargs)
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *varargs* | ... | A lot of parameters having any type that need to be displayed in a window |
-
-This method displays a debug window with text information. The line that is too long will be automatically wrapped. If parameter is a table, then it will be automatically serialized. To close the window, you must hit the Return key or click on the "OK" button.
-
-Example of implementation:
-
-```lua
-local buffer = require("doubleBuffering")
-local GUI = require("GUI")
-
---------------------------------------------------------------------------------
-
-buffer.clear(0x2D2D2D)
-GUI.error("Something went wrong here, my friend")
-```
-
-Result:
-
-![Imgur](http://i.imgur.com/s8mA2FL.png?1)
-
 GUI.**isPointInside**(object, x, y): *boolean* result
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
@@ -329,15 +308,33 @@ GUI.**isPointInside**(object, x, y): *boolean* result
 
 This method checks whether the specified point is inside the boundaries of the specified object. This method is useful in rare cases for manual verification.
 
-GUI.**getAlignmentCoordinates**(object, x, y): *boolean* result
+GUI.**getAlignmentCoordinates**(firstObjectX, firstObjectY, firstObjectWidth, firstObjectHeight, firstObjectHorizontalAlignment, firstObjectVerticalAlignment, secondObjectWidth, secondObjectHeight): *int* x, *int* y
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
-| *table* | object | Pointer to any object |
-| *int* | x | Coordinate by x-axis on screen |
-| *int* | y | Coordinate by y-axis on screen |
+| *int* | firstObjectX | Coordinate by x-axis of first object |
+| *int* | firstObjectY | Coordinate by y-axis of first object |
+| *int* | firstObjectWidth | Width of first object |
+| *int* | firstObjectHeight | Height of first object |
+| *enum* | firstObjectHorizontalAlignment | Horizontal alignment of first object |
+| *enum* | firstObjectVerticalAlignment | Vertical alignment of first object |
+| *int* | secondObjectWidth | Width of second object |
+| *int* | secondObjectHeight | Height of second object |
 
-This method checks whether the specified point is inside the boundaries of the specified object. This method is useful in rare cases for manual verification.
+This method calculates global (screen) coordinates of the second object inside the first, based on coordinates and sizes of both objects. For example, it's used by GUI.**layout**, GUI.**label** and GUI.**textBox**
+
+GUI.**getAlignmentCoordinates**(x, y, horizontalAlignment, verticalAlignment, horizontalMargin, verticalMargin): *int* x, *int* y
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *enum* | horizontalAlignment | Object horizontal alignment |
+| *enum* | verticalAlignment | Object vertical alignment |
+| *int* | horizontalMargin | Object horizontal margin in pixels |
+| *int* | verticalMargin | Object vertical margin in pixels |
+
+This method calculates the global (screen) coordinates inside the object, based on its alignment and pixel margin. For example, it's used by GUI.**layout**
 
 GUI.**highlightString**(x, y, width, fromSymbol, indentationWidth, syntaxPatterns, syntaxColorScheme, data)
 ------------------------------------------------------------------------
@@ -384,6 +381,30 @@ buffer.draw(true)
 Result:
 
 ![](https://i.imgur.com/kYRHeMu.png)
+
+GUI.**error**(...varargs)
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *varargs* | ... | A lot of parameters having any type that need to be displayed in a window |
+
+This method displays a debug window with text information. The line that is too long will be automatically wrapped. If parameter is a table, then it will be automatically serialized. To close the window, you must hit the Return key or click on the "OK" button.
+
+Example of implementation:
+
+```lua
+local buffer = require("doubleBuffering")
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+buffer.clear(0x2D2D2D)
+GUI.error("Something went wrong here, my friend")
+```
+
+Result:
+
+![Imgur](http://i.imgur.com/s8mA2FL.png?1)
 
 GUI.**addPalette**(parentContainer, addPanel, initialColor): *table* palette
 ------------------------------------------------------------------------
