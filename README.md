@@ -150,11 +150,11 @@ The key detail of the event handler is that if the event is a "**screen**" (touc
 
 If the event does not belong to the screen, or the object **does not have** event handler method, the processing of the remaining child elements will continue as always. You can see the logic and the order of event processing in the following image:
 
-![](https://i.imgur.com/9RiUKtl.png)
+![](https://i.imgur.com/eHqIFNN.png)
 
 | Type | Property | Description |
 | ------ | ------ | ------ |
-| *table* | .**children** | Table that contains all child objects of this container | 
+| *table* | .**children** | Table that contains all child objects of this container |
 | *function* | :**addChild**(*table* child, [*int* atIndex]): *table* child| Add specified object to the container as a child. When you do this, the object's global coordinates will become local. If the optional parameter **atIndex** is specified, then the element will be added to the corresponding position in container.**children** table |
 | *function* | :**deleteChildren**([*int* fromIndex, *int* toIndex]): *table* container | Delete all child elements of the container. If the optional parameters of the element indices are specified, the deletion will be performed in the appropriate range |
 | *function* | :**startEventHandling**([*float* delay]): *table* container | Run the event processing for this container and analyse events for all it's child objects. The  **delay** parameter is similar to computer.**pullSignal** one |
