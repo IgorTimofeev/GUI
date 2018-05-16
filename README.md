@@ -24,6 +24,10 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [    GUI.button](#guibutton-x-y-width-height-buttoncolor-textcolor-buttonpressedcolor-textpressedcolor-text--table-button) |
 | [    GUI.actionButtons](#guiactionbuttons-x-y-fat--table-actionbuttons) |
 | [    GUI.input](#guiinput-x-y-width-height-backgroundcolor-textcolor-placeholdertextcolor-backgroundfocusedcolor-textfocusedcolor-text-placeholdertext-erasetextonfocus-textmask--table-input) |
+| [    GUI.slider](#guislider-x-y-width-primarycolor-secondarycolor-pipecolor-valuecolor-minimumvalue-maximumvalue-value-showcornervalues-currentvalueprefix-currentvaluepostfix--table-slider) |
+| [    GUI.switch](#guiswitch-x-y-width-primarycolor-secondarycolor-pipecolor-state--table-switch) |
+| [    GUI.switchAndLabel](#guiswitchandlabel-x-y-width-switchwidth-primarycolor-secondarycolor-pipecolor-textcolor-text-switchstate--table-switchandlabel) |
+
 | [Standalone methods](#objects) |
 
 Installation
@@ -701,6 +705,7 @@ switch2.onStateChanged = function(state)
 end
 
 --------------------------------------------------------------------------------
+
 mainContainer:drawOnScreen(true)
 mainContainer:startEventHandling()
 ```
@@ -708,3 +713,47 @@ mainContainer:startEventHandling()
 Result:
 
 ![Imgur](http://i.imgur.com/prBIAsL.gif)
+
+GUI.**switchAndLabel**( x, y, width, switchWidth, primaryColor, secondaryColor, pipeColor, textColor, text, switchState ): *table* switchAndLabel
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object's coordinate by x-axis |
+| *int* | y | Object's coordinate by y-axis |
+| *int* | width | Total width |
+| *int* | switchWidth | Switch width |
+| *int* | primaryColor | Switch primary color |
+| *int* | secondaryColor | Switch secondary color |
+| *int* | textColor | Label text color |
+| *string* | text | Label text |
+| *boolean* | state | Switch state |
+
+This object is a container containing a label and switch, and is a quick way to visualize the boolean parameters for your programs.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**switch**| Pointer to switch child object |
+| *table* | .**label**| Pointer to label child object |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+mainContainer:addChild(GUI.switchAndLabel(2, 2, 25, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, 0x999999, "Sample text 1:", true))
+mainContainer:addChild(GUI.switchAndLabel(2, 4, 25, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, 0x999999, "Sample text 2:", false))
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](http://i.imgur.com/4zKOla9.gif)
