@@ -258,16 +258,13 @@ This is a rather boring section of the documentation, but it is still necessary 
 | *enum* | GUI.**IO_MODE_BOTH** | - | Mode for working with bothly files and directories |
 | *enum* | GUI.**SIZE_POLICY_ABSOLUTE** | - | Calculation of object's sizes via absolute values |
 | *enum* | GUI.**SIZE_POLICY_RELATIVE** | - | Calculation of object's sizes via relative (percentage) values |
+| *string* | GUI.**PALETTE_CONFIG_PATH** | /lib/.palette.cfg | Path where GUI.**palette** favourites colors are being saved |
+| *table* | GUI.**LUA_SYNTAX_PATTERNS** | - | Required patterns for Lua syntax highlighting by GUI.**highlightString**(...) method |
+| *table* | GUI.**LUA_SYNTAX_COLORS** | - | Default color scheme for Lua syntax highlighting by GUI.**highlightString**(...) method |
 
 Still not tired yet? And now think how I fucked up writing them during the library development. Shitty constants...
 
 ![](https://i.imgur.com/RDg5Qnz.jpg)
-
-| Type | Constant | Value | Description |
-| ------ | ------ | ------ | ------ |
-| *string* | GUI.**PALETTE_CONFIG_PATH** | /lib/.palette.cfg | Path where GUI.**palette** favourites colors are being saved |
-| *table* | GUI.**LUA_SYNTAX_PATTERNS** | - | Required patterns for Lua syntax highlighting by GUI.**highlightString**(...) method |
-| *table* | GUI.**LUA_SYNTAX_COLORS** | - | Default color scheme for Lua syntax highlighting by GUI.**highlightString**(...) method |
 
 Ready-to-use widgets
 ======
@@ -373,15 +370,15 @@ local GUI = require("GUI")
 local mainContainer = GUI.fullScreenContainer()
 mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
 
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [left, top] alighment")):setAlignment(GUI.alignment.horizontal.left, GUI.alignment.vertical.top)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [center, top] alighment")):setAlignment(GUI.alignment.horizontal.center, GUI.alignment.vertical.top)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [right, top] alighment")):setAlignment(GUI.alignment.horizontal.right, GUI.alignment.vertical.top)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [left, center] alighment")):setAlignment(GUI.alignment.horizontal.left, GUI.alignment.vertical.center)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [center, center] alighment")):setAlignment(GUI.alignment.horizontal.center, GUI.alignment.vertical.center)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [right, center] alighment")):setAlignment(GUI.alignment.horizontal.right, GUI.alignment.vertical.center)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [left, bottom] alighment")):setAlignment(GUI.alignment.horizontal.left, GUI.alignment.vertical.bottom)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [center, bottom] alighment")):setAlignment(GUI.alignment.horizontal.center, GUI.alignment.vertical.bottom)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [right, bottom] alighment")):setAlignment(GUI.alignment.horizontal.right, GUI.alignment.vertical.bottom)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [left, top] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [center, top] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [right, top] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_RIGHT, GUI.ALIGNMENT_VERTICAL_TOP)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [left, center] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_CENTER)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [center, center] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_CENTER)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [right, center] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_RIGHT, GUI.ALIGNMENT_VERTICAL_CENTER)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [left, bottom] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_BOTTOM)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [center, bottom] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_BOTTOM)
+mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [right, bottom] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_RIGHT, GUI.ALIGNMENT_VERTICAL_BOTTOM)
 
 --------------------------------------------------------------------------------
 
@@ -614,3 +611,100 @@ mainContainer:startEventHandling()
 Result:
 
 ![Imgur](http://i.imgur.com/njPN0eg.gif)
+
+GUI.**slider**( x, y, width, primaryColor, secondaryColor, pipeColor, valueColor, minimumValue, maximumValue, value, [showCornerValues, currentValuePrefix, currentValuePostfix] ): *table* slider
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object's coordinate by x-axis |
+| *int* | y | Object's coordinate by y-axis |
+| *int* | width | Object's width |
+| *int* | primaryColor | Object's primary color |
+| *int* | secondaryColor | Object's secondary color |
+| *int* | pipeColor | Object's "pipe" color |
+| *int* | valueColor | Object's text value color |
+| *float* | minimumValue | Object's minimum value |
+| *float* | maximumValue | Object's maximum value |
+| *float* | value | Object's current value |
+| [*bool* | showCornerValues] | Do min/max values are needed to be shown at slider's corners |
+| [*string* | currentValuePrefix] | Prefix for value displaying |
+| [*string* | currentValuePostfix] | Postfix for value displaying |
+
+Standard slider is used to select a numerical value from the specified range. The value of the slider is always **float**.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *float* | .**value** | Current slider value variable |
+| *boolean* | .**roundValues** | This property will **visually** round silder values |
+| *callback-function* | .**onValueChanged**()| This function will be called after slider value changing |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+local slider = mainContainer:addChild(GUI.slider(4, 2, 30, 0x66DB80, 0x0, 0xFFFFFF, 0xAAAAAA, 0, 100, 50, true, "Prefix: ", " postfix"))
+slider.roundValues = true
+slider.onValueChanged = function(value)
+	-- Do something when slider's value changed
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](http://i.imgur.com/F7jrTPM.gif)
+
+GUI.**switch**( x, y, width, primaryColor, secondaryColor, pipeColor, state ): *table* switch
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object's coordinate by x-axis |
+| *int* | y | Object's coordinate by y-axis |
+| *int* | width | Object's width |
+| *int* | primaryColor | Object's primary color |
+| *int* | secondaryColor | Object's secondary color |
+| *int* | pipeColor | Object's "pipe" color |
+| *boolean* | state | Object's state |
+
+This is one of my favorite widgets. An animated switch is designed to change the state of anything from true to false and vice versa.
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *boolean* | .**state** | Current switch state variable |
+| *function* | :**setState**(*boolean* state)| Change switch state to specified one |
+| *callback-function* | .**onStateChanged**()| This function will be called when switch state is changed |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+local switch1 = mainContainer:addChild(GUI.switch(3, 2, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, true))
+local switch2 = mainContainer:addChild(GUI.switch(3, 4, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, false))
+switch2.onStateChanged = function(state)
+	GUI.error("Switch state changed!")
+end
+
+--------------------------------------------------------------------------------
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![Imgur](http://i.imgur.com/prBIAsL.gif)
