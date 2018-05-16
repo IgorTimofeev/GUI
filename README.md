@@ -1258,7 +1258,7 @@ local panel = mainContainer:addChild(GUI.panel(3, 2, 30, 10, 0xE1E1E1))
 local resizer = mainContainer:addChild(GUI.resizer(panel.localX + panel.width - 2, panel.localY + math.floor(panel.height / 2 - 2), 3, 4, 0xAAAAAA, 0x0))
 
 -- This function will be called during the "drag" event, when the user moves over the resizer
-resizer.onResize = function(mainContainer, resizer, dragWidth, dragHeight)
+resizer.onResize = function(dragWidth, dragHeight)
 	panel.width = panel.width + dragWidth
 	resizer.localX = resizer.localX + dragWidth
 
@@ -1266,7 +1266,7 @@ resizer.onResize = function(mainContainer, resizer, dragWidth, dragHeight)
 end
 
 -- This function will be called on "drop" event
-resizer.onResizeFinished = function(mainContainer, resizer, dragWidth, dragHeight)
+resizer.onResizeFinished = function()
 	GUI.error("Resize finished!")
 end
 

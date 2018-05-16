@@ -1980,7 +1980,7 @@ local function layoutUpdate(layout)
 	end
 end
 
-local function layoutSetCellPosition(layout, column, row, object)
+local function layoutSetPosition(layout, column, row, object)
 	layoutCheckCell(layout, column, row)
 	object.layoutRow = row
 	object.layoutColumn = column
@@ -1988,28 +1988,28 @@ local function layoutSetCellPosition(layout, column, row, object)
 	return object
 end
 
-local function layoutSetCellDirection(layout, column, row, direction)
+local function layoutSetDirection(layout, column, row, direction)
 	layoutCheckCell(layout, column, row)
 	layout.cells[row][column].direction = direction
 
 	return layout
 end
 
-local function layoutSetCellSpacing(layout, column, row, spacing)
+local function layoutSetSpacing(layout, column, row, spacing)
 	layoutCheckCell(layout, column, row)
 	layout.cells[row][column].spacing = spacing
 
 	return layout
 end
 
-local function layoutSetCellAlignment(layout, column, row, horizontalAlignment, verticalAlignment)
+local function layoutSetAlignment(layout, column, row, horizontalAlignment, verticalAlignment)
 	layoutCheckCell(layout, column, row)
 	layout.cells[row][column].horizontalAlignment, layout.cells[row][column].verticalAlignment = horizontalAlignment, verticalAlignment
 
 	return layout
 end
 
-local function layoutSetCellMargin(layout, column, row, horizontalMargin, verticalMargin)
+local function layoutSetMargin(layout, column, row, horizontalMargin, verticalMargin)
 	layoutCheckCell(layout, column, row)
 	layout.cells[row][column].horizontalMargin = horizontalMargin
 	layout.cells[row][column].verticalMargin = verticalMargin
@@ -2128,7 +2128,7 @@ local function layoutRemoveColumn(layout, column)
 	return layout
 end
 
-local function layoutSetGridSize(layout, columnCount, rowCount)
+local function layoutSetSize(layout, columnCount, rowCount)
 	layout.cells = {}
 	layout.rowSizes = {}
 	layout.columnSizes = {}
@@ -2191,7 +2191,7 @@ local function layoutFitToChildrenSize(layout, column, row)
 	return layout
 end
 
-local function layoutSetCellFitting(layout, column, row, horizontal, vertical, horizontalRemove, verticalRemove)
+local function layoutSetFitting(layout, column, row, horizontal, vertical, horizontalRemove, verticalRemove)
 	layoutCheckCell(layout, column, row)
 	layout.cells[row][column].horizontalFitting = horizontal
 	layout.cells[row][column].verticalFitting = vertical
@@ -2223,21 +2223,21 @@ function GUI.layout(x, y, width, height, columnCount, rowCount)
 	layout.setRowHeight = layoutSetRowHeight
 	layout.setColumnWidth = layoutSetColumnWidth
 
-	layout.setCellPosition = layoutSetCellPosition
-	layout.setCellDirection = layoutSetCellDirection
-	layout.setGridSize = layoutSetGridSize
-	layout.setCellSpacing = layoutSetCellSpacing
-	layout.setCellAlignment = layoutSetCellAlignment
-	layout.setCellMargin = layoutSetCellMargin
+	layout.setPosition = layoutSetPosition
+	layout.setDirection = layoutSetDirection
+	layout.setSize = layoutSetSize
+	layout.setSpacing = layoutSetSpacing
+	layout.setAlignment = layoutSetAlignment
+	layout.setMargin = layoutSetMargin
 	
 	layout.fitToChildrenSize = layoutFitToChildrenSize
-	layout.setCellFitting = layoutSetCellFitting
+	layout.setFitting = layoutSetFitting
 
 	layout.update = layoutUpdate
 	layout.addChild = layoutAddChild
 	layout.draw = layoutDraw
 
-	layoutSetGridSize(layout, columnCount, rowCount)
+	layoutSetSize(layout, columnCount, rowCount)
 
 	return layout
 end
@@ -2513,14 +2513,14 @@ local function resizerEventHandler(mainContainer, object, e1, e2, e3, e4)
 		mainContainer:drawOnScreen()
 	elseif e1 == "drag" and object.lastTouchX then		
 		if object.onResize then
-			object.onResize(mainContainer, object, e3 - object.lastTouchX, e4 - object.lastTouchY)
+			object.onResize(e3 - object.lastTouchX, e4 - object.lastTouchY)
 		end
 		
 		object.lastTouchX, object.lastTouchY = e3, e4
 		mainContainer:drawOnScreen()
 	elseif e1 == "drop" then
 		if object.onResizeFinished then
-			object.onResizeFinished(mainContainer, object)
+			object.onResizeFinished()
 		end
 
 		object.lastTouchX, object.lastTouchY = nil, nil
@@ -3902,7 +3902,7 @@ function GUI.addBackgroundContainer(parentContainer, addPanel, addLayout, title)
 		container.layout:setColumnWidth(1, GUI.SIZE_POLICY_RELATIVE, 0.375)
 		container.layout:setColumnWidth(2, GUI.SIZE_POLICY_RELATIVE, 0.25)
 		container.layout:setColumnWidth(3, GUI.SIZE_POLICY_RELATIVE, 0.375)
-		container.layout:setCellFitting(2, 1, true, false)
+		container.layout:setFitting(2, 1, true, false)
 
 		if title then
 			container.label = container.layout:addChild(GUI.label(1, 1, 1, 1, GUI.COLOR_BACKGROUND_CONTAINER_TITLE, title)):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
@@ -4021,17 +4021,17 @@ local function listAddItem(object, text)
 end
 
 local function listSetAlignment(object, ...)
-	object.itemsLayout:setCellAlignment(1, 1, ...)
+	object.itemsLayout:setAlignment(1, 1, ...)
 	return object
 end
 
 local function listSetSpacing(object, ...)
-	object.itemsLayout:setCellSpacing(1, 1, ...)
+	object.itemsLayout:setSpacing(1, 1, ...)
 	return object
 end
 
 local function listSetDirection(object, ...)
-	object.itemsLayout:setCellDirection(1, 1, ...)
+	object.itemsLayout:setDirection(1, 1, ...)
 	object:update()
 
 	return object
