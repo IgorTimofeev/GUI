@@ -1906,11 +1906,11 @@ GUI.**layout**(x, y, width, height, columnCount, rowCount): *table* layout
 | *int* | rowCount | Layout grid row count |
 
 This is one of the most useful and technically advanced widgets. Layout is an inheritor
- of the GUI.**container** with similar behavior that can automatically calculate position of child objects within itself. For example, if you want to beautifully display a lot of objects without wasting time on manual calculation of coordinates, then layout is made for you. Picture below shows in detail the layout structure of 4x3:
+ of the GUI.**container** with similar behavior that can automatically calculate position of child objects within itself. For example, if you want to beautifully display a lot of objects without wasting time on manual calculation of coordinates, then layout is made for you. Picture below shows in detail the layout structure of 4x2:
 
-![Imgur](http://i.imgur.com/qf91PuM.png)
+![Imgur](https://i.imgur.com/XzD35c5.png)
 
-As you can see, there is 12 cells in this example, each of which can have its own direction, distance between objects, alignment and margin. The boundaries of the cells are **illusive**, so child objects can easily go beyond them, if cell alignment allows it.
+As you can see, there is 8 cells in this example, each of which can have its own direction, distance between objects, alignment and margin. The boundaries of the cells are **illusive**, so child objects can easily go beyond them, if cell alignment allows it.
 
 Each column and row can be assigned its own individual size either in pixels or in relative (percentage) value, so working with layout is fantastically convenient.
 
@@ -1942,4 +1942,4 @@ mainContainer:startEventHandling()
 
 Result:
 
-![](http://i.imgur.com/Rho1RTl.png?1)
+![](https://i.imgur.com/XzD35c5.png)
