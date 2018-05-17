@@ -1896,7 +1896,7 @@ Result:
 Ready-to-use containers
 ======
 
-The widgets are listed below comes with the library and are written on the instructions of this documentation. If you want, you can make absolutely similar or much more technically advanced widgets without any difficulties.
+There are various containers listed below that support all features of GUI.**container**, however they have a special functional and methods
 
 GUI.**layout**(x, y, width, height, columnCount, rowCount): *table* layout
 ------------------------------------------------------------------------
