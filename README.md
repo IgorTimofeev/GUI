@@ -1908,7 +1908,7 @@ GUI.**layout**(x, y, width, height, columnCount, rowCount): *table* layout
 This is one of the most useful and technically advanced widgets. Layout is an inheritor
  of the GUI.**container** with similar behavior that can automatically calculate position of child objects within itself. For example, if you want to beautifully display a lot of objects without wasting time on manual calculation of coordinates, then layout is made for you. Picture below shows in detail the layout structure of 4x2:
 
-![Imgur](https://i.imgur.com/XzD35c5.png)
+![Imgur](https://i.imgur.com/SZotsRj.png)
 
 As you can see, there is 8 cells in this example, each of which can have its own direction, distance between objects, alignment and margin. The boundaries of the cells are **illusive**, so child objects can easily go beyond them, if cell alignment allows it.
 
@@ -1941,5 +1941,3 @@ mainContainer:startEventHandling()
 ```
 
 Result:
-
-![](https://i.imgur.com/XzD35c5.png)
