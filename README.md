@@ -25,7 +25,7 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [    GUI.addPalette](#guiaddpaletteparentcontainer-addpanel-initialcolor-table-palette) |
 | [    GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel--table-filesystemdialog) |
 | [    GUI.addBackgroundContainer](#guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title-table-palette) |
-| [Ready-to-use widgets](#ready-to-use-widgets) |
+| [Ready-to-use objects](#ready-to-use-objects) |
 | [    GUI.panel](#guipanel-x-y-width-height-color-transparency--table-panel) |
 | [    GUI.text](#guitext-x-y-textcolor-text--table-text) |
 | [    GUI.label](#guilabel-x-y-width-height-textcolor-text--table-label) |
@@ -49,6 +49,10 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [    GUI.brailleCanvas](#guibraillecanvas-x-y-width-height--table-braillecanvas) |
 | [    GUI.scrollBar](#guiscrollbar-x-y-width-height-backgroundcolor-foregroundcolor-minimumvalue-maximumvalue-value-shownvaluecount-onscrollvalueincrement-thinhorizontalmode--table-scrollbar) |
 | [    GUI.textBox](#guitextbox-x-y-width-height-backgroundcolor-textcolor-lines-currentline-horizontaloffset-verticaloffset-autowrap-autoheight-table-textbox) |
+| [Ready-to-use containers](#ready-to-use-containers) |
+| [    GUI.layout](#guilayoutx-y-width-height-columncount-rowcount-table-layout) |
+| [    GUI.window](#guilayoutx-y-width-height-columncount-rowcount-table-layout) |
+| [    GUI.palette](#guilayoutx-y-width-height-columncount-rowcount-table-layout) |
 
 Installation
 ======
