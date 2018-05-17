@@ -1905,39 +1905,91 @@ GUI.**layout**(x, y, width, height, columnCount, rowCount): *table* layout
 | *int* | columnCount | Layout grid column count |
 | *int* | rowCount | Layout grid row count |
 
-This is one of the most useful and technically advanced widgets. Layout is an inheritor
+This is one of the most frequently used and technically advanced widgets. Layout is an inheritor
  of the GUI.**container** with similar behavior that can automatically calculate position of child objects within itself. For example, if you want to beautifully display a lot of objects without wasting time on manual calculation of coordinates, then layout is made for you. Picture below shows in detail the layout structure of 4x2:
 
 ![Imgur](https://i.imgur.com/OJ5CEFj.png)
 
-As you can see, there is 8 cells in this example, each of which can have its own direction, distance between objects, alignment and margin. The boundaries of the cells are **illusive**, so child objects can easily go beyond them, if cell alignment allows it.
+As you can see, there are 6 cells in this example: each of them can have its own direction, spacing between objects, alignment, margin and automatic fitting. Cells boundaries are **illusive**, so child objects **can** exist beyond them, if cell alignment allows it.
 
-Each column and row can be assigned its own individual size either in pixels or in relative (percentage) value, so working with layout is fantastically convenient.
+You can assign individual size for each column and row in pixels or as relative (percentage) value, you can change layout grid size and add/remove/resize rows and columns in realtime, you can toggle grid rendering for your comfort, you can even add layouts in each other to group widgets as you want, so working with it is fantastically convenient.
 
 This object has following properties:
 
 | Type | Property | Description |
 | ------ | ------ | ------ |
-| *int* | .**children** | Table that contains all child objects of this container |
+| *int* | .**defaultColumn**| Column of grid cell to which new child objects will be added. Default value is **1** |
+| *int* | .**defaultRow**| Row of grid cell to which new child objects will be added. Default value is **1** |
+| *table* | .**cells**| Three-dismensional table with rows/columns indices. Each .**cells**[row][column] table contains data with cell alignment/direction/spacing/fitting/calculated width and height |
+| *boolean* | .**showGrid**| Toggle grid borders rendering. The default value is **false** |
+| *function* | :**setGridSize**(*int* columnCount, *int* columnCount): *layout* layout | Set size of the layout grid. All objects located outside the range of new size must be assigned to required cells again via :**setCellPosition**(...)  |
+| *function* | :**setColumnWidth**(*int* column, *enum* sizePolicy, *float* size): *layout* layout | Set width of the specified column. The value can be one of two types: GUI.**SIZE_POLICY_ABSOLUTE** or GUI.**SIZE_POLICY_RELATIVE**. In the first case, the width exists as pixels, and does not change when layout size is changed. The second one exists as the percentage width of the column: if you specify a relative value, and there are other columns to the right of the selected column, their relative width will be automatically recalculated to the desired percentage values. Relative width must be a number in **[0.0; 1.0]** range |
+| *function* | :**setRowHeight**(*int* row, *enum* sizePolicy, *float* size): *layout* layout | Set height of the specified row. The behavior of the function is similar to **:setColumnWidth**(...) |
+| *function* | :**addColumn**(*enum* sizePolicy, *float* size): *layout* layout | Add an empty column to layout grid with specified size |
+| *function* | :**addRow**(*enum* sizePolicy, *float* size): *layout* layout | Add an empty row to layout grid with specified size |
+| *function* | :**removeColumn**(*int* column): *layout* layout | Remove specified column from layout grid |
+| *function* | :**removeRow**(*int* row): *layout* layout | Remove specified row from layout grid |
+| *function* | :**setPosition**(*int* column, *int* row, *object* child): *object* child| Assign the specified grid cell to the layout child object. One cell can contain as many objects as you want |
+| *function* | :**setDirection**(*int* column, *int* row, *enum* direction): *layout* layout | Set grid cell orientation (direction) of the child objects positioning. You can use **GUI.DIRECTION_HORIZONTAL** or **GUI.DIRECTION_VERTICAL** |
+| *function* | :**setAlignment**(*int* column, *int* row, *enum* horizontalAlignment, *enum* verticalAlignment): *layout* layout | Assign the method for aligning child objects to the grid cell borders. Following values and any combination of them can be used: GUI.**ALIGNMENT_HORIZONTAL_LEFT**, GUI.**ALIGNMENT_HORIZONTAL_CENTER**, GUI.**ALIGNMENT_HORIZONTAL_RIGHT**, GUI.**ALIGNMENT_VERTICAL_TOP**, GUI.**ALIGNMENT_VERTICAL_CENTER** or GUI.**ALIGNMENT_VERTICAL_BOTTOM** |
+| *function* | :**setSpacing**(*int* column, *int* row, *int* spacing): *layout* layout | Assign the specified grid cell distance in pixels between child objects. The default value is **1** |
+| *function* | :**setMargin**(*int* column, *int* row, *int* horizontalMargin, *int* verticalMargin): *layout* layout | Assign the specified grid cell indents (margins) in pixels, depending on the current **alignment** of this cell |
+| *function* | :**setFitting**(*int* column, *int* row, *int* horizontalFitting, *int* verticalFitting [, *int* horizontalOffset, *int* verticalOffset] ): *layout* layout | Assign the specified grid cell automatic resizing of child objects by horizonal, vertical or both directions. By default new child sizes will be equal the cell size. If optional parameters are specified, then it is possible to set an size reducing, i.e. the size of objects will be equal to **Cell size - Offset value** |
+| *function* | :**update**(): *layout* layout | Forcibly recalculate child objects position. By default this function is being called automatically, but in some cases it can be helful |
 
 Example of implementation:
 
 ```lua
+local image = require("image")
 local GUI = require("GUI")
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
 
 local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
 
--- Add panel that fits main container size
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x262626))
--- Add smaller red panel
-mainContainer:addChild(GUI.panel(10, 10, mainContainer.width - 20, mainContainer.height - 20, 0x880000))
+-- Add an layout with 5x1 grid size to main container
+local layout = mainContainer:addChild(GUI.layout(1, 1, mainContainer.width, mainContainer.height, 5, 1))
 
---------------------------------------------------------------------------------
+-- Add 9 buttons to layout and assign specified grid position to them
+-- As you can see, button object is being created first - after that it's being added as child object to layout
+-- Finally, a specified grid position is being assigned to added child object
+layout:setPosition(1, 1, layout:addChild(GUI.button(1, 1, 26, 3, 0xEEEEEE, 0x000000, 0xAAAAAA, 0x0, "Button 1")))
+layout:setPosition(2, 1, layout:addChild(GUI.button(1, 1, 26, 3, 0xEEEEEE, 0x000000, 0xAAAAAA, 0x0, "Button 2")))
+layout:setPosition(2, 1, layout:addChild(GUI.button(1, 1, 26, 3, 0xEEEEEE, 0x000000, 0xAAAAAA, 0x0, "Button 3")))
+layout:setPosition(3, 1, layout:addChild(GUI.button(1, 1, 26, 3, 0xEEEEEE, 0x000000, 0xAAAAAA, 0x0, "Button 4")))
+layout:setPosition(3, 1, layout:addChild(GUI.button(1, 1, 26, 3, 0xEEEEEE, 0x000000, 0xAAAAAA, 0x0, "Button 5")))
+layout:setPosition(3, 1, layout:addChild(GUI.button(1, 1, 26, 3, 0xEEEEEE, 0x000000, 0xAAAAAA, 0x0, "Button 6")))
+layout:setPosition(4, 1, layout:addChild(GUI.button(1, 1, 26, 3, 0xEEEEEE, 0x000000, 0xAAAAAA, 0x0, "Button 7")))
+layout:setPosition(4, 1, layout:addChild(GUI.button(1, 1, 26, 3, 0xEEEEEE, 0x000000, 0xAAAAAA, 0x0, "Button 8")))
+layout:setPosition(5, 1, layout:addChild(GUI.button(1, 1, 26, 3, 0xEEEEEE, 0x000000, 0xAAAAAA, 0x0, "Button 9")))
+
+-- Assign an callback function to the first added button
+layout.children[1].onTouch = function()
+	-- Enable layout grid rendering
+	layout.showGrid = true
+	-- Change layout grid size
+	layout:setGridSize(3, 1)
+	-- Change cell spacing for each column
+	for column = 1, 3 do
+		layout:setSpacing(column, 1, 4)
+	end
+	-- Change position of last 3 buttons to make them belong to last column
+	for child = 7, 9 do
+		layout:setPosition(3, 1, layout.children[child])
+	end
+	-- Enable automatic children width calculation for last column
+	layout:setFitting(3, 1, true, false, 4, 0)
+	-- Draw changes on screen
+	mainContainer:drawOnScreen()
+end
+
+------------------------------------------------------------------------------------------
 
 mainContainer:drawOnScreen(true)
 mainContainer:startEventHandling()
 ```
 
 Result:
+
+![](https://i.imgur.com/DnNSX45.gif)
