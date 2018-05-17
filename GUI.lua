@@ -223,7 +223,7 @@ local function containerObjectGetFirstParent(object)
 	return currentParent
 end
 
-local function containerObjectSelfDelete(object)
+local function containerObjectRemove(object)
 	table.remove(object.parent.children, containerObjectIndexOf(object))
 end
 
@@ -243,8 +243,8 @@ local function containerObjectAnimationStop(animation)
 	animation.started = false
 end
 
-local function containerObjectAnimationDelete(animation)
-	animation.deleteLater = true
+local function containerObjectAnimationRemove(animation)
+	animation.removeLater = true
 end
 
 local function containerObjectAddAnimation(object, frameHandler, onFinish)
@@ -253,7 +253,7 @@ local function containerObjectAddAnimation(object, frameHandler, onFinish)
 		position = 0,
 		start = containerObjectAnimationStart,
 		stop = containerObjectAnimationStop,
-		delete = containerObjectAnimationDelete,
+		remove = containerObjectAnimationRemove,
 		frameHandler = frameHandler,
 		onFinish = onFinish,
 	}
@@ -274,7 +274,7 @@ function containerAddChild(container, object, atIndex)
 	object.moveForward = containerObjectMoveForward
 	object.moveBackward = containerObjectMoveBackward
 	object.getFirstParent = containerObjectGetFirstParent
-	object.delete = containerObjectSelfDelete
+	object.remove = containerObjectRemove
 	object.parent = container
 	object.addAnimation = containerObjectAddAnimation
 
@@ -287,7 +287,7 @@ function containerAddChild(container, object, atIndex)
 	return object
 end
 
-local function containerDeleteChildren(container, from, to)
+local function containerRemoveChildren(container, from, to)
 	from = from or 1
 	for objectIndex = from, to or #container.children do
 		table.remove(container.children, from)
@@ -435,7 +435,7 @@ local function containerStartEventHandling(container, eventHandlingDelay)
 			while animationIndex <= #container.animations do
 				animation = container.animations[animationIndex]
 
-				if animation.deleteLater then
+				if animation.removeLater then
 					table.remove(container.animations, animationIndex)
 					if #container.animations == 0 then
 						container.animations = nil
@@ -483,7 +483,7 @@ function GUI.container(x, y, width, height)
 	container.children = {}
 	container.draw = containerDraw
 	container.drawOnScreen = containerDrawOnScreen
-	container.deleteChildren = containerDeleteChildren
+	container.removeChildren = containerRemoveChildren
 	container.addChild = containerAddChild
 	container.returnData = containerReturnData
 	container.startEventHandling = containerStartEventHandling
@@ -531,11 +531,11 @@ local function buttonPress(button, mainContainer, object, ...)
 				button.onTouch(mainContainer, button, table.unpack(eventData))
 			end
 
-			animation:delete()
+			animation:remove()
 
 			if not button.switchMode then
 				buttonPlayAnimation(button, function(mainContainer, animation)
-					animation:delete()
+					animation:remove()
 				end)
 			end
 		end)
@@ -859,7 +859,7 @@ end
 
 --------------------------------------------------------------------------------
 
-function GUI.windowShadow(x, y, width, height, transparency, thin)
+function GUI.drawShadow(x, y, width, height, transparency, thin)
 	if thin then
 		buffer.drawRectangle(x + width, y + 1, 1, height - 1, 0x000000, 0x000000, " ", transparency)
 		buffer.drawText(x + 1, y + height, 0x000000, string.rep("▀", width), transparency)
@@ -1268,424 +1268,6 @@ end
 
 --------------------------------------------------------------------------------
 
-local function dropDownMenuItemDraw(item)
-	local yText = item.y + math.floor(item.height / 2)
-
-	if item.type == 1 then
-		local textColor = item.color or item.parent.parent.colors.default.text
-
-		if item.pressed then
-			textColor = item.parent.parent.colors.pressed.text
-			buffer.drawRectangle(item.x, item.y, item.width, item.height, item.parent.parent.colors.pressed.background, textColor, " ")
-		elseif item.disabled then
-			textColor = item.parent.parent.colors.disabled.text
-		end
-
-		buffer.drawText(item.x + 1, yText, textColor, item.text)
-		if item.shortcut then
-			buffer.drawText(item.x + item.width - unicode.len(item.shortcut) - 1, yText, textColor, item.shortcut)
-		end
-	else
-		buffer.drawText(item.x, yText, item.parent.parent.colors.separator, string.rep("─", item.width))
-	end
-
-	return item
-end
-
-local function dropDownMenuItemEventHandler(mainContainer, object, e1)
-	if e1 == "touch" then
-		if object.type == 1 then
-			object.pressed = true
-			mainContainer:drawOnScreen()
-
-			if object.subMenu then
-				object.subMenu.y = object.parent.y + object.localY - 1
-				object.subMenu.x = object.parent.x + object.parent.width
-				if buffer.getWidth() - object.parent.x - object.parent.width + 1 < object.subMenu.width then
-					object.subMenu.x = object.parent.x - object.subMenu.width
-				end
-
-				object.subMenu:show()
-			else
-				os.sleep(0.2)
-			end
-
-			object.pressed = false
-			mainContainer.selectedItem = object:indexOf()
-		end
-
-		mainContainer:stopEventHandling()
-	end
-end
-
-local function dropDownMenuCalculateSizes(menu)
-	if #menu.itemsContainer.children > 0 then
-		local y, totalHeight = menu.itemsContainer.children[1].localY or 1, 0
-		for i = 1, #menu.itemsContainer.children do
-			menu.itemsContainer.children[i].width = menu.width
-			menu.itemsContainer.children[i].localY = y
-			
-			y = y + menu.itemsContainer.children[i].height
-			totalHeight = totalHeight + (menu.itemsContainer.children[i].type == 2 and 1 or menu.itemHeight)
-		end
-		menu.height = math.min(totalHeight, menu.maximumHeight, buffer.getHeight() - menu.y)
-		menu.itemsContainer.width, menu.itemsContainer.height = menu.width, menu.height
-
-		menu.nextButton.localY = menu.height
-		menu.prevButton.width, menu.nextButton.width = menu.width, menu.width
-		menu.prevButton.hidden = menu.itemsContainer.children[1].localY >= 1
-		menu.nextButton.hidden = menu.itemsContainer.children[#menu.itemsContainer.children].localY + menu.itemsContainer.children[#menu.itemsContainer.children].height - 1 <= menu.height
-	end
-end
-
-local function dropDownMenuRemoveItem(menu, index)
-	table.remove(menu.itemsContainer.children, index)
-	dropDownMenuCalculateSizes(menu)
-	return menu
-end
-
-local function dropDownMenuAddItem(menu, text, disabled, shortcut, color)
-	local item = menu.itemsContainer:addChild(GUI.object(1, 1, 1, menu.itemHeight))
-	
-	item.type = 1
-	item.text = text
-	item.disabled = disabled
-	item.shortcut = shortcut
-	item.color = color
-	item.draw = dropDownMenuItemDraw
-	item.eventHandler = dropDownMenuItemEventHandler
-
-	dropDownMenuCalculateSizes(menu)
-
-	return item
-end
-
-local function dropDownMenuAddSeparator(menu)
-	local item = dropDownMenuAddItem(menu)
-	item.type = 2
-	item.height = 1
-
-	return item
-end
-
-local function dropDownMenuScrollDown(menu)
-	if menu.itemsContainer.children[1].localY < 1 then
-		for i = 1, #menu.itemsContainer.children do
-			menu.itemsContainer.children[i].localY = menu.itemsContainer.children[i].localY + 1
-		end
-	end
-	menu:draw()
-	buffer.drawChanges()
-end
-
-local function dropDownMenuScrollUp(menu)
-	if menu.itemsContainer.children[#menu.itemsContainer.children].localY + menu.itemsContainer.children[#menu.itemsContainer.children].height - 1 > menu.height then
-		for i = 1, #menu.itemsContainer.children do
-			menu.itemsContainer.children[i].localY = menu.itemsContainer.children[i].localY - 1
-		end
-	end
-	menu:draw()
-	buffer.drawChanges()
-end
-
-local function dropDownMenuEventHandler(mainContainer, object, e1, e2, e3, e4, e5)
-	if e1 == "scroll" then
-		if e5 == 1 then
-			dropDownMenuScrollDown(object)
-		else
-			dropDownMenuScrollUp(object)
-		end
-	end
-end
-
-local function dropDownMenuDraw(menu)
-	dropDownMenuCalculateSizes(menu)
-
-	if menu.oldPixels then
-		buffer.paste(menu.x, menu.y, menu.oldPixels)
-	else
-		menu.oldPixels = buffer.copy(menu.x, menu.y, menu.width + 1, menu.height + 1)
-	end
-
-	buffer.drawRectangle(menu.x, menu.y, menu.width, menu.height, menu.colors.default.background, menu.colors.default.text, " ", menu.colors.transparency.background)
-	containerDraw(menu)
-	GUI.windowShadow(menu.x, menu.y, menu.width, menu.height, menu.colors.transparency.shadow, true)
-
-	return menu
-end
-
-local function dropDownMenuShow(menu)
-	local mainContainer = GUI.fullScreenContainer()
-	-- Удаляем олдпиксельсы, чтоб старое дерьмое не рисовалось во всяких комбобоксах
-	menu.oldPixels = nil
-	mainContainer:addChild(GUI.object(1, 1, mainContainer.width, mainContainer.height)).eventHandler = function(mainContainer, object, e1)
-		if e1 == "touch" then
-			buffer.paste(menu.x, menu.y, menu.oldPixels)
-			buffer.drawChanges()
-			mainContainer:stopEventHandling()
-		end
-	end
-	mainContainer:addChild(menu)
-	
-	mainContainer:drawOnScreen()
-	mainContainer:startEventHandling()
-	
-	if mainContainer.selectedItem then
-		local item = menu.itemsContainer.children[mainContainer.selectedItem]
-		
-		if not item.subMenu then
-			buffer.paste(menu.x, menu.y, menu.oldPixels)
-			buffer.drawChanges()
-		end
-		menu.oldPixels = nil
-
-		if item.onTouch then
-			item.onTouch()
-		end
-
-		return item, mainContainer.selectedItem
-	end
-end
-
-function GUI.dropDownMenu(x, y, width, maximumHeight, itemHeight, backgroundColor, textColor, backgroundPressedColor, textPressedColor, disabledColor, separatorColor, backgroundTransparency, shadowTransparency)
-	local menu = GUI.container(x, y, width, 1)
-	
-	menu.colors = {
-		default = {
-			background = backgroundColor,
-			text = textColor
-		},
-		pressed = {
-			background = backgroundPressedColor,
-			text = textPressedColor
-		},
-		disabled = {
-			text = disabledColor
-		},
-		separator = separatorColor,
-		transparency = {
-			background = backgroundTransparency,
-			shadow = shadowTransparency
-		}
-	}
-
-	menu.itemsContainer = menu:addChild(GUI.container(1, 1, menu.width, menu.height))
-	menu.prevButton = menu:addChild(GUI.button(1, 1, menu.width, 1, backgroundColor, textColor, backgroundPressedColor, textPressedColor, "▲"))
-	menu.nextButton = menu:addChild(GUI.button(1, 1, menu.width, 1, backgroundColor, textColor, backgroundPressedColor, textPressedColor, "▼"))
-	menu.prevButton.colors.transparency, menu.nextButton.colors.transparency = backgroundTransparency, backgroundTransparency
-	menu.prevButton.onTouch = function()
-		dropDownMenuScrollDown(menu)
-	end
-	menu.nextButton.onTouch = function()
-		dropDownMenuScrollUp(menu)
-	end
-
-	menu.itemHeight = itemHeight
-	menu.addSeparator = dropDownMenuAddSeparator
-	menu.addItem = dropDownMenuAddItem
-	menu.removeItem = dropDownMenuRemoveItem
-	menu.draw = dropDownMenuDraw
-	menu.show = dropDownMenuShow
-	menu.maximumHeight = maximumHeight
-	menu.eventHandler = dropDownMenuEventHandler
-
-	return menu
-end
-
---------------------------------------------------------------------------------
-
-local function contextMenuCalculate(menu)
-	local widestItem, widestShortcut = 0, 0
-	for i = 1, #menu.itemsContainer.children do
-		if menu.itemsContainer.children[i].type == 1 then
-			widestItem = math.max(widestItem, unicode.len(menu.itemsContainer.children[i].text))
-			if menu.itemsContainer.children[i].shortcut then
-				widestShortcut = math.max(widestShortcut, unicode.len(menu.itemsContainer.children[i].shortcut))
-			end
-		end
-	end
-	menu.width = 2 + widestItem + (widestShortcut > 0 and 3 + widestShortcut or 0)
-	menu.height = #menu.itemsContainer.children
-end
-
-local function contextMenuShow(menu)
-	contextMenuCalculate(menu)
-
-	local bufferWidth, bufferHeight = buffer.getResolution()
-	if menu.y + menu.height >= bufferHeight then
-		menu.y = bufferHeight - menu.height
-	end
-	if menu.x + menu.width + 1 >= bufferWidth then
-		menu.x = bufferWidth - menu.width - 1
-	end
-
-	return dropDownMenuShow(menu)
-end
-
-local function contextMenuAddItem(menu, ...)
-	local item = dropDownMenuAddItem(menu, ...)
-	contextMenuCalculate(menu)
-	return item
-end
-
-local function contextMenuAddSeparator(menu, ...)
-	local item = dropDownMenuAddSeparator(menu, ...)
-	contextMenuCalculate(menu)
-	return item
-end
-
-local function contextMenuAddSubMenu(menu, text, disabled)
-	local item = menu:addItem(text, disabled, "►")
-	item.subMenu = GUI.contextMenu(1, 1)
-	item.subMenu.colors = menu.colors
-	
-	return item.subMenu
-end
-
-function GUI.contextMenu(x, y, backgroundColor, textColor, backgroundPressedColor, textPressedColor, disabledColor, separatorColor, backgroundTransparency, shadowTransparency)
-	local menu = GUI.dropDownMenu(x, y, 1, math.ceil(buffer.getHeight() * 0.5), 1,
-		backgroundColor or GUI.COLOR_CONTEXT_MENU_DEFAULT_BACKGROUND,
-		textColor or GUI.COLOR_CONTEXT_MENU_DEFAULT_TEXT,
-		backgroundPressedColor or GUI.COLOR_CONTEXT_MENU_PRESSED_BACKGROUND,
-		textPressedColor or GUI.COLOR_CONTEXT_MENU_PRESSED_TEXT,
-		disabledColor or GUI.COLOR_CONTEXT_MENU_DISABLED,
-		separatorColor or GUI.COLOR_CONTEXT_MENU_SEPARATOR,
-		backgroundTransparency or GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND,
-		shadowTransparency or GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW
-	)
-	
-	menu.colors.transparency.background = menu.colors.transparency.background or GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND
-	menu.colors.transparency.shadow = menu.colors.transparency.shadow or GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW
-	
-	menu.show = contextMenuShow
-	menu.addSubMenu = contextMenuAddSubMenu
-	menu.addItem = contextMenuAddItem
-	menu.addSeparator = contextMenuAddSeparator
-
-	return menu
-end
-
---------------------------------------------------------------------------------
-
-local function drawComboBox(object)
-	buffer.drawRectangle(object.x, object.y, object.width, object.height, object.colors.default.background, object.colors.default.text, " ")
-	if object.dropDownMenu.itemsContainer.children[object.selectedItem] then
-		buffer.drawText(object.x + 1, math.floor(object.y + object.height / 2), object.colors.default.text, string.limit(object.dropDownMenu.itemsContainer.children[object.selectedItem].text, object.width - object.height - 2, "right"))
-	end
-	GUI.button(object.x + object.width - object.height * 2 + 1, object.y, object.height * 2 - 1, object.height, object.colors.arrow.background, object.colors.arrow.text, 0x0, 0x0, object.pressed and "▲" or "▼"):draw()
-
-	return object
-end
-
-local function comboBoxGetItem(object, index)
-	return object.dropDownMenu.itemsContainer.children[index]
-end
-
-local function comboBoxRemoveItem(object, index)
-	object.dropDownMenu:removeItem(index)
-	if object.selectedItem > #object.dropDownMenu.itemsContainer.children then
-		object.selectedItem = #object.dropDownMenu.itemsContainer.children
-	end
-end
-
-local function comboBoxCount(object)
-	return #object.dropDownMenu.itemsContainer.children
-end
-
-local function comboBoxClear(object)
-	object.dropDownMenu.itemsContainer:deleteChildren()
-	object.selectedItem = 1
-
-	return object
-end
-
-local function comboBoxIndexOfItem(object, text)
-	for i = 1, #object.dropDownMenu.itemsContainer.children do
-		if object.dropDownMenu.itemsContainer.children[i].text == text then
-			return i
-		end
-	end
-end
-
-local function comboBoxSelect(object)
-	object.pressed = true
-	object:draw()
-
-	object.dropDownMenu.x, object.dropDownMenu.y = object.x, object.y + object.height
-	object.dropDownMenu.width = object.width
-	local _, selectedItem = object.dropDownMenu:show()
-
-	object.selectedItem = selectedItem or object.selectedItem
-	object.pressed = false
-	object:draw()
-	buffer.drawChanges()
-
-	return object
-end
-
-local function comboBoxEventHandler(mainContainer, object, e1, ...)
-	if e1 == "touch" and #object.dropDownMenu.itemsContainer.children > 0 then
-		object:select()
-
-		if object.onItemSelected then
-			object.onItemSelected(mainContainer, object, e1, ...)
-		end
-	end
-end
-
-local function comboBoxAddItem(object, ...)
-	return object.dropDownMenu:addItem(...)
-end
-
-local function comboBoxAddSeparator(object)
-	return object.dropDownMenu:addSeparator()
-end
-
-function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBackgroundColor, arrowTextColor)
-	local object = GUI.object(x, y, width, itemSize)
-	
-	object.eventHandler = comboBoxEventHandler
-	object.colors = {
-		default = {
-			background = backgroundColor,
-			text = textColor
-		},
-		pressed = {
-			background = GUI.COLOR_CONTEXT_MENU_PRESSED_BACKGROUND,
-			text = GUI.COLOR_CONTEXT_MENU_PRESSED_TEXT
-		},
-		arrow = {
-			background = arrowBackgroundColor,
-			text = arrowTextColor
-		}
-	}
-
-	object.dropDownMenu = GUI.dropDownMenu(1, 1, 1, math.ceil(buffer.getHeight() * 0.5), itemSize,
-		object.colors.default.background, 
-		object.colors.default.text, 
-		object.colors.pressed.background,
-		object.colors.pressed.text,
-		GUI.COLOR_CONTEXT_MENU_DISABLED,
-		GUI.COLOR_CONTEXT_MENU_SEPARATOR,
-		COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND, 
-		COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW
-	)
-	object.selectedItem = 1
-	object.addItem = comboBoxAddItem
-	object.removeItem = comboBoxRemoveItem
-	object.addSeparator = comboBoxAddSeparator
-	object.draw = drawComboBox
-	object.select = comboBoxSelect
-	object.clear = comboBoxClear
-	object.indexOfItem = comboBoxIndexOfItem
-	object.getItem = comboBoxGetItem
-	object.count = comboBoxCount
-
-	return object
-end
-
---------------------------------------------------------------------------------
-
 local function switchAndLabelDraw(switchAndLabel)
 	switchAndLabel.label.width = switchAndLabel.width
 	switchAndLabel.switch.localX = switchAndLabel.width - switchAndLabel.switch.width
@@ -1809,7 +1391,7 @@ local function switchEventHandler(mainContainer, switch, e1, ...)
 				end
 			end,
 			function(mainContainer, animation)
-				animation:delete()
+				animation:remove()
 				if switch.onStateChanged then
 					switch.onStateChanged(mainContainer, switch, e1, table.unpack(eventData))
 				end
@@ -2252,7 +1834,7 @@ local function filesystemDialogDraw(filesystemDialog)
 	end
 	
 	containerDraw(filesystemDialog)
-	GUI.windowShadow(filesystemDialog.x, filesystemDialog.y, filesystemDialog.width, filesystemDialog.height, GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW, true)
+	GUI.drawShadow(filesystemDialog.x, filesystemDialog.y, filesystemDialog.width, filesystemDialog.height, GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW, true)
 
 	return filesystemDialog
 end
@@ -2328,7 +1910,7 @@ local function filesystemDialogShow(filesystemDialog)
 			filesystemDialog.localY = math.floor(1 + (1.0 - animation.position) * (-filesystemDialog.height))
 		end,
 		function(mainContainer, animation)
-			animation:delete()
+			animation:remove()
 		end
 	):start(0.5)
 
@@ -2346,7 +1928,7 @@ function GUI.addFilesystemDialog(parentContainer, addPanel, ...)
 
 	local function onAnyTouch()
 		local firstParent = filesystemDialog:getFirstParent()
-		container:delete()
+		container:remove()
 		firstParent:drawOnScreen()
 	end
 
@@ -3883,7 +3465,7 @@ function GUI.addBackgroundContainer(parentContainer, addPanel, addLayout, title)
 		container.panel = container:addChild(GUI.panel(1, 1, container.width, container.height, 0x0, GUI.COLOR_BACKGROUND_CONTAINER_TRANSPARENCY))
 		container.panel.eventHandler = function(parentContainer, object, e1)
 			if e1 == "touch" then
-				container:delete()
+				container:remove()
 				parentContainer:drawOnScreen()
 			end
 		end
@@ -3914,7 +3496,7 @@ function GUI.addPalette(parentContainer, addPanel, color)
 	palette.localX, palette.localY = math.floor(container.width / 2 - palette.width / 2), math.floor(container.height / 2 - palette.height / 2)
 
 	local function onAnyTouch()
-		container:delete()
+		container:remove()
 		palette:getFirstParent():drawOnScreen()
 	end
 
@@ -4079,7 +3661,7 @@ end
 
 function windowDraw(window)
 	containerDraw(window)
-	GUI.windowShadow(window.x, window.y, window.width, window.height, GUI.COLOR_WINDOW_SHADOW_TRANSPARENCY, true)
+	GUI.drawShadow(window.x, window.y, window.width, window.height, GUI.COLOR_WINDOW_SHADOW_TRANSPARENCY, true)
 
 	return window
 end
@@ -4227,6 +3809,501 @@ function GUI.highlightString(x, y, width, fromChar, indentationWidth, patterns, 
 		bufferIndex = bufferIndex + 1
 	end
 end
+
+--------------------------------------------------------------------------------
+
+local function dropDownMenuItemDraw(item)
+	local yText = item.y + math.floor(item.height / 2)
+
+	if item.type == 1 then
+		local textColor = item.color or item.parent.parent.colors.default.text
+
+		if item.pressed then
+			textColor = item.parent.parent.colors.pressed.text
+			buffer.drawRectangle(item.x, item.y, item.width, item.height, item.parent.parent.colors.pressed.background, textColor, " ")
+		elseif item.disabled then
+			textColor = item.parent.parent.colors.disabled.text
+		end
+
+		buffer.drawText(item.x + 1, yText, textColor, item.text)
+		if item.shortcut then
+			buffer.drawText(item.x + item.width - unicode.len(item.shortcut) - 1, yText, textColor, item.shortcut)
+		end
+	else
+		buffer.drawText(item.x, yText, item.parent.parent.colors.separator, string.rep("─", item.width))
+	end
+
+	return item
+end
+
+local function dropDownMenuItemEventHandler(mainContainer, object, e1, ...)
+	if e1 == "touch" then
+		if object.type == 1 and not object.pressed then
+			object.pressed = true
+			mainContainer:drawOnScreen()
+
+			if object.subMenu then
+				object.subMenu.hidden = false
+				object.subMenu.localX = object.parent.parent.localX + object.parent.parent.width
+				object.subMenu.localY = object.parent.parent.localY + object.localY - 1
+				if buffer.getWidth() - object.parent.parent.localX - object.parent.parent.width + 1 < object.subMenu.width then
+					object.subMenu.localX = object.parent.parent.localX - object.subMenu.width
+					object.parent.parent:moveToFront()
+				end
+
+				mainContainer:drawOnScreen()
+			else
+				os.sleep(0.2)
+
+				object.pressed = false
+				object.parent.parent.parent:remove()
+
+				if object.parent.parent.onClose then
+					object.parent.parent.onClose(object:indexOf())
+				end
+
+				if object.onTouch then
+					object.onTouch()
+				end
+
+				mainContainer:drawOnScreen()
+			end
+		end
+	end
+end
+
+local function dropDownMenuGetHeight(menu)
+	local height = 0
+	for i = 1, #menu.itemsContainer.children do
+		height = height + (menu.itemsContainer.children[i].type == 2 and 1 or menu.itemHeight)
+	end
+
+	return height
+end
+
+local function dropDownMenuReposition(menu)
+	menu.itemsContainer.width, menu.itemsContainer.height = menu.width, menu.height
+	menu.prevButton.width, menu.nextButton.width = menu.width, menu.width
+	menu.nextButton.localY = menu.height
+	menu.prevButton.hidden = menu.itemsContainer.children[1].localY >= 1
+	menu.nextButton.hidden = menu.itemsContainer.children[#menu.itemsContainer.children].localY + menu.itemsContainer.children[#menu.itemsContainer.children].height - 1 <= menu.height
+	
+	local y = menu.itemsContainer.children[1].localY
+	for i = 1, #menu.itemsContainer.children do
+		menu.itemsContainer.children[i].localY = y
+		menu.itemsContainer.children[i].width = menu.itemsContainer.width
+		y = y + menu.itemsContainer.children[i].height
+	end
+end
+
+local function dropDownMenuUpdate(menu)
+	if #menu.itemsContainer.children > 0 then
+		menu.height = math.min(dropDownMenuGetHeight(menu), menu.maximumHeight, buffer.getHeight() - menu.y)
+		dropDownMenuReposition(menu)
+	end
+end
+
+local function dropDownMenuRemoveItem(menu, index)
+	table.remove(menu.itemsContainer.children, index)
+
+	menu:update()
+
+	return menu
+end
+
+local function dropDownMenuAddItem(menu, text, disabled, shortcut, color)
+	local item = menu.itemsContainer:addChild(GUI.object(1, 1, 1, menu.itemHeight))
+	item.type = 1
+	item.text = text
+	item.disabled = disabled
+	item.shortcut = shortcut
+	item.color = color
+	item.draw = dropDownMenuItemDraw
+	item.eventHandler = dropDownMenuItemEventHandler
+
+	menu:update()
+
+	return item
+end
+
+local function dropDownMenuAddSeparator(menu)
+	local item = menu.itemsContainer:addChild(GUI.object(1, 1, 1, 1))
+	item.type = 2
+	item.draw = dropDownMenuItemDraw
+	item.eventHandler = dropDownMenuItemEventHandler
+
+	menu:update()
+
+	return item
+end
+
+local function dropDownMenuScrollDown(mainContainer, menu)
+	if menu.itemsContainer.children[1].localY < 1 then
+		for i = 1, #menu.itemsContainer.children do
+			menu.itemsContainer.children[i].localY = menu.itemsContainer.children[i].localY + 1
+		end
+
+		dropDownMenuReposition(menu)
+		mainContainer:drawOnScreen()
+	end
+end
+
+local function dropDownMenuScrollUp(mainContainer, menu)
+	if menu.itemsContainer.children[#menu.itemsContainer.children].localY + menu.itemsContainer.children[#menu.itemsContainer.children].height - 1 > menu.height then
+		for i = 1, #menu.itemsContainer.children do
+			menu.itemsContainer.children[i].localY = menu.itemsContainer.children[i].localY - 1
+		end
+
+		dropDownMenuReposition(menu)
+		mainContainer:drawOnScreen()
+	end
+end
+
+local function dropDownMenuEventHandler(mainContainer, menu, e1, e2, e3, e4, e5)
+	if e1 == "scroll" then
+		if e5 == 1 then
+			dropDownMenuScrollDown(mainContainer, menu)
+		else
+			dropDownMenuScrollUp(mainContainer, menu)
+		end
+	end
+end
+
+local function dropDownMenuPrevButtonOnTouch(mainContainer, button)
+	dropDownMenuScrollDown(mainContainer, button.parent)
+end
+
+local function dropDownMenuNextButtonOnTouch(mainContainer, button)
+	dropDownMenuScrollUp(mainContainer, button.parent)
+end
+
+local function dropDownMenuDraw(menu)
+	buffer.drawRectangle(menu.x, menu.y, menu.width, menu.height, menu.colors.default.background, menu.colors.default.text, " ", menu.colors.transparency.background)
+	GUI.drawShadow(menu.x, menu.y, menu.width, menu.height, menu.colors.transparency.shadow, true)
+	containerDraw(menu)
+end
+
+local function dropDownMenuBackgroundObjectEventHandler(mainContainer, object, e1)
+	if e1 == "touch" then
+		for i = 1, #object.parent.children do
+			if object.parent.children[i].onClose then
+				object.parent.children[i].onClose()
+			end
+		end
+
+		object.parent:remove()
+		mainContainer:drawOnScreen()
+	end
+end
+
+local function dropDownMenuAdd(parentContainer, menu)
+	local container = parentContainer:addChild(GUI.container(1, 1, parentContainer.width, parentContainer.height))
+	container:addChild(GUI.object(1, 1, container.width, container.height)).eventHandler = dropDownMenuBackgroundObjectEventHandler
+
+	return container:addChild(menu)
+end
+
+function GUI.dropDownMenu(x, y, width, maximumHeight, itemHeight, backgroundColor, textColor, backgroundPressedColor, textPressedColor, disabledColor, separatorColor, backgroundTransparency, shadowTransparency)
+	local menu = GUI.container(x, y, width, 1)
+	
+	menu.colors = {
+		default = {
+			background = backgroundColor,
+			text = textColor
+		},
+		pressed = {
+			background = backgroundPressedColor,
+			text = textPressedColor
+		},
+		disabled = {
+			text = disabledColor
+		},
+		separator = separatorColor,
+		transparency = {
+			background = backgroundTransparency,
+			shadow = shadowTransparency
+		}
+	}
+
+	menu.itemsContainer = menu:addChild(GUI.container(1, 1, menu.width, menu.height))
+	menu.prevButton = menu:addChild(GUI.button(1, 1, menu.width, 1, backgroundColor, textColor, backgroundPressedColor, textPressedColor, "▲"))
+	menu.nextButton = menu:addChild(GUI.button(1, 1, menu.width, 1, backgroundColor, textColor, backgroundPressedColor, textPressedColor, "▼"))
+	menu.prevButton.colors.transparency, menu.nextButton.colors.transparency = backgroundTransparency, backgroundTransparency
+	menu.prevButton.onTouch = dropDownMenuPrevButtonOnTouch
+	menu.nextButton.onTouch = dropDownMenuNextButtonOnTouch
+
+	menu.itemHeight = itemHeight
+	menu.addSeparator = dropDownMenuAddSeparator
+	menu.addItem = dropDownMenuAddItem
+	menu.removeItem = dropDownMenuRemoveItem
+	menu.draw = dropDownMenuDraw
+	menu.maximumHeight = maximumHeight
+	menu.eventHandler = dropDownMenuEventHandler
+	menu.update = dropDownMenuUpdate
+
+	return menu
+end
+
+--------------------------------------------------------------------------------
+
+local function contextMenuUpdate(menu)
+	if #menu.itemsContainer.children > 0 then
+		local widestItem, widestShortcut = 0, 0
+		for i = 1, #menu.itemsContainer.children do
+			if menu.itemsContainer.children[i].type == 1 then
+				widestItem = math.max(widestItem, unicode.len(menu.itemsContainer.children[i].text))
+				if menu.itemsContainer.children[i].shortcut then
+					widestShortcut = math.max(widestShortcut, unicode.len(menu.itemsContainer.children[i].shortcut))
+				end
+			end
+		end
+
+		menu.width, menu.height = 2 + widestItem + (widestShortcut > 0 and 3 + widestShortcut or 0), math.min(dropDownMenuGetHeight(menu), menu.maximumHeight)
+		dropDownMenuReposition(menu)
+
+		local bufferWidth, bufferHeight = buffer.getResolution()
+		if menu.localY + menu.maximumHeight >= bufferHeight then
+			menu.localY = bufferHeight - menu.maximumHeight
+		end
+		if menu.localX + menu.width + 1 >= bufferWidth then
+			menu.localX = bufferWidth - menu.width - 1
+		end
+	end
+end
+
+local contextMenuCreate, contextMenuAddSubMenu
+
+contextMenuAddSubMenu = function(menu, text, disabled)
+	local item = menu:addItem(text, disabled, "►")
+	item.subMenu = menu.parent:addChild(contextMenuCreate(1, 1))
+	item.subMenu.colors = menu.colors
+	item.subMenu.hidden = true
+	
+	return item.subMenu
+end
+
+contextMenuCreate = function(x, y, backgroundColor, textColor, backgroundPressedColor, textPressedColor, disabledColor, separatorColor, backgroundTransparency, shadowTransparency)
+	local menu = GUI.dropDownMenu(
+		x,
+		y,
+		1,
+		math.ceil(buffer.getHeight() * 0.5),
+		1,
+		backgroundColor or GUI.COLOR_CONTEXT_MENU_DEFAULT_BACKGROUND,
+		textColor or GUI.COLOR_CONTEXT_MENU_DEFAULT_TEXT,
+		backgroundPressedColor or GUI.COLOR_CONTEXT_MENU_PRESSED_BACKGROUND,
+		textPressedColor or GUI.COLOR_CONTEXT_MENU_PRESSED_TEXT,
+		disabledColor or GUI.COLOR_CONTEXT_MENU_DISABLED,
+		separatorColor or GUI.COLOR_CONTEXT_MENU_SEPARATOR,
+		backgroundTransparency or GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND,
+		shadowTransparency or GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW
+	)
+
+	menu.update = contextMenuUpdate
+	menu.addSubMenu = contextMenuAddSubMenu
+
+	return menu
+end
+
+function GUI.addContextMenu(parentContainer, ...)
+	return dropDownMenuAdd(parentContainer, contextMenuCreate(...))
+end
+
+--------------------------------------------------------------------------------
+
+local function comboBoxDraw(object)
+	buffer.drawRectangle(object.x, object.y, object.width, object.height, object.colors.default.background, object.colors.default.text, " ")
+	if object.dropDownMenu.itemsContainer.children[object.selectedItem] then
+		buffer.drawText(object.x + 1, math.floor(object.y + object.height / 2), object.colors.default.text, string.limit(object.dropDownMenu.itemsContainer.children[object.selectedItem].text, object.width - object.height - 2, "right"))
+	end
+
+	local width = object.height * 2 - 1
+	buffer.drawRectangle(object.x + object.width - object.height * 2 + 1, object.y, width, object.height, object.colors.arrow.background, object.colors.arrow.text, " ")
+	buffer.drawText(math.floor(object.x + object.width - width / 2), math.floor(object.y + object.height / 2), object.colors.arrow.text, object.pressed and "▲" or "▼")
+
+	return object
+end
+
+local function comboBoxGetItem(object, index)
+	return object.dropDownMenu.itemsContainer.children[index]
+end
+
+local function comboBoxRemoveItem(object, index)
+	object.dropDownMenu:removeItem(index)
+	if object.selectedItem > #object.dropDownMenu.itemsContainer.children then
+		object.selectedItem = #object.dropDownMenu.itemsContainer.children
+	end
+end
+
+local function comboBoxCount(object)
+	return #object.dropDownMenu.itemsContainer.children
+end
+
+local function comboBoxClear(object)
+	object.dropDownMenu.itemsContainer:removeChildren()
+	object.selectedItem = 1
+
+	return object
+end
+
+local function comboBoxIndexOfItem(object, text)
+	for i = 1, #object.dropDownMenu.itemsContainer.children do
+		if object.dropDownMenu.itemsContainer.children[i].text == text then
+			return i
+		end
+	end
+end
+
+local function comboBoxEventHandler(mainContainer, object, e1, ...)
+	if e1 == "touch" and #object.dropDownMenu.itemsContainer.children > 0 then
+		object.pressed = true
+		object.dropDownMenu.x, object.dropDownMenu.y, object.dropDownMenu.width = object.x, object.y + object.height, object.width
+		object.dropDownMenu:update()
+		dropDownMenuAdd(mainContainer, object.dropDownMenu)
+		mainContainer:drawOnScreen()
+	end
+end
+
+local function comboBoxAddItem(object, ...)
+	return object.dropDownMenu:addItem(...)
+end
+
+local function comboBoxAddSeparator(object)
+	return object.dropDownMenu:addSeparator()
+end
+
+function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBackgroundColor, arrowTextColor)
+	local comboBox = GUI.object(x, y, width, itemSize)
+	
+	comboBox.colors = {
+		default = {
+			background = backgroundColor,
+			text = textColor
+		},
+		pressed = {
+			background = GUI.COLOR_CONTEXT_MENU_PRESSED_BACKGROUND,
+			text = GUI.COLOR_CONTEXT_MENU_PRESSED_TEXT
+		},
+		arrow = {
+			background = arrowBackgroundColor,
+			text = arrowTextColor
+		}
+	}
+
+	comboBox.dropDownMenu = GUI.dropDownMenu(
+		1,
+		1,
+		1,
+		math.ceil(buffer.getHeight() * 0.5),
+		itemSize,
+		comboBox.colors.default.background, 
+		comboBox.colors.default.text, 
+		comboBox.colors.pressed.background,
+		comboBox.colors.pressed.text,
+		GUI.COLOR_CONTEXT_MENU_DISABLED,
+		GUI.COLOR_CONTEXT_MENU_SEPARATOR,
+		GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND, 
+		GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW
+	)
+
+	comboBox.dropDownMenu.onClose = function(index)
+		comboBox.pressed = false
+		comboBox.selectedItem = index or comboBox.selectedItem
+		comboBox:getFirstParent():drawOnScreen()
+		
+		if index and comboBox.onItemSelected then
+			comboBox.onItemSelected(index)
+		end
+	end
+
+	comboBox.selectedItem = 1
+	comboBox.addItem = comboBoxAddItem
+	comboBox.removeItem = comboBoxRemoveItem
+	comboBox.addSeparator = comboBoxAddSeparator
+	comboBox.draw = comboBoxDraw
+	comboBox.select = comboBoxSelect
+	comboBox.clear = comboBoxClear
+	comboBox.indexOfItem = comboBoxIndexOfItem
+	comboBox.getItem = comboBoxGetItem
+	comboBox.count = comboBoxCount
+	comboBox.eventHandler = comboBoxEventHandler
+
+	return comboBox
+end
+
+---------------------------------------------------------------------------------------------------
+
+-- local mainContainer = GUI.fullScreenContainer()
+-- mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D)).eventHandler = function(mainContainer, object, e1, e2, e3, e4)
+-- 	if e1 == "touch" then
+-- 		local contextMenu = GUI.addContextMenu(mainContainer, e3, e4)
+-- 		contextMenu:addItem("New")
+-- 		contextMenu:addItem("Open").onTouch = function()
+-- 			-- Do something to open file or whatever
+-- 		end
+
+-- 		local subMenu = contextMenu:addSubMenu("Open with")
+-- 		subMenu:addItem("Explorer.app")
+-- 		subMenu:addItem("Viewer.app")
+-- 		subMenu:addItem("Finder.app")
+-- 		subMenu:addSeparator()
+-- 		subMenu:addItem("Browse...")
+
+-- 		contextMenu:addSeparator()
+-- 		contextMenu:addItem("Save", true)
+-- 		contextMenu:addItem("Save as")
+-- 		contextMenu:addSeparator()
+-- 		for i = 1, 25 do
+-- 			contextMenu:addItem("Do something " .. i).onTouch = function()
+-- 				GUI.error("Meaf")
+-- 			end
+-- 		end
+
+-- 		mainContainer:drawOnScreen()
+-- 	end
+-- end
+
+-- mainContainer:drawOnScreen(true)
+-- mainContainer:startEventHandling()
+
+
+
+
+
+-- local mainContainer = GUI.fullScreenContainer()
+-- mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+-- local comboBox = mainContainer:addChild(GUI.comboBox(3, 2, 30, 3, 0xEEEEEE, 0x2D2D2D, 0xCCCCCC, 0x888888))
+-- comboBox:addItem(".PNG")
+-- comboBox:addItem(".JPG").onTouch = function()
+-- 	local contextMenu = GUI.addContextMenu(mainContainer, 3, 2)
+-- 	contextMenu:addItem("New")
+-- 	contextMenu:addItem("Open").onTouch = function()
+-- 		-- Do something to open file or whatever
+-- 	end
+
+-- 	local subMenu = contextMenu:addSubMenu("Open with")
+-- 	subMenu:addItem("Explorer.app")
+-- 	subMenu:addItem("Viewer.app")
+-- 	subMenu:addItem("Finder.app")
+-- 	subMenu:addSeparator()
+-- 	subMenu:addItem("Browse...")
+
+-- 	contextMenu:addSeparator()
+-- 	contextMenu:addItem("Save", true)
+-- 	contextMenu:addItem("Save as")
+-- 	contextMenu:addSeparator()
+-- 	for i = 1, 25 do
+-- 		contextMenu:addItem("Do something " .. i).onTouch = function()
+-- 			GUI.error("Meaf")
+-- 		end
+-- 	end
+-- end
+-- comboBox:addItem(".GIF")
+-- comboBox:addItem(".PIC")
+
+-- mainContainer:drawOnScreen(true)
+-- mainContainer:startEventHandling()
 
 ---------------------------------------------------------------------------------------------------
 

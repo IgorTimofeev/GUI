@@ -160,7 +160,7 @@ If the event does not belong to the screen, or the object **does not have** even
 | ------ | ------ | ------ |
 | *table* | .**children** | Table that contains all child objects of this container |
 | *function* | :**addChild**(*table* child, [*int* atIndex]): *table* child| Add specified object to the container as a child. When you do this, the object's global coordinates will become local. If the optional parameter **atIndex** is specified, then the element will be added to the corresponding position in container.**children** table |
-| *function* | :**deleteChildren**([*int* fromIndex, *int* toIndex]): *table* container | Delete all child elements of the container. If the optional parameters of the element indices are specified, the deletion will be performed in the appropriate range |
+| *function* | :**removeChildren**([*int* fromIndex, *int* toIndex]): *table* container | Delete all child elements of the container. If the optional parameters of the element indices are specified, the deletion will be performed in the appropriate range |
 | *function* | :**startEventHandling**([*float* delay]): *table* container | Run the event processing for this container and analyse events for all it's child objects. The  **delay** parameter is similar to computer.**pullSignal** one |
 | *function* | :**stopEventHandling**(): *table* container | Stop processing events for this container |
 | *function* | :**draw**() | Recursively renders the contents of the container in the order of the queue of its children. I draw your attention to the fact that this method only draws data into the screen buffer. To display changes on the screen, you must use the doubleBuffering.**drawChanges**() method or use method below |
@@ -229,7 +229,7 @@ After adding an object to the container using the :**addChild()** method, it acq
 | *function* | :**moveToFront**() | Move the object to the end of the container children hierarchy |
 | *function* | :**moveToBack**() | Move the object to the beginning of the container children hierarchy |
 | *function* | :**getFirstParent**() | Recursively get the first parent container. If there are many nested containers, the method will return the first in the hierarchy and the "main" of them |
-| *function* | :**delete**() | Remove this object from the parent container. Roughly speaking, this is a convenient way of self-destruction |
+| *function* | :**remove**() | Remove this object from the parent container. Roughly speaking, this is a convenient way of self-destruction |
 | *function* | :**addAnimation**(*function* frameHandler, *function* onFinish): *table* animation | Add an animation to this object. For more information about animations and their creation, see below  |
 | [*callback-function* | .**eventHandler**(*container* mainContainer, *object* object, ... *varargs* eventData) ]| An optional method for handling system events, called by the parent container handler. If it exists in the object under consideration, it will be called with the appropriate arguments |
 
