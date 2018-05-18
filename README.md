@@ -42,10 +42,10 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [   GUI.textBox](#guitextbox-x-y-width-height-backgroundcolor-textcolor-lines-currentline-horizontaloffset-verticaloffset-autowrap-autoheight-table-textbox) |
 | [Ready-to-use containers](#ready-to-use-containers) |
 | [   GUI.layout](#guilayoutx-y-width-height-columncount-rowcount-table-layout) |
-| [   GUI.window](guiwindowx-y-width-height-table-window) |
-| [   GUI.filledWindow](guifilledwindowx-y-width-height-fillcolor-table-window) |
-| [   GUI.titledWindow](guititledwindowx-y-width-height-title-addtitlepanel-table-window) |
-| [   GUI.tabbedWindow](guitabbedwindowx-y-width-height-table-window) |
+| [   GUI.window](#guiwindowx-y-width-height-table-window) |
+| [   GUI.filledWindow](#guifilledwindowx-y-width-height-fillcolor-table-window) |
+| [   GUI.titledWindow](#guititledwindowx-y-width-height-title-addtitlepanel-table-window) |
+| [   GUI.tabbedWindow](#guitabbedwindowx-y-width-height-table-window) |
 | [   GUI.palette](#guipalettex-y-initialcolor-table-palette) |
 | [Standalone methods](#standalone-methods) |
 | [   GUI.error](#guierrorvarargs) |
