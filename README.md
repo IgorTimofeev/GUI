@@ -17,7 +17,7 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [Objects](#objects) |
 | [Animations](#animations) |
 | [Constants](#constants) |
-| [Ready-to-use objects](#ready-to-use-objects) |
+| [Ready-to-use objects:](#ready-to-use-objects) |
 | [   GUI.panel](#guipanelx-y-width-height-color-transparency-table-panel) |
 | [   GUI.text](#guitextxy-textcolor-text-table-text) |
 | [   GUI.label](#guilabelx-y-width-height-textcolor-text-table-label) |
@@ -41,7 +41,7 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [   GUI.brailleCanvas](#guibraillecanvasx-y-width-height-table-braillecanvas) |
 | [   GUI.scrollBar](#guiscrollbarx-y-width-height-backgroundcolor-foregroundcolor-minimumvalue-maximumvalue-value-shownvaluecount-onscrollvalueincrement-thinhorizontalmode-table-scrollbar) |
 | [   GUI.textBox](#guitextboxx-y-width-height-backgroundcolor-textcolor-lines-currentline-horizontaloffset-verticaloffset-autowrap-autoheight-table-textbox) |
-| [Ready-to-use containers](#ready-to-use-containers) |
+| [Ready-to-use containers:](#ready-to-use-containers) |
 | [   GUI.layout](#guilayoutx-y-width-height-columncount-rowcount-table-layout) |
 | [   GUI.window](#guiwindowx-y-width-height-table-window) |
 | [   GUI.filledWindow](#guifilledwindowx-y-width-height-fillcolor-table-window) |
@@ -434,7 +434,7 @@ GUI.**label**( x, y, width, height, textColor, text ): *table* label
 
 A text label is an advanced version of the GUI.**text** that supports various alignment options.
 
-| Тип свойства | Свойство |Описание |
+| Type | Property | Description |
 | ------ | ------ | ------ |
 | *function* | :**setAlignment**(*enum* horizontalAlignment, *enum* verticalAlignment): *table* label| Choose a text display option for label boundaries |
 
@@ -918,7 +918,7 @@ This object has following properties:
 | *function* | :**getItem**(*int* index): *table* item| Get item by it's index |
 | *function* | :**select**(*int* index): *table* list| Select item from List by it's index |
 | *function* | :**deselect**(): *table* list| Deselect selected elements |
-| *function* | :**setAlignment**(*enum* horizontalAlignment, *enum* verticalAlignment): *table* list| Установить вариант выравнивания элементов List. По умолчанию вырванивание идет по левому верхнему углу |
+| *function* | :**setAlignment**(*enum* horizontalAlignment, *enum* verticalAlignment): *table* list| Set list items alignment. By default it's set to GUI.**ALIGNMENT_HORIZONTAL_LEFT** and GUI.**ALIGNMENT_VERTICAL_TOP** |
 | *function* | :**setDirection**(*enum* direction): *table* list| Choose an items display option for List boundaries. The default alignment is **left** and **top** |
 | *function* | :**setSpacing**(*int* spacing): *table* list| Set spacing between List items |
 
