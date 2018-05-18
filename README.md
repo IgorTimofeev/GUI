@@ -344,10 +344,10 @@ Still not tired? Now think how I fucked up writing them during the library devel
 
 ![](https://i.imgur.com/x0Cti52.jpg?2)
 
-Ready-to-use widgets
+Ready-to-use objects
 ======
 
-The widgets are listed below comes with the library and are written on the instructions of this documentation. If you want, you can make absolutely similar or much more technically advanced widgets without any difficulties.
+The objects are listed below comes with the library and are written on the instructions of this documentation. If you want, you can make absolutely similar or much more technically advanced widgets without any difficulties.
 
 GUI.**panel**(x, y, width, height, color, [transparency]): *table* panel
 ------------------------------------------------------------------------
