@@ -48,7 +48,7 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [   GUI.tabbedWindow](#guitabbedwindowx-y-width-height-table-window) |
 | [   GUI.palette](#guipalettex-y-initialcolor-table-palette) |
 | [Standalone methods](#standalone-methods) |
-| [   GUI.error](#guierrorvarargs) |
+| [   GUI.alert](#guialertvarargs) |
 | [   GUI.addPalette](#guiaddpaletteparentcontainer-addpanel-initialcolor-table-palette) |
 | [   GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel--table-filesystemdialog) |
 | [   GUI.addBackgroundContainer](#guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title-table-palette) |
@@ -517,7 +517,7 @@ mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height
 -- Add a regular button
 local regularButton = mainContainer:addChild(GUI.button(2, 2, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Regular button"))
 regularButton.onTouch = function()
-	GUI.error("Regular button was pressed")
+	GUI.alert("Regular button was pressed")
 end
 
 -- Add a regular button with disabled state
@@ -528,24 +528,24 @@ disabledButton.disabled = true
 local switchButton = mainContainer:addChild(GUI.button(2, 10, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Switch button"))
 switchButton.switchMode = true
 switchButton.onTouch = function()
-	GUI.error("Switch button was pressed")
+	GUI.alert("Switch button was pressed")
 end
 
 -- Add a regular button with disabled animation
 local notAnimatedButton = mainContainer:addChild(GUI.button(2, 14, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Not animated button"))
 notAnimatedButton.animated = false
 notAnimatedButton.onTouch = function()
-	GUI.error("Not animated button was pressed")
+	GUI.alert("Not animated button was pressed")
 end
 
 -- Add a rounded button
 mainContainer:addChild(GUI.roundedButton(2, 18, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Rounded button")).onTouch = function()
-	GUI.error("Rounded button was pressed")
+	GUI.alert("Rounded button was pressed")
 end
 
 -- Add a framed button
 mainContainer:addChild(GUI.framedButton(2, 22, 30, 3, 0xFFFFFF, 0xFFFFFF, 0x880000, 0x880000, "Framed button")).onTouch = function()
-	GUI.error("Framed button was pressed")
+	GUI.alert("Framed button was pressed")
 end
 
 --------------------------------------------------------------------------------
@@ -643,7 +643,7 @@ local mainContainer = GUI.fullScreenContainer()
 mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
 
 mainContainer:addChild(GUI.input(2, 2, 30, 3, 0xEEEEEE, 0x555555, 0x999999, 0xFFFFFF, 0x2D2D2D, "Hello world", "Placeholder text")).onInputFinished = function()
-	GUI.error("Input finished!")
+	GUI.alert("Input finished!")
 end
 
 --------------------------------------------------------------------------------
@@ -745,7 +745,7 @@ mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height
 local switch1 = mainContainer:addChild(GUI.switch(3, 2, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, true))
 local switch2 = mainContainer:addChild(GUI.switch(3, 4, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, false))
 switch2.onStateChanged = function(state)
-	GUI.error("Switch state changed!")
+	GUI.alert("Switch state changed!")
 end
 
 --------------------------------------------------------------------------------
@@ -894,7 +894,7 @@ mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height
 local verticalList = mainContainer:addChild(GUI.list(3, 2, 25, 30, 3, 0, 0xE1E1E1, 0x4B4B4B, 0xD2D2D2, 0x4B4B4B, 0x3366CC, 0xFFFFFF, false))
 verticalList:addItem("Hello world")
 verticalList:addItem("This is test").onTouch = function()
-	GUI.error("Selected item: " .. verticalList.selectedItem)
+	GUI.alert("Selected item: " .. verticalList.selectedItem)
 end
 verticalList:addItem("Beautiful")
 verticalList:addItem("Like a shit")
@@ -956,7 +956,7 @@ item.onTouch = function()
 	local contextMenu = GUI.contextMenu(item.x, item.y + 1)
 	contextMenu:addItem("New")
 	contextMenu:addItem("Open").onTouch = function()
-		GUI.error("Open was pressed")
+		GUI.alert("Open was pressed")
 	end
 	contextMenu:addSeparator()
 	contextMenu:addItem("Save")
@@ -1079,7 +1079,7 @@ end
 
 -- This function will be called on "drop" event
 resizer.onResizeFinished = function()
-	GUI.error("Resize finished!")
+	GUI.alert("Resize finished!")
 end
 
 --------------------------------------------------------------------------------
@@ -1186,19 +1186,19 @@ mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height
 local tree1 = mainContainer:addChild(GUI.filesystemTree(3, 2, 30, 41, 0xCCCCCC, 0x3C3C3C, 0x3C3C3C, 0x999999, 0x3C3C3C, 0xE1E1E1, 0xBBBBBB, 0xAAAAAA, 0xBBBBBB, 0x444444, GUI.IO_MODE_BOTH, GUI.IO_MODE_FILE))
 tree1:updateFileList()
 tree1.onItemSelected = function(path)
-	GUI.error("Something was selected, the path is: \"" .. path .. "\"")
+	GUI.alert("Something was selected, the path is: \"" .. path .. "\"")
 end
 
 local tree2 = mainContainer:addChild(GUI.filesystemTree(34, 2, 30, 41, 0xCCCCCC, 0x3C3C3C, 0x3C3C3C, 0x999999, 0x3C3C3C, 0xE1E1E1, 0xBBBBBB, 0xAAAAAA, 0xBBBBBB, 0x444444, GUI.IO_MODE_FILE, GUI.IO_MODE_FILE))
 tree2:updateFileList()
 tree2.onItemSelected = function(path)
-	GUI.error("File was selected, the path is: \"" .. path .. "\"")
+	GUI.alert("File was selected, the path is: \"" .. path .. "\"")
 end
 
 local tree3 = mainContainer:addChild(GUI.filesystemTree(66, 2, 30, 41, 0xCCCCCC, 0x3C3C3C, 0x3C3C3C, 0x999999, 0x3C3C3C, 0xE1E1E1, 0xBBBBBB, 0xAAAAAA, 0xBBBBBB, 0x444444, GUI.IO_MODE_DIRECTORY, GUI.IO_MODE_DIRECTORY))
 tree3:updateFileList()
 tree3.onItemSelected = function(path)
-	GUI.error("Directory was selected, the path is: \"" .. path .. "\"")
+	GUI.alert("Directory was selected, the path is: \"" .. path .. "\"")
 end
 
 --------------------------------------------------------------------------------
@@ -1254,7 +1254,7 @@ mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height
 local filesystemChooser = mainContainer:addChild(GUI.filesystemChooser(2, 2, 30, 3, 0xE1E1E1, 0x888888, 0x3C3C3C, 0x888888, nil, "Open", "Cancel", "Choose", "/"))
 filesystemChooser:setMode(GUI.IO_MODE_OPEN, GUI.IO_MODE_FILE)
 filesystemChooser.onSubmit = function(path)
-	GUI.error("File \"" .. path .. "\" was selected")
+	GUI.alert("File \"" .. path .. "\" was selected")
 end
 
 --------------------------------------------------------------------------------
@@ -1490,7 +1490,7 @@ mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height
 -- Add vertical scrollBar to main container
 local verticalScrollBar = mainContainer:addChild(GUI.scrollBar(2, 3, 1, 15, 0x444444, 0x888888, 1, 100, 1, 10, 1, true))
 verticalScrollBar.onTouch = function()
-	GUI.error("Vertical scrollbar was touched")
+	GUI.alert("Vertical scrollbar was touched")
 end
 
 -- Add horizontal too
@@ -1603,7 +1603,7 @@ This object has following properties:
 | *table* | .**cells**| Three-dismensional table with rows/columns indices. Each .**cells**[row][column] table contains data with cell alignment/direction/spacing/fitting/calculated width and height |
 | *boolean* | .**showGrid**| Toggle grid borders rendering. The default value is **false** |
 | *function* | :**setPosition**(*int* column, *int* row, *object* child): *object* child| Assign the specified grid cell to the layout child object. One cell can contain as many objects as you want |
-| *function* | :**setGridSize**(*int* columnCount, *int* columnCount): *table* layout | Set size of the layout grid. All objects located outside the range of new size must be assigned to required cells again via :**setCellPosition**(...)  |
+| *function* | :**setSize**(*int* columnCount, *int* columnCount): *table* layout | Set size of the layout grid. All objects located outside the range of new size must be assigned to required cells again via :**setPosition**(...)  |
 | *function* | :**setColumnWidth**(*int* column, *enum* sizePolicy, *float* size): *table* layout | Set width of the specified column. The value can be one of two types: GUI.**SIZE_POLICY_ABSOLUTE** or GUI.**SIZE_POLICY_RELATIVE**. In the first case, the width exists as pixels, and does not change when layout size is changed. The second one exists as the percentage width of the column: if you specify a relative value, and there are other columns to the right of the selected column, their relative width will be automatically recalculated to the desired percentage values. Relative width must be a number in **[0.0; 1.0]** range |
 | *function* | :**setRowHeight**(*int* row, *enum* sizePolicy, *float* size): *table* layout | Set height of the specified row. The behavior of the function is similar to **:setColumnWidth**(...) |
 | *function* | :**addColumn**(*enum* sizePolicy, *float* size): *table* layout | Add an empty column to layout grid with specified size |
@@ -1649,7 +1649,7 @@ layout.children[1].onTouch = function()
 	-- Enable layout grid rendering
 	layout.showGrid = true
 	-- Change layout grid size
-	layout:setGridSize(3, 1)
+	layout:setSize(3, 1)
 	-- Change cell spacing for each column
 	for column = 1, 3 do
 		layout:setSpacing(column, 1, 4)
@@ -1842,7 +1842,7 @@ mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height
 local palette = mainContainer:addChild(GUI.palette(3, 2, 0x9900FF))
 -- Specify an .onTouch() callback-function to submit button
 palette.submitButton.onTouch = function()
-	GUI.error("You've been selected a color: " .. string.format("0x%X", palette.color.integer))
+	GUI.alert("You've been selected a color: " .. string.format("0x%X", palette.color.integer))
 end
 
 ------------------------------------------------------------------------------------------
@@ -1860,7 +1860,7 @@ Standalone methods
 
 The library has several methods that can simplify the development of programs. For example, a context menu, an information window or a palette window.
 
-GUI.**error**(...varargs)
+GUI.**alert**(...varargs)
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1877,7 +1877,7 @@ local GUI = require("GUI")
 --------------------------------------------------------------------------------
 
 buffer.clear(0x2D2D2D)
-GUI.error("Something went wrong here, my friend")
+GUI.alert("Something went wrong here, my friend")
 ```
 
 Result:
@@ -1991,7 +1991,7 @@ mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height
 local palette = GUI.addPalette(mainContainer, false, 0x9900FF)
 -- Do something after color selection
 palette.onSubmit = function()
-	GUI.error("This color was selected: " .. string.format("0x%06X", palette.color.integer))
+	GUI.alert("This color was selected: " .. string.format("0x%06X", palette.color.integer))
 	mainContainer:drawOnScreen()
 end
 
@@ -2036,7 +2036,7 @@ local filesystemDialog = GUI.addFilesystemDialog(mainContainer, false, 50, math.
 filesystemDialog:setMode(GUI.IO_MODE_OPEN, GUI.IO_MODE_FILE)
 filesystemDialog:addExtensionFilter(".pic")
 filesystemDialog.onSubmit = function(path)
-	GUI.error("This path was selected: " .. path)
+	GUI.alert("This path was selected: " .. path)
 end
 
 filesystemDialog:show()
