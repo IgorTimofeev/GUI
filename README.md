@@ -48,7 +48,7 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [   GUI.titledWindow](#guititledwindowx-y-width-height-title-addtitlepanel-table-window) |
 | [   GUI.tabbedWindow](#guitabbedwindowx-y-width-height-table-window) |
 | [   GUI.palette](#guipalettex-y-initialcolor-table-palette) |
-| [Standalone methods](#standalone-methods) |
+| [Standalone methods:](#standalone-methods) |
 | [   GUI.alert](#guialertvarargs) |
 | [   GUI.highlightString](#guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
 | [   GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel-table-filesystemdialog) |
