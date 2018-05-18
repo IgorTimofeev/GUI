@@ -18,29 +18,29 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [Animations](#animations) |
 | [Constants](#constants) |
 | [Ready-to-use objects](#ready-to-use-objects) |
-| [   GUI.panel](#guipanel-x-y-width-height-color-transparency--table-panel) |
-| [   GUI.text](#guitext-x-y-textcolor-text--table-text) |
-| [   GUI.label](#guilabel-x-y-width-height-textcolor-text--table-label) |
-| [   GUI.image](#guiimage-x-y-loadedimage--table-image) |
-| [   GUI.button](#guibutton-x-y-width-height-buttoncolor-textcolor-buttonpressedcolor-textpressedcolor-text--table-button) |
-| [   GUI.actionButtons](#guiactionbuttons-x-y-fat--table-actionbuttons) |
-| [   GUI.input](#guiinput-x-y-width-height-backgroundcolor-textcolor-placeholdertextcolor-backgroundfocusedcolor-textfocusedcolor-text-placeholdertext-erasetextonfocus-textmask--table-input) |
-| [   GUI.slider](#guislider-x-y-width-primarycolor-secondarycolor-pipecolor-valuecolor-minimumvalue-maximumvalue-value-showcornervalues-currentvalueprefix-currentvaluepostfix--table-slider) |
-| [   GUI.switch](#guiswitch-x-y-width-primarycolor-secondarycolor-pipecolor-state--table-switch) |
-| [   GUI.switchAndLabel](#guiswitchandlabel-x-y-width-switchwidth-primarycolor-secondarycolor-pipecolor-textcolor-text-switchstate--table-switchandlabel) |
-| [   GUI.colorSelector](#guicolorselector-x-y-width-height-color-text--table-colorselector) |
-| [   GUI.list](#guilist-x-y-width-height-itemsize-spacing-backgroundcolor-textcolor-alternatebackgroundcolor-alternatetextcolor-backgroundselectedcolor-textselectedcolor--offsetmode--table-list) |
-| [   GUI.comboBox](#guicombobox-x-y-width-elementheight-backgroundcolor-textcolor-arrowbackgroundcolor-arrowtextcolor--table-combobox) |
-| [   GUI.menu](#guimenu-x-y-width-backgroundcolor-textcolor-backgroundpressedcolor-textpressedcolor-backgroundtransparency--table-menu) |
-| [   GUI.resizer](#guiresizer-x-y-width-height-resizercolor-arrowcolor--table-resizer) |
-| [   GUI.progressBar](#guiprogressbar-x-y-width-primarycolor-secondarycolor-valuecolor-value-thin-showvalue-valueprefix-valuepostfix--table-progressbar) |
-| [   GUI.filesystemTree](#guifilesystemtree-x-y-width-height-backgroundcolor-directorycolor-filecolor-arrowcolor-backgroundselectioncolor-textselectioncolor-arrowselectioncolor-disabledcolor-scrollbarbackground-scrollbarforeground-showmode-selectionmode--table-filesystemtree) |
-| [   GUI.filesystemChooser](#guifilesystemchooser-x-y-width-height-backgroundcolor-textcolor-tipbackgroundcolor-tiptextcolor-initialtext-sumbitbuttontext-cancelbuttontext-placeholdertext-filesystemdialogmode-filesystemdialogpath--table-filesystemchooser) |
-| [   GUI.codeView](#guicodeview-x-y-width-height-lines-fromsymbol-fromline-maximumlinelength-selections-highlights-highlightluasyntax-indentationwidth--table-codeview) |
-| [   GUI.chart](#guichart-x-y-width-height-axiscolor-axisvaluecolor-axishelperscolor-chartcolor-xaxisvalueinterval-yaxisvalueinterval-xaxispostfix-yaxispostfix-fillchartarea-values--table-chart) |
-| [   GUI.brailleCanvas](#guibraillecanvas-x-y-width-height--table-braillecanvas) |
-| [   GUI.scrollBar](#guiscrollbar-x-y-width-height-backgroundcolor-foregroundcolor-minimumvalue-maximumvalue-value-shownvaluecount-onscrollvalueincrement-thinhorizontalmode--table-scrollbar) |
-| [   GUI.textBox](#guitextbox-x-y-width-height-backgroundcolor-textcolor-lines-currentline-horizontaloffset-verticaloffset-autowrap-autoheight-table-textbox) |
+| [   GUI.panel](#guipanelx-y-width-height-color-transparency-table-panel) |
+| [   GUI.text](#guitextxy-textcolor-text-table-text) |
+| [   GUI.label](#guilabelx-y-width-height-textcolor-text-table-label) |
+| [   GUI.image](#guiimagex-y-loadedimage-table-image) |
+| [   GUI.button](#guibuttonx-y-width-height-buttoncolor-textcolor-buttonpressedcolor-textpressedcolor-text-table-button) |
+| [   GUI.actionButtons](#guiactionbuttonsx-y-fat-table-actionbuttons) |
+| [   GUI.input](#guiinputx-y-width-height-backgroundcolor-textcolor-placeholdertextcolor-backgroundfocusedcolor-textfocusedcolor-text-placeholdertext-erasetextonfocus-textmask-table-input) |
+| [   GUI.slider](#guisliderx-y-width-primarycolor-secondarycolor-pipecolor-valuecolor-minimumvalue-maximumvalue-value-showcornervalues-currentvalueprefix-currentvaluepostfix-table-slider) |
+| [   GUI.switch](#guiswitchx-y-width-primarycolor-secondarycolor-pipecolor-state-table-switch) |
+| [   GUI.switchAndLabel](#guiswitchandlabelx-y-width-switchwidth-primarycolor-secondarycolor-pipecolor-textcolor-text-switchstate-table-switchandlabel) |
+| [   GUI.colorSelector](#guicolorselectorx-y-width-height-color-text-table-colorselector) |
+| [   GUI.list](#guilistx-y-width-height-itemsize-spacing-backgroundcolor-textcolor-alternatebackgroundcolor-alternatetextcolor-backgroundselectedcolor-textselectedcolor--offsetmode-table-list) |
+| [   GUI.comboBox](#guicomboboxx-y-width-elementheight-backgroundcolor-textcolor-arrowbackgroundcolor-arrowtextcolor-table-combobox) |
+| [   GUI.menu](#guimenux-y-width-backgroundcolor-textcolor-backgroundpressedcolor-textpressedcolor-backgroundtransparency-table-menu) |
+| [   GUI.resizer](#guiresizerx-y-width-height-resizercolor-arrowcolor-table-resizer) |
+| [   GUI.progressBar](#guiprogressbarx-y-width-primarycolor-secondarycolor-valuecolor-value-thin-showvalue-valueprefix-valuepostfix-table-progressbar) |
+| [   GUI.filesystemTree](#guifilesystemtreex-y-width-height-backgroundcolor-directorycolor-filecolor-arrowcolor-backgroundselectioncolor-textselectioncolor-arrowselectioncolor-disabledcolor-scrollbarbackground-scrollbarforeground-showmode-selectionmode-table-filesystemtree) |
+| [   GUI.filesystemChooser](#guifilesystemchooserx-y-width-height-backgroundcolor-textcolor-tipbackgroundcolor-tiptextcolor-initialtext-sumbitbuttontext-cancelbuttontext-placeholdertext-filesystemdialogmode-filesystemdialogpath-table-filesystemchooser) |
+| [   GUI.codeView](#guicodeviewx-y-width-height-lines-fromsymbol-fromline-maximumlinelength-selections-highlights-highlightluasyntax-indentationwidth-table-codeview) |
+| [   GUI.chart](#guichartx-y-width-height-axiscolor-axisvaluecolor-axishelperscolor-chartcolor-xaxisvalueinterval-yaxisvalueinterval-xaxispostfix-yaxispostfix-fillchartarea-values-table-chart) |
+| [   GUI.brailleCanvas](#guibraillecanvasx-y-width-height-table-braillecanvas) |
+| [   GUI.scrollBar](#guiscrollbarx-y-width-height-backgroundcolor-foregroundcolor-minimumvalue-maximumvalue-value-shownvaluecount-onscrollvalueincrement-thinhorizontalmode-table-scrollbar) |
+| [   GUI.textBox](#guitextboxx-y-width-height-backgroundcolor-textcolor-lines-currentline-horizontaloffset-verticaloffset-autowrap-autoheight-table-textbox) |
 | [Ready-to-use containers](#ready-to-use-containers) |
 | [   GUI.layout](#guilayoutx-y-width-height-columncount-rowcount-table-layout) |
 | [   GUI.window](#guiwindowx-y-width-height-table-window) |
@@ -51,7 +51,7 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [Standalone methods](#standalone-methods) |
 | [   GUI.alert](#guialertvarargs) |
 | [   GUI.highlightString](#guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
-| [   GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel--table-filesystemdialog) |
+| [   GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel-table-filesystemdialog) |
 | [   GUI.addBackgroundContainer](#guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title-table-palette) |
 | [   GUI.isPointInside](#guiispointinsideobject-x-y-boolean-result) |
 | [   GUI.getAlignmentCoordinates](#guigetalignmentcoordinatesfirstobjectx-firstobjecty-firstobjectwidth-firstobjectheight-firstobjecthorizontalalignment-firstobjectverticalalignment-secondobjectwidth-secondobjectheight-int-x-int-y) |
@@ -326,7 +326,7 @@ Ready-to-use widgets
 
 The widgets are listed below comes with the library and are written on the instructions of this documentation. If you want, you can make absolutely similar or much more technically advanced widgets without any difficulties.
 
-GUI.**panel**( x, y, width, height, color, [transparency] ): *table* panel
+GUI.**panel**(x, y, width, height, color, [transparency]): *table* panel
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -485,7 +485,7 @@ Result:
 
 ![](http://i91.fastpic.ru/big/2017/0402/80/3b0ec81c3b2f660b9a4c6f18908f4280.png)
 
-GUI.**button**( x, y, width, height, buttonColor, textColor, buttonPressedColor, textPressedColor, text ): *table* button
+GUI.**button**(x, y, width, height, buttonColor, textColor, buttonPressedColor, textPressedColor, text): *table* button
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -577,13 +577,13 @@ Result:
 
 ![](https://i.imgur.com/Q2sX0P5.gif)
 
-GUI.**actionButtons**( x, y, [fat] ): *table* actionButtons
+GUI.**actionButtons**(x, y, [fat]): *table* actionButtons
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
 | *int* | x | Object coordinate by x-axis |
 | *int* | y | Object coordinate by y-axis |
-| [ *boolean* | fat ] | The option of drawing buttons with a large size |
+| [*boolean* | fat] | The option of drawing buttons with a large size |
 
 This object is a container containing three round buttons. Basically, it is used to control the state of windows: to close, minimize, and so on.
 
@@ -622,7 +622,7 @@ Result:
 
 ![](https://i.imgur.com/lYUS7fl.png)
 
-GUI.**input**( x, y, width, height, backgroundColor, textColor, placeholderTextColor, backgroundFocusedColor, textFocusedColor, text, [placeholderText, eraseTextOnFocus, textMask] ): *table* input
+GUI.**input**(x, y, width, height, backgroundColor, textColor, placeholderTextColor, backgroundFocusedColor, textFocusedColor, text, [placeholderText, eraseTextOnFocus, textMask]): *table* input
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -675,7 +675,7 @@ Result:
 
 ![](http://i.imgur.com/njPN0eg.gif)
 
-GUI.**slider**( x, y, width, primaryColor, secondaryColor, pipeColor, valueColor, minimumValue, maximumValue, value, [showCornerValues, currentValuePrefix, currentValuePostfix] ): *table* slider
+GUI.**slider**(x, y, width, primaryColor, secondaryColor, pipeColor, valueColor, minimumValue, maximumValue, value, [showCornerValues, currentValuePrefix, currentValuePostfix]): *table* slider
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -729,7 +729,7 @@ Result:
 
 ![](http://i.imgur.com/F7jrTPM.gif)
 
-GUI.**switch**( x, y, width, primaryColor, secondaryColor, pipeColor, state ): *table* switch
+GUI.**switch**(x, y, width, primaryColor, secondaryColor, pipeColor, state): *table* switch
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -777,7 +777,7 @@ Result:
 
 ![](http://i.imgur.com/prBIAsL.gif)
 
-GUI.**switchAndLabel**( x, y, width, switchWidth, primaryColor, secondaryColor, pipeColor, textColor, text, switchState ): *table* switchAndLabel
+GUI.**switchAndLabel**(x, y, width, switchWidth, primaryColor, secondaryColor, pipeColor, textColor, text, switchState): *table* switchAndLabel
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -823,7 +823,7 @@ Result:
 
 ![](http://i.imgur.com/4zKOla9.gif)
 
-GUI.**colorSelector**( x, y, width, height, color, text ): *table* colorSelector
+GUI.**colorSelector**(x, y, width, height, color, text): *table* colorSelector
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -866,7 +866,7 @@ Result:
 
 ![](http://i.imgur.com/QVxu2N0.gif)
 
-GUI.**list**( x, y, width, height, itemSize, spacing, backgroundColor, textColor, alternateBackgroundColor, alternateTextColor, backgroundSelectedColor, textSelectedColor, [offsetMode] ): *table* list
+GUI.**list**(x, y, width, height, itemSize, spacing, backgroundColor, textColor, alternateBackgroundColor, alternateTextColor, backgroundSelectedColor, textSelectedColor, [offsetMode]): *table* list
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -937,7 +937,7 @@ Result:
 
 ![](https://i.imgur.com/lYzufn2.gif)
 
-GUI.**menu**( x, y, width, backgroundColor, textColor, backgroundPressedColor, textPressedColor, [backgroundTransparency] ): *table* menu
+GUI.**menu**(x, y, width, backgroundColor, textColor, backgroundPressedColor, textPressedColor, [backgroundTransparency]): *table* menu
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -996,7 +996,7 @@ Result:
 
 ![](http://i.imgur.com/b1Tmge5.gif)
 
-GUI.**comboBox**( x, y, width, elementHeight, backgroundColor, textColor, arrowBackgroundColor, arrowTextColor ): *table* comboBox
+GUI.**comboBox**(x, y, width, elementHeight, backgroundColor, textColor, arrowBackgroundColor, arrowTextColor): *table* comboBox
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1052,7 +1052,7 @@ Result:
 
 ![](http://i.imgur.com/6ROzLAc.gif)
 
-GUI.**resizer**( x, y, width, height, resizerColor, arrowColor ): *table* resizer
+GUI.**resizer**(x, y, width, height, resizerColor, arrowColor): *table* resizer
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1111,7 +1111,7 @@ Result:
 
 ![](https://i.imgur.com/PvARN8j.gif)
 
-GUI.**progressBar**( x, y, width, primaryColor, secondaryColor, valueColor, value, [thin, showValue, valuePrefix, valuePostfix] ): *table* progressBar
+GUI.**progressBar**(x, y, width, primaryColor, secondaryColor, valueColor, value, [thin, showValue, valuePrefix, valuePostfix]): *table* progressBar
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1157,7 +1157,7 @@ Result:
 
 ![](http://i89.fastpic.ru/big/2017/0402/f1/ef1da27531ccf899eb9eb59c010180f1.png)
 
-GUI.**filesystemTree**( x, y, width, height, backgroundColor, directoryColor, fileColor, arrowColor, backgroundSelectionColor, textSelectionColor, arrowSelectionColor, disabledColor, scrollBarBackground, scrollBarForeground, showMode, selectionMode ): *table* filesystemTree
+GUI.**filesystemTree**(x, y, width, height, backgroundColor, directoryColor, fileColor, arrowColor, backgroundSelectionColor, textSelectionColor, arrowSelectionColor, disabledColor, scrollBarBackground, scrollBarForeground, showMode, selectionMode): *table* filesystemTree
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1230,7 +1230,7 @@ Result:
 
 ![](https://i.imgur.com/igGozFP.gif)
 
-GUI.**filesystemChooser**( x, y, width, height, backgroundColor, textColor, tipBackgroundColor, tipTextColor, initialText, sumbitButtonText, cancelButtonText, placeholderText, filesystemDialogMode, filesystemDialogPath ): *table* filesystemChooser
+GUI.**filesystemChooser**(x, y, width, height, backgroundColor, textColor, tipBackgroundColor, tipTextColor, initialText, sumbitButtonText, cancelButtonText, placeholderText, filesystemDialogMode, filesystemDialogPath): *table* filesystemChooser
 --------------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1286,7 +1286,7 @@ Result:
 
 ![](https://i.imgur.com/F0ch8yQ.gif)
 
-GUI.**codeView**( x, y, width, height, fromSymbol, fromLine, maximumLineLength, selections, highlights, syntaxPatterns, syntaxColorScheme, syntaxHighlight, lines ): *table* codeView
+GUI.**codeView**(x, y, width, height, fromSymbol, fromLine, maximumLineLength, selections, highlights, syntaxPatterns, syntaxColorScheme, syntaxHighlight, lines): *table* codeView
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1355,7 +1355,7 @@ Result:
 
 ![](https://i.imgur.com/UQJxhCn.png)
 
-GUI.**chart**( x, y, width, height, axisColor, axisValueColor, axisHelpersColor, chartColor, xAxisValueInterval, yAxisValueInterval, xAxisPostfix, yAxisPostfix, fillChartArea, values ): *table* chart
+GUI.**chart**(x, y, width, height, axisColor, axisValueColor, axisHelpersColor, chartColor, xAxisValueInterval, yAxisValueInterval, xAxisPostfix, yAxisPostfix, fillChartArea, values): *table* chart
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1401,7 +1401,7 @@ Result:
 
 ![](http://i91.fastpic.ru/big/2017/0402/5b/66ff353492298f6a0c9b01c0fc8a525b.png)
 
-GUI.**brailleCanvas**( x, y, width, height ): *table* brailleCanvas
+GUI.**brailleCanvas**(x, y, width, height): *table* brailleCanvas
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1469,7 +1469,7 @@ Result:
 
 ![](https://i.imgur.com/FPWbQkv.png)
 
-GUI.**scrollBar**( x, y, width, height, backgroundColor, foregroundColor, minimumValue, maximumValue, value, shownValueCount, onScrollValueIncrement, thinMode ): *table* scrollBar
+GUI.**scrollBar**(x, y, width, height, backgroundColor, foregroundColor, minimumValue, maximumValue, value, shownValueCount, onScrollValueIncrement, thinMode): *table* scrollBar
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1633,7 +1633,7 @@ This object has following properties:
 | *function* | :**setAlignment**(*int* column, *int* row, *enum* horizontalAlignment, *enum* verticalAlignment): *table* layout | Assign the method for aligning child objects to the grid cell borders. Following values and any combination of them can be used: GUI.**ALIGNMENT_HORIZONTAL_LEFT**, GUI.**ALIGNMENT_HORIZONTAL_CENTER**, GUI.**ALIGNMENT_HORIZONTAL_RIGHT**, GUI.**ALIGNMENT_VERTICAL_TOP**, GUI.**ALIGNMENT_VERTICAL_CENTER** or GUI.**ALIGNMENT_VERTICAL_BOTTOM** |
 | *function* | :**setSpacing**(*int* column, *int* row, *int* spacing): *table* layout | Assign the specified grid cell distance in pixels between child objects. The default value is **1** |
 | *function* | :**setMargin**(*int* column, *int* row, *int* horizontalMargin, *int* verticalMargin): *table* layout | Assign the specified grid cell indents (margins) in pixels, depending on the current **alignment** of this cell |
-| *function* | :**setFitting**(*int* column, *int* row, *int* horizontalFitting, *int* verticalFitting [, *int* horizontalOffset, *int* verticalOffset] ): *table* layout | Assign the specified grid cell automatic resizing of child objects by horizonal, vertical or both directions. By default new child sizes will be equal the cell size. If optional parameters are specified, then it is possible to set an size reducing, i.e. the size of objects will be equal to **Cell size - Offset value** |
+| *function* | :**setFitting**(*int* column, *int* row, *int* horizontalFitting, *int* verticalFitting, [*int* horizontalOffset, *int* verticalOffset] ): *table* layout | Assign the specified grid cell automatic resizing of child objects by horizonal, vertical or both directions. By default new child sizes will be equal the cell size. If optional parameters are specified, then it is possible to set an size reducing, i.e. the size of objects will be equal to **Cell size - Offset value** |
 | *function* | :**update**(): *table* layout | Forcibly recalculate child objects position. By default this function is being called automatically, but in some cases it can be helful |
 
 Example of implementation:
