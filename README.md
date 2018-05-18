@@ -864,7 +864,7 @@ This object has following properties:
 
 | Type | Property | Description |
 | ------ | ------ | ------ |
-| *callback-function* | .**onTouch**() | This function will be called after choosing color from palette |
+| *callback-function* | .**onColorSelected**() | This function will be called after choosing color from palette |
 
 Example of implementation:
 
@@ -876,7 +876,7 @@ local GUI = require("GUI")
 local mainContainer = GUI.fullScreenContainer()
 mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
 
-mainContainer:addChild(GUI.colorSelector(2, 2, 30, 3, 0xFF55FF, "Choose color")).onTouch = function()
+mainContainer:addChild(GUI.colorSelector(2, 2, 30, 3, 0xFF55FF, "Choose color")).onColorSelected = function()
 	-- Do something after choosing color
 end
 

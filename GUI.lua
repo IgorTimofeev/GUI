@@ -802,7 +802,7 @@ end
 
 local function menuAddItem(menu, text, textColor)
 	local x = 2; for i = 1, #menu.children do x = x + unicode.len(menu.children[i].text) + 2; end
-	local item = menu:addChild(GUI.adaptiveButton(x, 1, 1, 0, nil, textColor or menu.colors.default.text, menu.colors.pressed.background, menu.colors.pressed.text, text))
+	local item = menu:addChild(GUI.adaptiveButton(x, 1, 1, 0, nil, textColor or menu.colors.default.text, menu.colors.selected.background, menu.colors.selected.text, text))
 	item.animated = false
 	item.eventHandler = menuItemEventHandler
 
@@ -817,7 +817,7 @@ function GUI.menu(x, y, width, backgroundColor, textColor, backgroundPressedColo
 			background = backgroundColor,
 			text = textColor,
 		},
-		pressed = {
+		selected = {
 			background = backgroundPressedColor,
 			text = textPressedColor,
 		},
@@ -1125,8 +1125,8 @@ local function colorSelectorEventHandler(mainContainer, object, e1, ...)
 			palette:remove()
 			mainContainer:drawOnScreen()
 
-			if object.onTouch then
-				object.onTouch(mainContainer, object, e1, table.unpack(eventData))
+			if object.onColorSelected then
+				object.onColorSelected(mainContainer, object, e1, table.unpack(eventData))
 			end
 		end
 
@@ -3517,7 +3517,7 @@ local function listUpdate(object)
 		else
 			child.colors.default = object.colors.default
 		end
-		child.colors.pressed, step = object.colors.pressed, not step
+		child.colors.pressed, step = object.colors.selected, not step
 		
 		-- Размеры хуйни
 		if object.itemsLayout.cells[1][1].direction == GUI.DIRECTION_HORIZONTAL then
@@ -3613,7 +3613,7 @@ function GUI.list(x, y, width, height, itemSize, spacing, backgroundColor, textC
 			background = backgroundAlternatingColor,
 			text = textAlternatingColor
 		},
-		pressed = {
+		selected = {
 			background = backgroundSelectedColor,
 			text = textSelectedColor
 		},
@@ -3735,8 +3735,8 @@ local function dropDownMenuItemDraw(item)
 		local textColor = item.color or item.parent.parent.colors.default.text
 
 		if item.pressed then
-			textColor = item.parent.parent.colors.pressed.text
-			buffer.drawRectangle(item.x, item.y, item.width, item.height, item.parent.parent.colors.pressed.background, textColor, " ")
+			textColor = item.parent.parent.colors.selected.text
+			buffer.drawRectangle(item.x, item.y, item.width, item.height, item.parent.parent.colors.selected.background, textColor, " ")
 		elseif item.disabled then
 			textColor = item.parent.parent.colors.disabled.text
 		end
@@ -3928,7 +3928,7 @@ function GUI.dropDownMenu(x, y, width, maximumHeight, itemHeight, backgroundColo
 			background = backgroundColor,
 			text = textColor
 		},
-		pressed = {
+		selected = {
 			background = backgroundPressedColor,
 			text = textPressedColor
 		},
@@ -4097,7 +4097,7 @@ function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBa
 			background = backgroundColor,
 			text = textColor
 		},
-		pressed = {
+		selected = {
 			background = GUI.CONTEXT_MENU_PRESSED_BACKGROUND_COLOR,
 			text = GUI.CONTEXT_MENU_PRESSED_TEXT_COLOR
 		},
@@ -4115,8 +4115,8 @@ function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBa
 		itemSize,
 		comboBox.colors.default.background, 
 		comboBox.colors.default.text, 
-		comboBox.colors.pressed.background,
-		comboBox.colors.pressed.text,
+		comboBox.colors.selected.background,
+		comboBox.colors.selected.text,
 		GUI.CONTEXT_MENU_DISABLED_COLOR,
 		GUI.CONTEXT_MENU_SEPARATOR_COLOR,
 		GUI.CONTEXT_MENU_BACKGROUND_TRANSPARENCY, 
