@@ -1,5 +1,6 @@
 About
 ======
+
 GUI is a multifunctional graphics library, especially designed and optimized for low-performance computers. You can realize all of your most perverted fantasies using it: from habitual buttons, sliders and charts to complex animated interfaces. Extreme performance of the library is achieved by using double buffering and complex color grouping and processing algorithms.
 
 For example, my OS, IDE and 3D-engine are fully implemented by the methods of this library:
