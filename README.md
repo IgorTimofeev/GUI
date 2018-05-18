@@ -298,28 +298,53 @@ This is a rather boring section of the documentation, but it is still necessary 
 
 | Type | Constant | Value | Description |
 | ------ | ------ | ------ | ------ |
-| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | - | Align object to left side horizontally |
-| *enum* | GUI.**ALIGNMENT_HORIZONTAL_CENTER** | - | Align object to center side horizontally |
-| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | - | Align object to right side horizontally |
-| *enum* | GUI.**ALIGNMENT_VERTICAL_TOP** | - | Align object to top side vertically |
-| *enum* | GUI.**ALIGNMENT_VERTICAL_CENTER** | - | Align object to center side vertically |
-| *enum* | GUI.**ALIGNMENT_VERTICAL_BOTTOM** | - | Align object to bottom side vertically |
-| *enum* | GUI.**DIRECTION_HORIZONTAL** | - | Set horizontal direction to an object |
-| *enum* | GUI.**DIRECTION_VERTICAL** | - | Set horizontal direction to an object |
-| *enum* | GUI.**IO_MODE_OPEN** | - | Mode for opening data |
-| *enum* | GUI.**IO_MODE_SAVE** | - | Mode for saving data |
-| *enum* | GUI.**IO_MODE_FILE** | - | Mode for working with files |
-| *enum* | GUI.**IO_MODE_DIRECTORY** | - | Mode for working with directories |
-| *enum* | GUI.**IO_MODE_BOTH** | - | Mode for working with bothly files and directories |
-| *enum* | GUI.**SIZE_POLICY_ABSOLUTE** | - | Calculation of object's sizes via absolute values |
-| *enum* | GUI.**SIZE_POLICY_RELATIVE** | - | Calculation of object's sizes via relative (percentage) values |
-| *string* | GUI.**PALETTE_CONFIG_PATH** | /lib/.palette.cfg | Path where GUI.**palette** favourites colors are being saved |
-| *table* | GUI.**LUA_SYNTAX_PATTERNS** | - | Required patterns for Lua syntax highlighting by GUI.**highlightString**(...) method |
-| *table* | GUI.**LUA_SYNTAX_COLORS** | - | Default color scheme for Lua syntax highlighting by GUI.**highlightString**(...) method |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | 1 | Align object to left side horizontally |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_CENTER** | 2 | Align object to center side horizontally |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | 3 | Align object to right side horizontally |
+| *enum* | GUI.**ALIGNMENT_VERTICAL_TOP** | 4 | Align object to top side vertically |
+| *enum* | GUI.**ALIGNMENT_VERTICAL_CENTER** | 5 | Align object to center side vertically |
+| *enum* | GUI.**ALIGNMENT_VERTICAL_BOTTOM** | 6 | Align object to bottom side vertically |
+| *enum* | GUI.**DIRECTION_HORIZONTAL** | 7 | Set horizontal direction to an object |
+| *enum* | GUI.**DIRECTION_VERTICAL** | 8 | Set horizontal direction to an object |
+| *enum* | GUI.**SIZE_POLICY_ABSOLUTE** | 9 | Calculation of object's sizes via absolute values |
+| *enum* | GUI.**SIZE_POLICY_RELATIVE** | 10 | Calculation of object's sizes via relative (percentage) values |
+| *enum* | GUI.**IO_MODE_FILE** | 11 | Mode for working with files |
+| *enum* | GUI.**IO_MODE_DIRECTORY** | 12 | Mode for working with directories |
+| *enum* | GUI.**IO_MODE_BOTH** | 13 | Mode for working with bothly files and directories |
+| *enum* | GUI.**IO_MODE_OPEN** | 14 | Mode for opening data |
+| *enum* | GUI.**IO_MODE_SAVE** | 15 | Mode for saving data |
 
 Still not tired? Now think how I fucked up writing them during the library development. Shitty constants...
 
 ![](https://i.imgur.com/RDg5Qnz.jpg)
+
+| Type | Constant | Value | Description |
+| ------ | ------ | ------ | ------ |
+| *int* | GUI.**CONTEXT_MENU_SEPARATOR_COLOR** | 0x878787 | Context menu separator color |
+| *int* | GUI.**CONTEXT_MENU_DEFAULT_TEXT_COLOR** | 0x2D2D2D | Context menu default item text color |
+| *int* | GUI.**CONTEXT_MENU_DEFAULT_BACKGROUND_COLOR** | 0xFFFFFF | Context menu default item background color |
+| *int* | GUI.**CONTEXT_MENU_PRESSED_BACKGROUND_COLOR** | 0x3366CC | Context menu default item background color |
+| *int* | GUI.**CONTEXT_MENU_PRESSED_TEXT_COLOR** | 0xFFFFFF | Context menu default item text color |
+| *int* | GUI.**CONTEXT_MENU_DISABLED_COLOR** | 0x878787 | Context menu disabled item text color |
+| *float* | GUI.**CONTEXT_MENU_BACKGROUND_TRANSPARENCY** | 0.24 | Context menu background transparency |
+| *float* | GUI.**CONTEXT_MENU_SHADOW_TRANSPARENCY** | 0.4 | Context menu shadow transparency |
+| *int* | GUI.**BACKGROUND_CONTAINER_TITLE_COLOR** | 0xE1E1E1 | Background container title color |
+| *float* | GUI.**BACKGROUND_CONTAINER_PANEL_TRANSPARENCY** | 0.3 | Background container panel transparency |
+| *int* | GUI.**WINDOW_BACKGROUND_PANEL_COLOR** | 0xF0F0F0 | Window background panel color |
+| *int* | GUI.**WINDOW_TITLE_BACKGROUND_COLOR** | 0xE1E1E1 | Window title background color |
+| *int* | GUI.**WINDOW_TITLE_TEXT_COLOR** | 0x2D2D2D | Window title text color |
+| *int* | GUI.**WINDOW_TAB_BAR_DEFAULT_BACKGROUND_COLOR** | 0x2D2D2D | Window tab bar default background color |
+| *int* | GUI.**WINDOW_TAB_BAR_DEFAULT_TEXT_COLOR** | 0xF0F0F0 | Window tab bar default text color |
+| *int* | GUI.**WINDOW_TAB_BAR_SELECTED_BACKGROUND_COLOR** | 0xF0F0F0 | Window tab bar selected background color |
+| *int* | GUI.**WINDOW_TAB_BAR_SELECTED_TEXT_COLOR** | 0x2D2D2D | Window tab bar selected text color |
+| *float* | GUI.**WINDOW_SHADOW_TRANSPARENCY** | 0.5 | Window shadow transparency |
+| *string* | GUI.**PALETTE_CONFIG_PATH** | "/lib/.palette.cfg" | Path where GUI.**palette** favourites colors are being saved |
+| *table* | GUI.**LUA_SYNTAX_PATTERNS** | {...} | Required patterns for Lua syntax highlighting by GUI.**highlightString**(...) method |
+| *table* | GUI.**LUA_SYNTAX_COLORS** | {...} | Default color scheme for Lua syntax highlighting by GUI.**highlightString**(...) method |
+
+A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A
+
+![](https://pp.userapi.com/c639717/v639717895/27680/cDRUWgCZiBc.jpg)
 
 Ready-to-use widgets
 ======
