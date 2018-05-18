@@ -270,7 +270,7 @@ As a result, we will get a nice green rectangle:
 
 ![](https://i.imgur.com/VBrEdyx.png)
 
-The next feature of an objects is animations: every object can be animated. For example, here is field of animated GUI.**switch** objects:
+The next feature of an objects is animations: every object can be animated. For more information about creating animations, see practical examples in end of this documentation. By the way, here is field of animated GUI.**switch** objects:
 
 ![](http://i.imgur.com/f5aO73U.gif)
 
