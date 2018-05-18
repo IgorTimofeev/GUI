@@ -298,16 +298,16 @@ This is a rather boring section of the documentation, but it is still necessary 
 
 | Type | Constant | Description |
 | ------ | ------ | ------ |
-| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | Align object to left side horizontally |
-| *enum* | GUI.**ALIGNMENT_HORIZONTAL_CENTER** | Align object to center side horizontally |
-| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | Align object to right side horizontally |
-| *enum* | GUI.**ALIGNMENT_VERTICAL_TOP** | Align object to top side vertically |
-| *enum* | GUI.**ALIGNMENT_VERTICAL_CENTER** | Align object to center side vertically |
-| *enum* | GUI.**ALIGNMENT_VERTICAL_BOTTOM** | Align object to bottom side vertically |
-| *enum* | GUI.**DIRECTION_HORIZONTAL** | Set horizontal direction to an object |
-| *enum* | GUI.**DIRECTION_VERTICAL** | Set horizontal direction to an object |
-| *enum* | GUI.**SIZE_POLICY_ABSOLUTE** | Calculation of object's sizes via absolute values |
-| *enum* | GUI.**SIZE_POLICY_RELATIVE** | Calculation of object's sizes via relative (percentage) values |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | Align something to left side horizontally |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_CENTER** | Align something to center side horizontally |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | Align something to right side horizontally |
+| *enum* | GUI.**ALIGNMENT_VERTICAL_TOP** | Align something to top side vertically |
+| *enum* | GUI.**ALIGNMENT_VERTICAL_CENTER** | Align something to center vertically |
+| *enum* | GUI.**ALIGNMENT_VERTICAL_BOTTOM** | Align something to bottom side vertically |
+| *enum* | GUI.**DIRECTION_HORIZONTAL** | Horizontal direction of something |
+| *enum* | GUI.**DIRECTION_VERTICAL** | Horizontal direction of something |
+| *enum* | GUI.**SIZE_POLICY_ABSOLUTE** | Calculate sizes of something as absolute values |
+| *enum* | GUI.**SIZE_POLICY_RELATIVE** | Calculate sizes of something as relative (percentage) values |
 | *enum* | GUI.**IO_MODE_FILE** | Mode for working with files |
 | *enum* | GUI.**IO_MODE_DIRECTORY** | Mode for working with directories |
 | *enum* | GUI.**IO_MODE_BOTH** | Mode for working with bothly files and directories |
