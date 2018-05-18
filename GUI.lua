@@ -31,27 +31,26 @@ local GUI = {
 	IO_MODE_BOTH = 13,
 	IO_MODE_OPEN = 14,
 	IO_MODE_SAVE = 15,
+	
+	CONTEXT_MENU_SEPARATOR_COLOR = 0x878787,
+	CONTEXT_MENU_DEFAULT_TEXT_COLOR = 0x2D2D2D,
+	CONTEXT_MENU_DEFAULT_BACKGROUND_COLOR = 0xFFFFFF,
+	CONTEXT_MENU_PRESSED_BACKGROUND_COLOR = 0x3366CC,
+	CONTEXT_MENU_PRESSED_TEXT_COLOR = 0xFFFFFF,
+	CONTEXT_MENU_DISABLED_COLOR = 0x878787,
+	CONTEXT_MENU_BACKGROUND_TRANSPARENCY = 0.24,
+	CONTEXT_MENU_SHADOW_TRANSPARENCY = 0.4,
 
-	COLOR_CONTEXT_MENU_SEPARATOR = 0x878787,
-	COLOR_CONTEXT_MENU_DISABLED = 0x878787,
-	COLOR_CONTEXT_MENU_DEFAULT_BACKGROUND = 0xFFFFFF,
-	COLOR_CONTEXT_MENU_DEFAULT_TEXT = 0x2D2D2D,
-	COLOR_CONTEXT_MENU_PRESSED_BACKGROUND = 0x3366CC,
-	COLOR_CONTEXT_MENU_PRESSED_TEXT = 0xFFFFFF,
-	COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND = 0.24,
-	COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW = 0.4,
+	BACKGROUND_CONTAINER_TITLE_COLOR = 0xE1E1E1,
+	BACKGROUND_CONTAINER_PANEL_TRANSPARENCY = 0.3,
 
-	COLOR_BACKGROUND_CONTAINER_TITLE = 0xE1E1E1,
-	COLOR_BACKGROUND_CONTAINER_TRANSPARENCY = 0.3,
-
-	COLOR_WINDOW_BACKGROUND_PANEL = 0xF0F0F0,
-	COLOR_WINDOW_TITLE_BACKGROUND = 0xE1E1E1,
-	COLOR_WINDOW_TITLE_TEXT = 0x2D2D2D,
-	COLOR_WINDOW_TAB_BAR_DEFAULT_BACKGROUND = 0x2D2D2D,
-	COLOR_WINDOW_TAB_BAR_DEFAULT_TEXT = 0xF0F0F0,
-	COLOR_WINDOW_TAB_BAR_SELECTED_BACKGROUND = 0xF0F0F0,
-	COLOR_WINDOW_TAB_BAR_SELECTED_TEXT = 0x2D2D2D,
-	COLOR_WINDOW_TRANSPARENCY_SHADOW = 0.5,
+	WINDOW_BACKGROUND_PANEL_COLOR = 0xF0F0F0,
+	WINDOW_TITLE_BACKGROUND_COLOR = 0xE1E1E1,
+	WINDOW_TITLE_TEXT_COLOR = 0x2D2D2D,
+	WINDOW_TAB_BAR_DEFAULT_BACKGROUND_COLOR = 0x2D2D2D,
+	WINDOW_TAB_BAR_DEFAULT_TEXT_COLOR = 0xF0F0F0,
+	WINDOW_TAB_BAR_SELECTED_BACKGROUND_COLOR = 0xF0F0F0,
+	WINDOW_TAB_BAR_SELECTED_TEXT_COLOR = 0x2D2D2D,
 
 	PALETTE_CONFIG_PATH = "/lib/.palette.cfg",
 
@@ -1845,7 +1844,7 @@ local function filesystemDialogDraw(filesystemDialog)
 	end
 	
 	containerDraw(filesystemDialog)
-	GUI.drawShadow(filesystemDialog.x, filesystemDialog.y, filesystemDialog.width, filesystemDialog.height, GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW, true)
+	GUI.drawShadow(filesystemDialog.x, filesystemDialog.y, filesystemDialog.width, filesystemDialog.height, GUI.CONTEXT_MENU_SHADOW_TRANSPARENCY, true)
 
 	return filesystemDialog
 end
@@ -3473,7 +3472,7 @@ function GUI.addBackgroundContainer(parentContainer, addPanel, addLayout, title)
 	local container = parentContainer:addChild(GUI.container(1, 1, parentContainer.width, parentContainer.height))
 	
 	if addPanel then
-		container.panel = container:addChild(GUI.panel(1, 1, container.width, container.height, 0x0, GUI.COLOR_BACKGROUND_CONTAINER_TRANSPARENCY))
+		container.panel = container:addChild(GUI.panel(1, 1, container.width, container.height, 0x0, GUI.BACKGROUND_CONTAINER_PANEL_TRANSPARENCY))
 		container.panel.eventHandler = function(parentContainer, object, e1)
 			if e1 == "touch" then
 				container:remove()
@@ -3491,7 +3490,7 @@ function GUI.addBackgroundContainer(parentContainer, addPanel, addLayout, title)
 		container.layout:setFitting(2, 1, true, false)
 
 		if title then
-			container.label = container.layout:addChild(GUI.label(1, 1, 1, 1, GUI.COLOR_BACKGROUND_CONTAINER_TITLE, title)):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
+			container.label = container.layout:addChild(GUI.label(1, 1, 1, 1, GUI.BACKGROUND_CONTAINER_TITLE_COLOR, title)):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
 		end
 	end
 
@@ -4007,14 +4006,14 @@ contextMenuCreate = function(x, y, backgroundColor, textColor, backgroundPressed
 		1,
 		math.ceil(buffer.getHeight() * 0.5),
 		1,
-		backgroundColor or GUI.COLOR_CONTEXT_MENU_DEFAULT_BACKGROUND,
-		textColor or GUI.COLOR_CONTEXT_MENU_DEFAULT_TEXT,
-		backgroundPressedColor or GUI.COLOR_CONTEXT_MENU_PRESSED_BACKGROUND,
-		textPressedColor or GUI.COLOR_CONTEXT_MENU_PRESSED_TEXT,
-		disabledColor or GUI.COLOR_CONTEXT_MENU_DISABLED,
-		separatorColor or GUI.COLOR_CONTEXT_MENU_SEPARATOR,
-		backgroundTransparency or GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND,
-		shadowTransparency or GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW
+		backgroundColor or GUI.CONTEXT_MENU_DEFAULT_BACKGROUND_COLOR,
+		textColor or GUI.CONTEXT_MENU_DEFAULT_TEXT_COLOR,
+		backgroundPressedColor or GUI.CONTEXT_MENU_PRESSED_BACKGROUND_COLOR,
+		textPressedColor or GUI.CONTEXT_MENU_PRESSED_TEXT_COLOR,
+		disabledColor or GUI.CONTEXT_MENU_DISABLED_COLOR,
+		separatorColor or GUI.CONTEXT_MENU_SEPARATOR_COLOR,
+		backgroundTransparency or GUI.CONTEXT_MENU_BACKGROUND_TRANSPARENCY,
+		shadowTransparency or GUI.CONTEXT_MENU_SHADOW_TRANSPARENCY
 	)
 
 	menu.update = contextMenuUpdate
@@ -4099,8 +4098,8 @@ function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBa
 			text = textColor
 		},
 		pressed = {
-			background = GUI.COLOR_CONTEXT_MENU_PRESSED_BACKGROUND,
-			text = GUI.COLOR_CONTEXT_MENU_PRESSED_TEXT
+			background = GUI.CONTEXT_MENU_PRESSED_BACKGROUND_COLOR,
+			text = GUI.CONTEXT_MENU_PRESSED_TEXT_COLOR
 		},
 		arrow = {
 			background = arrowBackgroundColor,
@@ -4118,10 +4117,10 @@ function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBa
 		comboBox.colors.default.text, 
 		comboBox.colors.pressed.background,
 		comboBox.colors.pressed.text,
-		GUI.COLOR_CONTEXT_MENU_DISABLED,
-		GUI.COLOR_CONTEXT_MENU_SEPARATOR,
-		GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_BACKGROUND, 
-		GUI.COLOR_CONTEXT_MENU_TRANSPARENCY_SHADOW
+		GUI.CONTEXT_MENU_DISABLED_COLOR,
+		GUI.CONTEXT_MENU_SEPARATOR_COLOR,
+		GUI.CONTEXT_MENU_BACKGROUND_TRANSPARENCY, 
+		GUI.CONTEXT_MENU_SHADOW_TRANSPARENCY
 	)
 
 	comboBox.dropDownMenu.onClose = function(index)
@@ -4153,7 +4152,7 @@ end
 
 function windowDraw(window)
 	containerDraw(window)
-	GUI.drawShadow(window.x, window.y, window.width, window.height, GUI.COLOR_WINDOW_TRANSPARENCY_SHADOW, true)
+	GUI.drawShadow(window.x, window.y, window.width, window.height, GUI.WINDOW_SHADOW_TRANSPARENCY, true)
 
 	return window
 end
@@ -4252,14 +4251,14 @@ function GUI.filledWindow(x, y, width, height, backgroundColor)
 end
 
 function GUI.titledWindow(x, y, width, height, title, addTitlePanel)
-	local window = GUI.filledWindow(x, y, width, height, GUI.COLOR_WINDOW_BACKGROUND_PANEL)
+	local window = GUI.filledWindow(x, y, width, height, GUI.WINDOW_BACKGROUND_PANEL_COLOR)
 
 	if addTitlePanel then
-		window.titlePanel = window:addChild(GUI.panel(1, 1, width, 1, GUI.COLOR_WINDOW_TITLE_BACKGROUND))
+		window.titlePanel = window:addChild(GUI.panel(1, 1, width, 1, GUI.WINDOW_TITLE_BACKGROUND_COLOR))
 		window.backgroundPanel.localY, window.backgroundPanel.height = 2, window.height - 1
 	end
 
-	window.titleLabel = window:addChild(GUI.label(1, 1, width, height, GUI.COLOR_WINDOW_TITLE_TEXT, title)):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
+	window.titleLabel = window:addChild(GUI.label(1, 1, width, height, GUI.WINDOW_TITLE_TEXT_COLOR, title)):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
 	window.actionButtons.localY = 1
 	window.actionButtons:moveToFront()
 
@@ -4267,9 +4266,9 @@ function GUI.titledWindow(x, y, width, height, title, addTitlePanel)
 end
 
 function GUI.tabbedWindow(x, y, width, height, ...)
-	local window = GUI.filledWindow(x, y, width, height, GUI.COLOR_WINDOW_BACKGROUND_PANEL)
+	local window = GUI.filledWindow(x, y, width, height, GUI.WINDOW_BACKGROUND_PANEL_COLOR)
 
-	window.tabBar = window:addChild(GUI.tabBar(1, 1, window.width, 3, 2, 0, GUI.COLOR_WINDOW_TAB_BAR_DEFAULT_BACKGROUND, GUI.COLOR_WINDOW_TAB_BAR_DEFAULT_TEXT, GUI.COLOR_WINDOW_TAB_BAR_DEFAULT_BACKGROUND, GUI.COLOR_WINDOW_TAB_BAR_DEFAULT_TEXT, GUI.COLOR_WINDOW_TAB_BAR_SELECTED_BACKGROUND, GUI.COLOR_WINDOW_TAB_BAR_SELECTED_TEXT, true))
+	window.tabBar = window:addChild(GUI.tabBar(1, 1, window.width, 3, 2, 0, GUI.WINDOW_TAB_BAR_DEFAULT_BACKGROUND_COLOR, GUI.WINDOW_TAB_BAR_DEFAULT_TEXT_COLOR, GUI.WINDOW_TAB_BAR_DEFAULT_BACKGROUND_COLOR, GUI.WINDOW_TAB_BAR_DEFAULT_TEXT_COLOR, GUI.WINDOW_TAB_BAR_SELECTED_BACKGROUND_COLOR, GUI.WINDOW_TAB_BAR_SELECTED_TEXT_COLOR, true))
 	
 	window.backgroundPanel.localY, window.backgroundPanel.height = 4, window.height - 3
 	window.actionButtons:moveToFront()
