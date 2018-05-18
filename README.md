@@ -15,6 +15,7 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [Installation](#installation) |
 | [Containers](#containers) |
 | [Objects](#objects) |
+| [Animations](#animations) |
 | [Constants](#constants) |
 | [Ready-to-use objects](#ready-to-use-objects) |
 | [   GUI.panel](#guipanel-x-y-width-height-color-transparency--table-panel) |
@@ -55,6 +56,7 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [   GUI.isPointInside](#guiispointinsideobject-x-y-boolean-result) |
 | [   GUI.getAlignmentCoordinates](#guigetalignmentcoordinatesfirstobjectx-firstobjecty-firstobjectwidth-firstobjectheight-firstobjecthorizontalalignment-firstobjectverticalalignment-secondobjectwidth-secondobjectheight-int-x-int-y) |
 | [   GUI.getMarginCoordinates](#guigetalignmentcoordinatesx-y-horizontalalignment-verticalalignment-horizontalmargin-verticalmargin-int-x-int-y) |
+| [Practical example #1: Creating an animated widget](#practical-example--1-creating-an-animated-widget) |
 
 Installation
 ======
@@ -269,6 +271,9 @@ mainContainer:startEventHandling()
 As a result, we will get a nice green rectangle:
 
 ![](https://i.imgur.com/VBrEdyx.png)
+
+Animations
+======
 
 The next feature of an objects is animations: every object can be animated. For more information about creating animations, see practical examples in end of this documentation. By the way, here is field of animated GUI.**switch** objects:
 
