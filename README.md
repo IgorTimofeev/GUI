@@ -295,7 +295,7 @@ This is a rather boring section of the documentation, but it is still necessary 
 | *table* | GUI.**LUA_SYNTAX_PATTERNS** | - | Required patterns for Lua syntax highlighting by GUI.**highlightString**(...) method |
 | *table* | GUI.**LUA_SYNTAX_COLORS** | - | Default color scheme for Lua syntax highlighting by GUI.**highlightString**(...) method |
 
-Still not tired yet? And now think how I fucked up writing them during the library development. Shitty constants...
+Still not tired? Now think how I fucked up writing them during the library development. Shitty constants...
 
 ![](https://i.imgur.com/RDg5Qnz.jpg)
 
@@ -1982,7 +1982,7 @@ layout.children[1].onTouch = function()
 	for child = 7, 9 do
 		layout:setPosition(3, 1, layout.children[child])
 	end
-	-- Enable automatic children width calculation for last column
+	-- Enable automatic children width calculation for last column with offset of 4 pixels (2 on each side)
 	layout:setFitting(3, 1, true, false, 4, 0)
 	-- Draw changes on screen
 	mainContainer:drawOnScreen()
@@ -1997,3 +1997,140 @@ mainContainer:startEventHandling()
 Result:
 
 ![](https://i.imgur.com/DnNSX45.gif)
+
+GUI.**window**(x, y, width, height): *table* window
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Window coordinate by x-axis |
+| *int* | y | Window coordinate by y-axis |
+| *int* | width | Window width |
+| *int* | height | Window height |
+
+Windows are a wonderful thing, allowing the user to move them with a couple of mouse clicks. They already have a built-in .**eventHandler**, so you do not have to bother with anything. 
+
+This object has following properties:
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *function* | :**resize**(*int* newWidth, *int* newHeight) | Sets a new window size and calls .**onResize**(...) callback-function if it exists |
+| *function* | :**close**() | Closes window and performs an self :**remove**() on it |
+| *function* | :**minimize**() | Toggles window hidden state. Call this function again to revert changes |
+| *function* | :**maximize**() | Toggles window size to full-screen (to fit parent container) or default size. Call this function again to set previous used size. This will call :**resize**(...) function and, of course, .**onResize**(...) callback-function if it exists |
+| *callback-function* | :**onResize**(*int* newWidth, *int* newHeight) | This function is called after window size hes been changed via :**resize**(...) function. Two parameters are new window size |
+
+In addition to the empty window template, there are also several prepared window designs:
+
+GUI.**filledWindow**(x, y, width, height, fillColor): *table* window
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| ... | ... | ... |
+| *int* | fillColor | Window background panel color |
+
+Creates a window with background panel and action buttons inside it:
+
+![](https://i.imgur.com/l3deL1z.png)
+
+This object has following properties:
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**backgroundPanel** | Pointer to GUI.**panel** object |
+| *table* | .**actionButtons** | Pointer to GUI.**actionButtons** object |
+
+GUI.**titledWindow**(x, y, width, height, title, addTitlePanel): *table* window
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| ... | ... | ... |
+| *string* | title | Window title text |
+| [*boolean* | addTitlePanel] | Optional adding of title background panel |
+
+Creates a window with background panel, action buttons, label with specified title and title background panel if desired:
+
+![](https://i.imgur.com/AU7kuwm.png)
+
+This object has following properties:
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**backgroundPanel** | Pointer to GUI.**panel** object |
+| *table* | .**actionButtons** | Pointer to GUI.**actionButtons** object |
+| *table* | .**titleLabel** | Pointer to title GUI.**label** object |
+| *table* | .**titlePanel** | Pointer to title GUI.**panel** object. Has a **nil** value if not specified |
+
+GUI.**tabbedWindow**(x, y, width, height): *table* window
+------------------------------------------------------------------------
+
+Creates a window with background panel, action buttons and tab bar objects
+
+![](https://i.imgur.com/XERM46i.png)
+
+This object has following properties:
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**backgroundPanel** | Pointer to GUI.**panel** object |
+| *table* | .**actionButtons** | Pointer to GUI.**actionButtons** object |
+| *table* | .**tabBar** | Pointer to title GUI.**tabBar** object |
+
+Example of windows implementation:
+
+```lua
+local image = require("image")
+local GUI = require("GUI")
+
+------------------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x1E1E1E))
+
+-- First, add an empty window to main container
+local window1 = mainContainer:addChild(GUI.window(90, 6, 60, 20))
+-- Add a background panel and text widget to it
+window1:addChild(GUI.panel(1, 1, window1.width, window1.height, 0xF0F0F0))
+window1:addChild(GUI.text(3, 2, 0x2D2D2D, "Regular window example"))
+
+-- Next add tabbed window
+local window2 = mainContainer:addChild(GUI.tabbedWindow(4, 3, 60, 20))
+-- Use pointer to GUI.tabBar object to add some tabs
+window2.tabBar:addItem("Apps")
+window2.tabBar:addItem("Libs")
+window2.tabBar:addItem("Pictures")
+window2.tabBar:addItem("Updates")
+-- Add and .onTouch() method to close button to make window be able to close
+window2.actionButtons.close.onTouch = function()
+	window2:close()
+	mainContainer:drawOnScreen()
+end
+-- Do the same with maximize button
+window2.actionButtons.maximize.onTouch = function()
+	window2:maximize()
+	mainContainer:drawOnScreen()
+end
+-- Add callback method which is called on window resize. Use passed parameters to set sizes of window child objects
+window2.onResize = function(newWidth, newHeight)
+	window2.tabBar.width = newWidth
+	window2.backgroundPanel.width = newWidth
+	window2.backgroundPanel.height = newHeight - window2.tabBar.height
+	mainContainer:drawOnScreen()
+end
+
+-- Finally add titled window
+local window3 = mainContainer:addChild(GUI.titledWindow(50, 22, 60, 20, "Titled window example", true))
+-- Attach an single cell layout to it
+local layout = window3:addChild(GUI.layout(1, 2, window3.width, window3.height - 1, 1, 1))
+-- Add some stuff to layout
+layout:addChild(GUI.button(1, 1, 36, 3, 0xB4B4B4, 0xFFFFFF, 0x969696, 0xB4B4B4, "Press me"))
+layout:addChild(GUI.button(1, 1, 36, 3, 0xB4B4B4, 0xFFFFFF, 0x969696, 0xB4B4B4, "And me"))
+
+------------------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](https://i.imgur.com/EZO66Ce.gif)
