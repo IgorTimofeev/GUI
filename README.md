@@ -49,10 +49,9 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [   GUI.palette](#guipalettex-y-initialcolor-table-palette) |
 | [Standalone methods](#standalone-methods) |
 | [   GUI.alert](#guialertvarargs) |
-| [   GUI.addPalette](#guiaddpaletteparentcontainer-addpanel-initialcolor-table-palette) |
+| [   GUI.highlightString](#guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
 | [   GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel--table-filesystemdialog) |
 | [   GUI.addBackgroundContainer](#guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title-table-palette) |
-| [   GUI.highlightString](#guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
 | [   GUI.isPointInside](#guiispointinsideobject-x-y-boolean-result) |
 | [   GUI.getAlignmentCoordinates](#guigetalignmentcoordinatesfirstobjectx-firstobjecty-firstobjectwidth-firstobjectheight-firstobjecthorizontalalignment-firstobjectverticalalignment-secondobjectwidth-secondobjectheight-int-x-int-y) |
 | [   GUI.getMarginCoordinates](#guigetalignmentcoordinatesx-y-horizontalalignment-verticalalignment-horizontalmargin-verticalmargin-int-x-int-y) |
@@ -1964,46 +1963,6 @@ mainContainer:startEventHandling()
 Result:
 
 ![](https://i.imgur.com/JqGXAs1.gif)
-
-GUI.**addPalette**(parentContainer, addPanel, initialColor): *table* palette
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *table* | parentContainer | Container to which palette will be added |
-| *boolean* | addPanel | Necessity to add a semi-transparent dark background panel |
-| *int* | initialColor | Initial color that palette open with |
-
-This method creates a palette window in the specified container right at its center and returns the palette object. It is convenient in that you do not need to manually calculate the coordinates of the window, as well as useful to people who do not want to use GUI.**colorSelector*
-
-Example of implementation:
-
-```lua
-local GUI = require("GUI")
-
---------------------------------------------------------------------------------
-
--- Create "main" container
-local mainContainer = GUI.fullScreenContainer()
--- Add gray background panel
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
-
--- Add palette window
-local palette = GUI.addPalette(mainContainer, false, 0x9900FF)
--- Do something after color selection
-palette.onSubmit = function()
-	GUI.alert("This color was selected: " .. string.format("0x%06X", palette.color.integer))
-	mainContainer:drawOnScreen()
-end
-
---------------------------------------------------------------------------------
-
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
-```
-
-Result:
-
-![](https://i.imgur.com/GvVbn1b.gif)
 
 GUI.**addFilesystemDialog**(parentContainer, addPanel, ...): *table* filesystemDialog
 ------------------------------------------------------------------------
