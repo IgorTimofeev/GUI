@@ -296,23 +296,23 @@ Constants
 
 This is a rather boring section of the documentation, but it is still necessary for learning. The library has several universal constants, with which some objects are oftenly working. For example, if you want to centerize the text on the screen, you will need alignment constants. If you want to change object's direction - use direction constants, and so on.
 
-| Type | Constant | Value | Description |
-| ------ | ------ | ------ | ------ |
-| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | 1 | Align object to left side horizontally |
-| *enum* | GUI.**ALIGNMENT_HORIZONTAL_CENTER** | 2 | Align object to center side horizontally |
-| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | 3 | Align object to right side horizontally |
-| *enum* | GUI.**ALIGNMENT_VERTICAL_TOP** | 4 | Align object to top side vertically |
-| *enum* | GUI.**ALIGNMENT_VERTICAL_CENTER** | 5 | Align object to center side vertically |
-| *enum* | GUI.**ALIGNMENT_VERTICAL_BOTTOM** | 6 | Align object to bottom side vertically |
-| *enum* | GUI.**DIRECTION_HORIZONTAL** | 7 | Set horizontal direction to an object |
-| *enum* | GUI.**DIRECTION_VERTICAL** | 8 | Set horizontal direction to an object |
-| *enum* | GUI.**SIZE_POLICY_ABSOLUTE** | 9 | Calculation of object's sizes via absolute values |
-| *enum* | GUI.**SIZE_POLICY_RELATIVE** | 10 | Calculation of object's sizes via relative (percentage) values |
-| *enum* | GUI.**IO_MODE_FILE** | 11 | Mode for working with files |
-| *enum* | GUI.**IO_MODE_DIRECTORY** | 12 | Mode for working with directories |
-| *enum* | GUI.**IO_MODE_BOTH** | 13 | Mode for working with bothly files and directories |
-| *enum* | GUI.**IO_MODE_OPEN** | 14 | Mode for opening data |
-| *enum* | GUI.**IO_MODE_SAVE** | 15 | Mode for saving data |
+| Type | Constant | Description |
+| ------ | ------ | ------ |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | Align object to left side horizontally |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_CENTER** | Align object to center side horizontally |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | Align object to right side horizontally |
+| *enum* | GUI.**ALIGNMENT_VERTICAL_TOP** | Align object to top side vertically |
+| *enum* | GUI.**ALIGNMENT_VERTICAL_CENTER** | Align object to center side vertically |
+| *enum* | GUI.**ALIGNMENT_VERTICAL_BOTTOM** | Align object to bottom side vertically |
+| *enum* | GUI.**DIRECTION_HORIZONTAL** | Set horizontal direction to an object |
+| *enum* | GUI.**DIRECTION_VERTICAL** | Set horizontal direction to an object |
+| *enum* | GUI.**SIZE_POLICY_ABSOLUTE** | Calculation of object's sizes via absolute values |
+| *enum* | GUI.**SIZE_POLICY_RELATIVE** | Calculation of object's sizes via relative (percentage) values |
+| *enum* | GUI.**IO_MODE_FILE** | Mode for working with files |
+| *enum* | GUI.**IO_MODE_DIRECTORY** | Mode for working with directories |
+| *enum* | GUI.**IO_MODE_BOTH** | Mode for working with bothly files and directories |
+| *enum* | GUI.**IO_MODE_OPEN** | Mode for opening data |
+| *enum* | GUI.**IO_MODE_SAVE** | Mode for saving data |
 
 Still not tired? Now think how I fucked up writing them during the library development. Shitty constants...
 
@@ -342,9 +342,7 @@ Still not tired? Now think how I fucked up writing them during the library devel
 | *table* | GUI.**LUA_SYNTAX_PATTERNS** | {...} | Required patterns for Lua syntax highlighting by GUI.**highlightString**(...) method |
 | *table* | GUI.**LUA_SYNTAX_COLORS** | {...} | Default color scheme for Lua syntax highlighting by GUI.**highlightString**(...) method |
 
-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A-A
-
-![](https://pp.userapi.com/c639717/v639717895/27680/cDRUWgCZiBc.jpg)
+![](https://i.imgur.com/x0Cti52.jpg?2)
 
 Ready-to-use widgets
 ======
