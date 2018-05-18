@@ -16,15 +16,6 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [Containers](#containers) |
 | [Objects](#objects) |
 | [Constants](#constants) |
-| [Standalone methods](#standalone-methods) |
-| [    GUI.isPointInside](#guiispointinsideobject-x-y-boolean-result) |
-| [    GUI.getAlignmentCoordinates](#guigetalignmentcoordinatesfirstobjectx-firstobjecty-firstobjectwidth-firstobjectheight-firstobjecthorizontalalignment-firstobjectverticalalignment-secondobjectwidth-secondobjectheight-int-x-int-y) |
-| [    GUI.getMarginCoordinates](#guigetalignmentcoordinatesx-y-horizontalalignment-verticalalignment-horizontalmargin-verticalmargin-int-x-int-y) |
-| [    GUI.highlightString](#guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
-| [    GUI.error](#guierrorvarargs) |
-| [    GUI.addPalette](#guiaddpaletteparentcontainer-addpanel-initialcolor-table-palette) |
-| [    GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel--table-filesystemdialog) |
-| [    GUI.addBackgroundContainer](#guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title-table-palette) |
 | [Ready-to-use objects](#ready-to-use-objects) |
 | [    GUI.panel](#guipanel-x-y-width-height-color-transparency--table-panel) |
 | [    GUI.text](#guitext-x-y-textcolor-text--table-text) |
@@ -51,8 +42,20 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [    GUI.textBox](#guitextbox-x-y-width-height-backgroundcolor-textcolor-lines-currentline-horizontaloffset-verticaloffset-autowrap-autoheight-table-textbox) |
 | [Ready-to-use containers](#ready-to-use-containers) |
 | [    GUI.layout](#guilayoutx-y-width-height-columncount-rowcount-table-layout) |
-| [    GUI.window](#guilayoutx-y-width-height-columncount-rowcount-table-layout) |
-| [    GUI.palette](#guilayoutx-y-width-height-columncount-rowcount-table-layout) |
+| [    GUI.window](guiwindowx-y-width-height-table-window) |
+| [    GUI.filledWindow](guifilledwindowx-y-width-height-fillcolor-table-window) |
+| [    GUI.titledWindow](guititledwindowx-y-width-height-title-addtitlepanel-table-window) |
+| [    GUI.tabbedWindow](guitabbedwindowx-y-width-height-table-window) |
+| [    GUI.palette](#guipalettex-y-initialcolor-table-palette) |
+| [Standalone methods](#standalone-methods) |
+| [    GUI.error](#guierrorvarargs) |
+| [    GUI.addPalette](#guiaddpaletteparentcontainer-addpanel-initialcolor-table-palette) |
+| [    GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel--table-filesystemdialog) |
+| [    GUI.addBackgroundContainer](#guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title-table-palette) |
+| [    GUI.highlightString](#guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
+| [    GUI.isPointInside](#guiispointinsideobject-x-y-boolean-result) |
+| [    GUI.getAlignmentCoordinates](#guigetalignmentcoordinatesfirstobjectx-firstobjecty-firstobjectwidth-firstobjectheight-firstobjecthorizontalalignment-firstobjectverticalalignment-secondobjectwidth-secondobjectheight-int-x-int-y) |
+| [    GUI.getMarginCoordinates](#guigetalignmentcoordinatesx-y-horizontalalignment-verticalalignment-horizontalmargin-verticalmargin-int-x-int-y) |
 
 Installation
 ======
@@ -298,333 +301,6 @@ This is a rather boring section of the documentation, but it is still necessary 
 Still not tired? Now think how I fucked up writing them during the library development. Shitty constants...
 
 ![](https://i.imgur.com/RDg5Qnz.jpg)
-
-Standalone methods
-======
-
-The library has several methods that can simplify the development of programs. For example, a context menu, an information window or a palette window.
-
-GUI.**error**(...varargs)
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *varargs* | ... | A lot of parameters having any type that need to be displayed in a window |
-
-This method displays a debug window with text information. The line that is too long will be automatically wrapped. If parameter is a table, then it will be automatically serialized. To close the window, you must hit the Return key or click on the "OK" button
-
-Example of implementation:
-
-```lua
-local buffer = require("doubleBuffering")
-local GUI = require("GUI")
-
---------------------------------------------------------------------------------
-
-buffer.clear(0x2D2D2D)
-GUI.error("Something went wrong here, my friend")
-```
-
-Result:
-
-![](http://i.imgur.com/s8mA2FL.png?1)
-
-GUI.**addContextMenu**(parentContainer, x, y, [backgroundColor, textColor, backgroundPressedColor, textPressedColor, disabledColor, separatorColor, backgroundTransparency, shadowTransparency]): *table* contextMenu
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *table* | parentContainer | Container to which context menu will be added |
-| *int* | x | Local coordinate by x-axis in parent container |
-| *int* | y | Local coordinate by y-axis in parent container |
-| [*int* | backgroundColor] | Optional default background color |
-| [*int* | textColor] | Optional default text color |
-| [*int* | backgroundPressedColor] | Optional pressed item background color |
-| [*int* | textPressedColor] | Optional pressed item text color |
-| [*int* | disabledColor] | Optional disabled item text color |
-| [*int* | separatorColor] | Optional separator text color |
-| [*float* [0.0; 1.0] | backgroundTransparency] | Optional background transparency |
-| [*float* [0.0; 1.0] | shadowTransparency] | Optional shadow transparency |
-
-This is one of the most commonly used methods. It adds a context menu to the specified container and allows to work with it fantastically easy. All optional parameters of the method exist only for customization, and if they are not specified, pre-stored library constants will be used.
-
-If the context menu contains too many items, scrolling buttons will appear and mouse wheel support will be enabled to navigate menu content. Also if you select an item and it's have callback function .**onTouch()**, it will be called
-
-This object has following properties:
-
-| Type | Property | Description |
-| ------ | ------ | ------ |
-| *function* | :**addItem**(*string* text, [*boolean* disabled, *string* shortcut, *int* color]): *table* item | Add new item to context menu. If **disabled** parameter is specified, item will be shown but not available for clicking You can also specify .**onTouch**() function to added item to do some stuff if desired |
-| *function* | :**addSeparator**()| Add an separator to context menu |
-| *function* | :**removeItem**(*int* index): *table* item | Remove item from context menu by it's index |
-| *function* | :**addSubMenu**(*string* text, [*boolean* disabled]): *table* contextMenu| Add another context menu to this context menu. The returned menu object is independent and supports all the methods described above  |
-| *callback-function* | .**onClose**(*int* selectedIndex)| This function is called after user selects a menu item or closes it. If an element has been selected, this function will have and selected item index as a parameter |
-
-Example of implementation:
-
-```lua
-local GUI = require("GUI")
-
---------------------------------------------------------------------------------
-
-local mainContainer = GUI.fullScreenContainer()
-
--- Add an background panel and attack event handler to it
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D)).eventHandler = function(mainContainer, object, e1, e2, e3, e4)
-	if e1 == "touch" then
-		-- Add context menu object to main container and some items to it
-		local contextMenu = GUI.addContextMenu(mainContainer, e3, e4)
-		contextMenu:addItem("New")
-		contextMenu:addItem("Open").onTouch = function()
-			-- Do something to open file or whatever
-		end
-
-		-- Add a sub menu and some items to it
-		local subMenu = contextMenu:addSubMenu("Open with")
-		subMenu:addItem("Explorer.app")
-		subMenu:addItem("Viewer.app")
-		subMenu:addItem("Finder.app")
-		subMenu:addSeparator()
-		subMenu:addItem("Browse...")
-
-		contextMenu:addSeparator()
-		contextMenu:addItem("Save", true)
-		contextMenu:addItem("Save as")
-		contextMenu:addSeparator()
-
-		-- Of course, you can use loops to do the same
-		for i = 1, 25 do
-			contextMenu:addItem("Do something " .. i)
-		end
-
-		mainContainer:drawOnScreen()
-	end
-end
-
---------------------------------------------------------------------------------
-
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
-```
-
-Result:
-
-![](https://i.imgur.com/JqGXAs1.gif)
-
-GUI.**addPalette**(parentContainer, addPanel, initialColor): *table* palette
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *table* | parentContainer | Container to which palette will be added |
-| *boolean* | addPanel | Necessity to add a semi-transparent dark background panel |
-| *int* | initialColor | Initial color that palette open with |
-
-This method creates a palette window in the specified container right at its center and returns the palette object. It is convenient in that you do not need to manually calculate the coordinates of the window, as well as useful to people who do not want to use GUI.**colorSelector*
-
-Example of implementation:
-
-```lua
-local GUI = require("GUI")
-
---------------------------------------------------------------------------------
-
--- Create "main" container
-local mainContainer = GUI.fullScreenContainer()
--- Add gray background panel
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
-
--- Add palette window
-local palette = GUI.addPalette(mainContainer, false, 0x9900FF)
--- Do something after color selection
-palette.onSubmit = function()
-	GUI.error("This color was selected: " .. string.format("0x%06X", palette.color.integer))
-	mainContainer:drawOnScreen()
-end
-
---------------------------------------------------------------------------------
-
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
-```
-
-Result:
-
-![](https://i.imgur.com/GvVbn1b.gif)
-
-GUI.**addFilesystemDialog**(parentContainer, addPanel, ...): *table* filesystemDialog
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *table* | parentContainer | Container to which palette will be added |
-| *boolean* | addPanel | Necessity to add a semi-transparent dark background panel |
-| *varargs* | ... | Multiple parameters that comes to GUI.**fileSystemDialog** starting from **width** |
-
-This method creates a filesystem dialor in specified container with a nice drop-down animation and allows you to work with it in the same way as with a conventional JUI. It is useful for manual work with the file system, if there is no desire to work with GUI.**filesystemChooser**
-
-This object has following properties:
-
-| Type | Property | Description |
-| ------ | ------ | ------ |
-| *table* | .**filesystemDialog** | Pointer to internal filesystemDialog object |
-| *function* | :**show**() | This method will update internal file list and start drop-down animation. After that dialog will be available for user interactions |
-
-Example of implementation:
-
-```lua
-local GUI = require("GUI")
-
---------------------------------------------------------------------------------
-
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
-
-local filesystemDialog = GUI.addFilesystemDialog(mainContainer, false, 50, math.floor(mainContainer.height * 0.8), "Open", "Cancel", "File name", "/")
-filesystemDialog:setMode(GUI.IO_MODE_OPEN, GUI.IO_MODE_FILE)
-filesystemDialog:addExtensionFilter(".pic")
-filesystemDialog.onSubmit = function(path)
-	GUI.error("This path was selected: " .. path)
-end
-
-filesystemDialog:show()
-
---------------------------------------------------------------------------------
-
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
-```
-
-Result:
-
-![](https://i.imgur.com/4WqJBVk.gif)
-
-GUI.**addBackgroundContainer**(parentContainer, addPanel, addLayout, [title]): *table* palette
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *table* | parentContainer | Container to which palette will be added |
-| *boolean* | addPanel | Necessity to add a semi-transparent dark background panel |
-| *boolean* | addLayout | Necessity to add a 3-columned background layout |
-| [*string* | title] | If specified, adds a label to layout as child |
-
-This method creates a new container and adds it as a child to the specified container. If background panel is added, it will already have an event listener: so if you click on panel, this container will be deleted automatically. Personally, I use this object everywhere to quickly create a simple menus with easy closing feature and automated layout calculations.
-
-This object has following properties:
-
-| Type | Property | Description |
-| ------ | ------ | ------ |
-| *table* | .**panel** | Pointer to background panel object. Doesn't exists if **addPanel** parameter is set to **false** |
-| *table* | .**layout** | Pointer to background layout object. Doesn't exists if **addLayout** parameter is set to **false** |
-| *table* | .**label** | Pointer to title label object. Doesn't exists if **title** parameter is **nil** |
-
-Example of implementation:
-
-```lua
-local GUI = require("GUI")
-
---------------------------------------------------------------------------------
-
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
-
--- Add a button to main container and .onTouch() method
-mainContainer:addChild(GUI.button(3, 2, 36, 3, 0xE1E1E1, 0x4B4B4B, 0xA5A5A5, 0x0, "Add container")).onTouch = function()
-	-- Add a background container to main container with background panel and layout
-	local container = GUI.addBackgroundContainer(mainContainer, true, true, "Hello world")
-	-- Add a switch and label to it's layout
-	container.layout:addChild(GUI.switchAndLabel(1, 1, 36, 8, 0x66DB80, 0x2D2D2D, 0xE1E1E1, 0x878787, "I like to suck big dicks:", true))
-end
-
---------------------------------------------------------------------------------
-
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
-```
-
-Result:
-
-![](https://i.imgur.com/VOX9BzY.gif)
-
-GUI.**highlightString**(x, y, width, fromSymbol, indentationWidth, syntaxPatterns, syntaxColorScheme, data)
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *int* | x | Coordinate by x-axis to draw from |
-| *int* | y | Coordinate by y-axis to draw from |
-| *int* | width | Width of highlighting area  |
-| *int* | fromSymbol | Symbol index to draw from |
-| *int* | indentationWidth | Width of indentation that will be added instead on whitespace symbols in string starting |
-| *table* | syntaxPatterns | Patterns for syntax highlighting |
-| *table* | syntaxColorScheme | Color scheme for syntax highlighting |
-| *string* | data | String to highlight |
-
-This method allows you to highlight specified string and draw the result to screen buffer using specified syntax patterns and specified color scheme. This library already comes with a set of patterns and color scheme for Lua syntax (see **Constants**), however you can easily write your own for any other programming language if you wish.
-
-Example of implementation:
-
-```lua
-local GUI = require("GUI")
-local buffer = require("doubleBuffering")
-
---------------------------------------------------------------------------------
-
-buffer.clear(0x1E1E1E)
-
--- Open file and read it's lines
-local y = 1
-for line in io.lines("/lib/advancedLua.lua") do
-	-- Replace tab symbols to 2 whitespaces and Windows line endings to UNIX line endings
-	line = line:gsub("\t", "  "):gsub("\r\n", "")
-	-- Highlight result
-	GUI.highlightString(3, y, buffer.getWidth(), 1, 2, GUI.LUA_SYNTAX_PATTERNS, GUI.LUA_SYNTAX_COLOR_SCHEME, line)
-	
-	y = y + 1
-	if y > buffer.getHeight() then
-		break
-	end
-end
-
-buffer.drawChanges(true)
-```
-
-Result:
-
-![](https://i.imgur.com/kYRHeMu.png)
-
-GUI.**isPointInside**(object, x, y): *boolean* result
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *table* | object | Pointer to any object |
-| *int* | x | Coordinate by x-axis on screen |
-| *int* | y | Coordinate by y-axis on screen |
-
-This method checks whether the specified point is inside the boundaries of the specified object. This method is useful in rare cases for manual verification.
-
-GUI.**getAlignmentCoordinates**(firstObjectX, firstObjectY, firstObjectWidth, firstObjectHeight, firstObjectHorizontalAlignment, firstObjectVerticalAlignment, secondObjectWidth, secondObjectHeight): *int* x, *int* y
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *int* | firstObjectX | Coordinate by x-axis of first object |
-| *int* | firstObjectY | Coordinate by y-axis of first object |
-| *int* | firstObjectWidth | Width of first object |
-| *int* | firstObjectHeight | Height of first object |
-| *enum* | firstObjectHorizontalAlignment | Horizontal alignment of first object |
-| *enum* | firstObjectVerticalAlignment | Vertical alignment of first object |
-| *int* | secondObjectWidth | Width of second object |
-| *int* | secondObjectHeight | Height of second object |
-
-This method calculates global (screen) coordinates of the second object inside the first, based on coordinates and sizes of both objects. For example, it's used by GUI.**layout**, GUI.**label** and GUI.**textBox**
-
-GUI.**getMarginCoordinates**(x, y, horizontalAlignment, verticalAlignment, horizontalMargin, verticalMargin): *int* x, *int* y
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *int* | x | Object coordinate by x-axis |
-| *int* | y | Object coordinate by y-axis |
-| *enum* | horizontalAlignment | Object horizontal alignment |
-| *enum* | verticalAlignment | Object vertical alignment |
-| *int* | horizontalMargin | Object horizontal margin in pixels |
-| *int* | verticalMargin | Object vertical margin in pixels |
-
-This method calculates the global (screen) coordinates inside the object, based on its alignment and pixel margin. For example, it's used by GUI.**layout**
 
 Ready-to-use widgets
 ======
@@ -2134,3 +1810,374 @@ mainContainer:startEventHandling()
 Result:
 
 ![](https://i.imgur.com/EZO66Ce.gif)
+
+GUI.**palette**(x, y, initialColor): *table* palette
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Palette coordinate by x-axis |
+| *int* | y | Palette coordinate by y-axis |
+| *int* | initialColor | Initial color for palette |
+
+The palette is the inherited object of GUI.**window**, allowing you to choose the desired color by clicking or entering the desired values into text input fields.
+
+This object has following properties:
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**color** )| A table with currently selected color value with different color spaces. For example, if you need integer (hexadecimal) color value, use palette.**color**.**integer**. Otherwise there's also palette.**color**.**hsb**.**hue**, palette.**color**.**hsb**.**saturation**, palette.**color**.**hsb**.**brightness** and palette.**color**.**rgb**.**red**, palette.**color**.**rgb**.**green**, palette.**color**.**rgb**.**blue** values |
+| *table* | .**submitButton** )| A pointer to submit GUI.**button** object |
+| *table* | .**cancelButton** )| A pointer to cancel GUI.**button** object |
+
+Example of implementation:
+```lua
+local GUI = require("GUI")
+
+------------------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x1E1E1E))
+
+-- Add a palette window to main container
+local palette = mainContainer:addChild(GUI.palette(3, 2, 0x9900FF))
+-- Specify an .onTouch() callback-function to submit button
+palette.submitButton.onTouch = function()
+	GUI.error("You've been selected a color: " .. string.format("0x%X", palette.color.integer))
+end
+
+------------------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](https://i.imgur.com/NFM1aGo.gif)
+
+Standalone methods
+======
+
+The library has several methods that can simplify the development of programs. For example, a context menu, an information window or a palette window.
+
+GUI.**error**(...varargs)
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *varargs* | ... | A lot of parameters having any type that need to be displayed in a window |
+
+This method displays a debug window with text information. The line that is too long will be automatically wrapped. If parameter is a table, then it will be automatically serialized. To close the window, you must hit the Return key or click on the "OK" button
+
+Example of implementation:
+
+```lua
+local buffer = require("doubleBuffering")
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+buffer.clear(0x2D2D2D)
+GUI.error("Something went wrong here, my friend")
+```
+
+Result:
+
+![](http://i.imgur.com/s8mA2FL.png?1)
+
+GUI.**addContextMenu**(parentContainer, x, y, [backgroundColor, textColor, backgroundPressedColor, textPressedColor, disabledColor, separatorColor, backgroundTransparency, shadowTransparency]): *table* contextMenu
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *table* | parentContainer | Container to which context menu will be added |
+| *int* | x | Local coordinate by x-axis in parent container |
+| *int* | y | Local coordinate by y-axis in parent container |
+| [*int* | backgroundColor] | Optional default background color |
+| [*int* | textColor] | Optional default text color |
+| [*int* | backgroundPressedColor] | Optional pressed item background color |
+| [*int* | textPressedColor] | Optional pressed item text color |
+| [*int* | disabledColor] | Optional disabled item text color |
+| [*int* | separatorColor] | Optional separator text color |
+| [*float* [0.0; 1.0] | backgroundTransparency] | Optional background transparency |
+| [*float* [0.0; 1.0] | shadowTransparency] | Optional shadow transparency |
+
+This is one of the most commonly used methods. It adds a context menu to the specified container and allows to work with it fantastically easy. All optional parameters of the method exist only for customization, and if they are not specified, pre-stored library constants will be used.
+
+If the context menu contains too many items, scrolling buttons will appear and mouse wheel support will be enabled to navigate menu content. Also if you select an item and it's have callback function .**onTouch()**, it will be called
+
+This object has following properties:
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *function* | :**addItem**(*string* text, [*boolean* disabled, *string* shortcut, *int* color]): *table* item | Add new item to context menu. If **disabled** parameter is specified, item will be shown but not available for clicking You can also specify .**onTouch**() function to added item to do some stuff if desired |
+| *function* | :**addSeparator**()| Add an separator to context menu |
+| *function* | :**removeItem**(*int* index): *table* item | Remove item from context menu by it's index |
+| *function* | :**addSubMenu**(*string* text, [*boolean* disabled]): *table* contextMenu| Add another context menu to this context menu. The returned menu object is independent and supports all the methods described above  |
+| *callback-function* | .**onClose**(*int* selectedIndex)| This function is called after user selects a menu item or closes it. If an element has been selected, this function will have and selected item index as a parameter |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+
+-- Add an background panel and attack event handler to it
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D)).eventHandler = function(mainContainer, object, e1, e2, e3, e4)
+	if e1 == "touch" then
+		-- Add context menu object to main container and some items to it
+		local contextMenu = GUI.addContextMenu(mainContainer, e3, e4)
+		contextMenu:addItem("New")
+		contextMenu:addItem("Open").onTouch = function()
+			-- Do something to open file or whatever
+		end
+
+		-- Add a sub menu and some items to it
+		local subMenu = contextMenu:addSubMenu("Open with")
+		subMenu:addItem("Explorer.app")
+		subMenu:addItem("Viewer.app")
+		subMenu:addItem("Finder.app")
+		subMenu:addSeparator()
+		subMenu:addItem("Browse...")
+
+		contextMenu:addSeparator()
+		contextMenu:addItem("Save", true)
+		contextMenu:addItem("Save as")
+		contextMenu:addSeparator()
+
+		-- Of course, you can use loops to do the same
+		for i = 1, 25 do
+			contextMenu:addItem("Do something " .. i)
+		end
+
+		mainContainer:drawOnScreen()
+	end
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](https://i.imgur.com/JqGXAs1.gif)
+
+GUI.**addPalette**(parentContainer, addPanel, initialColor): *table* palette
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *table* | parentContainer | Container to which palette will be added |
+| *boolean* | addPanel | Necessity to add a semi-transparent dark background panel |
+| *int* | initialColor | Initial color that palette open with |
+
+This method creates a palette window in the specified container right at its center and returns the palette object. It is convenient in that you do not need to manually calculate the coordinates of the window, as well as useful to people who do not want to use GUI.**colorSelector*
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+-- Create "main" container
+local mainContainer = GUI.fullScreenContainer()
+-- Add gray background panel
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+-- Add palette window
+local palette = GUI.addPalette(mainContainer, false, 0x9900FF)
+-- Do something after color selection
+palette.onSubmit = function()
+	GUI.error("This color was selected: " .. string.format("0x%06X", palette.color.integer))
+	mainContainer:drawOnScreen()
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](https://i.imgur.com/GvVbn1b.gif)
+
+GUI.**addFilesystemDialog**(parentContainer, addPanel, ...): *table* filesystemDialog
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *table* | parentContainer | Container to which palette will be added |
+| *boolean* | addPanel | Necessity to add a semi-transparent dark background panel |
+| *varargs* | ... | Multiple parameters that comes to GUI.**fileSystemDialog** starting from **width** |
+
+This method creates a filesystem dialor in specified container with a nice drop-down animation and allows you to work with it in the same way as with a conventional JUI. It is useful for manual work with the file system, if there is no desire to work with GUI.**filesystemChooser**
+
+This object has following properties:
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**filesystemDialog** | Pointer to internal filesystemDialog object |
+| *function* | :**show**() | This method will update internal file list and start drop-down animation. After that dialog will be available for user interactions |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+local filesystemDialog = GUI.addFilesystemDialog(mainContainer, false, 50, math.floor(mainContainer.height * 0.8), "Open", "Cancel", "File name", "/")
+filesystemDialog:setMode(GUI.IO_MODE_OPEN, GUI.IO_MODE_FILE)
+filesystemDialog:addExtensionFilter(".pic")
+filesystemDialog.onSubmit = function(path)
+	GUI.error("This path was selected: " .. path)
+end
+
+filesystemDialog:show()
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](https://i.imgur.com/4WqJBVk.gif)
+
+GUI.**addBackgroundContainer**(parentContainer, addPanel, addLayout, [title]): *table* palette
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *table* | parentContainer | Container to which palette will be added |
+| *boolean* | addPanel | Necessity to add a semi-transparent dark background panel |
+| *boolean* | addLayout | Necessity to add a 3-columned background layout |
+| [*string* | title] | If specified, adds a label to layout as child |
+
+This method creates a new container and adds it as a child to the specified container. If background panel is added, it will already have an event listener: so if you click on panel, this container will be deleted automatically. Personally, I use this object everywhere to quickly create a simple menus with easy closing feature and automated layout calculations.
+
+This object has following properties:
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**panel** | Pointer to background panel object. Doesn't exists if **addPanel** parameter is set to **false** |
+| *table* | .**layout** | Pointer to background layout object. Doesn't exists if **addLayout** parameter is set to **false** |
+| *table* | .**label** | Pointer to title label object. Doesn't exists if **title** parameter is **nil** |
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+-- Add a button to main container and .onTouch() method
+mainContainer:addChild(GUI.button(3, 2, 36, 3, 0xE1E1E1, 0x4B4B4B, 0xA5A5A5, 0x0, "Add container")).onTouch = function()
+	-- Add a background container to main container with background panel and layout
+	local container = GUI.addBackgroundContainer(mainContainer, true, true, "Hello world")
+	-- Add a switch and label to it's layout
+	container.layout:addChild(GUI.switchAndLabel(1, 1, 36, 8, 0x66DB80, 0x2D2D2D, 0xE1E1E1, 0x878787, "I like to suck big dicks:", true))
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result:
+
+![](https://i.imgur.com/VOX9BzY.gif)
+
+GUI.**highlightString**(x, y, width, fromSymbol, indentationWidth, syntaxPatterns, syntaxColorScheme, data)
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Coordinate by x-axis to draw from |
+| *int* | y | Coordinate by y-axis to draw from |
+| *int* | width | Width of highlighting area  |
+| *int* | fromSymbol | Symbol index to draw from |
+| *int* | indentationWidth | Width of indentation that will be added instead on whitespace symbols in string starting |
+| *table* | syntaxPatterns | Patterns for syntax highlighting |
+| *table* | syntaxColorScheme | Color scheme for syntax highlighting |
+| *string* | data | String to highlight |
+
+This method allows you to highlight specified string and draw the result to screen buffer using specified syntax patterns and specified color scheme. This library already comes with a set of patterns and color scheme for Lua syntax (see **Constants**), however you can easily write your own for any other programming language if you wish.
+
+Example of implementation:
+
+```lua
+local GUI = require("GUI")
+local buffer = require("doubleBuffering")
+
+--------------------------------------------------------------------------------
+
+buffer.clear(0x1E1E1E)
+
+-- Open file and read it's lines
+local y = 1
+for line in io.lines("/lib/advancedLua.lua") do
+	-- Replace tab symbols to 2 whitespaces and Windows line endings to UNIX line endings
+	line = line:gsub("\t", "  "):gsub("\r\n", "")
+	-- Highlight result
+	GUI.highlightString(3, y, buffer.getWidth(), 1, 2, GUI.LUA_SYNTAX_PATTERNS, GUI.LUA_SYNTAX_COLOR_SCHEME, line)
+	
+	y = y + 1
+	if y > buffer.getHeight() then
+		break
+	end
+end
+
+buffer.drawChanges(true)
+```
+
+Result:
+
+![](https://i.imgur.com/kYRHeMu.png)
+
+GUI.**isPointInside**(object, x, y): *boolean* result
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *table* | object | Pointer to any object |
+| *int* | x | Coordinate by x-axis on screen |
+| *int* | y | Coordinate by y-axis on screen |
+
+This method checks whether the specified point is inside the boundaries of the specified object. This method is useful in rare cases for manual verification.
+
+GUI.**getAlignmentCoordinates**(firstObjectX, firstObjectY, firstObjectWidth, firstObjectHeight, firstObjectHorizontalAlignment, firstObjectVerticalAlignment, secondObjectWidth, secondObjectHeight): *int* x, *int* y
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | firstObjectX | Coordinate by x-axis of first object |
+| *int* | firstObjectY | Coordinate by y-axis of first object |
+| *int* | firstObjectWidth | Width of first object |
+| *int* | firstObjectHeight | Height of first object |
+| *enum* | firstObjectHorizontalAlignment | Horizontal alignment of first object |
+| *enum* | firstObjectVerticalAlignment | Vertical alignment of first object |
+| *int* | secondObjectWidth | Width of second object |
+| *int* | secondObjectHeight | Height of second object |
+
+This method calculates global (screen) coordinates of the second object inside the first, based on coordinates and sizes of both objects. For example, it's used by GUI.**layout**, GUI.**label** and GUI.**textBox**
+
+GUI.**getMarginCoordinates**(x, y, horizontalAlignment, verticalAlignment, horizontalMargin, verticalMargin): *int* x, *int* y
+------------------------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Object coordinate by x-axis |
+| *int* | y | Object coordinate by y-axis |
+| *enum* | horizontalAlignment | Object horizontal alignment |
+| *enum* | verticalAlignment | Object vertical alignment |
+| *int* | horizontalMargin | Object horizontal margin in pixels |
+| *int* | verticalMargin | Object vertical margin in pixels |
+
+This method calculates the global (screen) coordinates inside the object, based on its alignment and pixel margin. For example, it's used by GUI.**layout**
