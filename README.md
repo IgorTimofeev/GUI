@@ -168,7 +168,7 @@ This object has following properties:
 | ------ | ------ | ------ |
 | *table* | .**children** | Table that contains all child objects of this container |
 | *function* | :**addChild**(*table* child, [*int* atIndex]): *table* child| Add specified object to the container as a child. When you do this, the object's global coordinates will become local. If the optional parameter **atIndex** is specified, then the element will be added to the corresponding position in container.**children** table |
-| *function* | :**removeChildren**([*int* fromIndex, *int* toIndex]): *table* container | Delete all child elements of the container. If the optional parameters of the element indices are specified, the deletion will be performed in the appropriate range |
+| *function* | :**removeChildren**([*int* fromIndex, *int* toIndex]): *table* container | Remove all child elements of the container. If the optional parameters of the element indices are specified, the deletion will be performed in the appropriate range |
 | *function* | :**startEventHandling**([*float* delay]): *table* container | Run the event processing for this container and analyse events for all it's child objects. The  **delay** parameter is similar to computer.**pullSignal** one |
 | *function* | :**stopEventHandling**(): *table* container | Stop processing events for this container |
 | *function* | :**draw**() | Recursively renders the contents of the container in the order of the queue of its children. I draw your attention to the fact that this method only draws data into the screen buffer. To display changes on the screen, you must use the doubleBuffering.**drawChanges**() method or use method below |
@@ -221,8 +221,7 @@ In addition to the coordinates and size, any object has several universal proper
 | ------ | ------ | ------ |
 | *boolean* | .**hidden** | Whether the object is hidden. If the object is hidden, then its rendering and analysis of system events are ignored |
 | *boolean* | .**disabled** | Whether the object is disabled. If the object is disabled, then it can be rendered, but all system events are ignored |
-| *function* | :**isPointInside**() | A method that allows you to determine whether a specified point is inside the geometry of a specified object |
-| *function* | :**draw**() | Mandatory method that is called to render the widget on the screen. It can be defined by the user in any convenient way |
+| *function* | :**draw**(*table* object) | Mandatory method that is called to render the widget on the screen. It can be defined by the user in any convenient way |
 
 After adding an object to the container using the :**addChild()** method, it acquires additional properties for ease of use:
 
@@ -238,7 +237,7 @@ After adding an object to the container using the :**addChild()** method, it acq
 | *function* | :**moveToBack**() | Move the object to the beginning of the container children hierarchy |
 | *function* | :**getFirstParent**() | Recursively get the first parent container. If there are many nested containers, the method will return the first in the hierarchy and the "main" of them |
 | *function* | :**remove**() | Remove this object from the parent container. Roughly speaking, this is a convenient way of self-destruction |
-| *function* | :**addAnimation**(*function* frameHandler, *function* onFinish): *table* animation | Add an animation to this object. For more information about animations and their creation, see below  |
+| *function* | :**addAnimation**(*function* frameHandler, *function* onFinish): *table* animation | Add an animation to this object, see below |
 | [*callback-function* | .**eventHandler**(*container* mainContainer, *object* object, ... *varargs* eventData) ]| An optional method for handling system events, called by the parent container handler. If it exists in the object under consideration, it will be called with the appropriate arguments |
 
 An example of the implementation of the simplest rectangle object:
@@ -270,6 +269,22 @@ mainContainer:startEventHandling()
 As a result, we will get a nice green rectangle:
 
 ![](https://i.imgur.com/VBrEdyx.png)
+
+The next feature of an objects is animations: every object can be animated. For example, here is field of animated GUI.**switch** objects:
+
+![](http://i.imgur.com/f5aO73U.gif)
+
+As described above, to add an animation to object, call <object>:**addAnimation**(...) function. It will return an animation object which has the following properties:
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**object** | A pointer to the widget which contains this animation |
+| *float* | .**position** | Current animation playback position. It is always in **[0.0; 1.0]** range, where **0.0** is animation starting and **1.0** is animation ending |
+| *function* | :**start**() | Start animation playback. Interesting detail: during animation playing a main container which has some animated objects will temporary handle events with maximum available speed (i.e. like computer.**pullSignal**(0)). After finishing all animations, event handling delay will be the same it was in beginning |
+| *function* | :**stop**() | Stop animation playback |
+| *function* | :**remove**() | Remove animation from it's widget |
+| *callback-function* | .**frameHandler**(*table* mainContainer, *table* animation) | An animation frame handler. It is called every frame before drawing stuff to screen buffer. The first parameter is a pointer to main container that handling events, and second one - pointer to animation object|
+| *callback-function* | .**onFinish**() | This function is called after finishing animation playback. Important: calling :**stop**() will **not** call this function |
 
 Constants
 ======
@@ -617,7 +632,7 @@ GUI.**input**( x, y, width, height, backgroundColor, textColor, placeholderTextC
 | *int* | textFocusedColor | Object focused text color |
 | *string* | text | Object text value |
 | [*string* | placeholderText] | Text to be displayed, provided that the entered text is empty |
-| [*boolean* | eraseTextOnFocus] | Delete text when the input is focused |
+| [*boolean* | eraseTextOnFocus] | Erase text when the input is focused |
 | [*char* | textMask] | A mask character for the text to be entered. Convenient for creating a password entry field |
 
 The input object is intended for input and analysis of text data from the keyboard. Pasting data from real clipboard is also supported. You can move the cursor with clicks or left and right arrows. Clicking on the object starts the process of entering text, and pressing Enter or clicking on an empty zone on the screen will finish it.
@@ -2019,7 +2034,7 @@ GUI.**addBackgroundContainer**(parentContainer, addPanel, addLayout, [title]): *
 | *boolean* | addLayout | Necessity to add a 3-columned background layout |
 | [*string* | title] | If specified, adds a label to layout as child |
 
-This method creates a new container and adds it as a child to the specified container. If background panel is added, it will already have an event listener: so if you click on panel, this container will be deleted automatically. Personally, I use this object everywhere to quickly create a simple menus with easy closing feature and automated layout calculations.
+This method creates a new container and adds it as a child to the specified container. If background panel is added, it will already have an event listener: so if you click on panel, this container will be removed automatically. Personally, I use this object everywhere to quickly create a simple menus with easy closing feature and automated layout calculations.
 
 This object has following properties:
 
@@ -2140,3 +2155,146 @@ GUI.**getMarginCoordinates**(x, y, horizontalAlignment, verticalAlignment, horiz
 | *int* | verticalMargin | Object vertical margin in pixels |
 
 This method calculates the global (screen) coordinates inside the object, based on its alignment and pixel margin. For example, it's used by GUI.**layout**
+
+
+Practical example # 1: Creating an animated widget
+======
+
+To demonstrate how to work with animations, here is the source code with detailed comments, allowing you to create the **switch** widget and add a motion animation to it. Of course, to understand all this shit, it is **highly** recommended to read information about GUI.**object** and methods of **Double buffering** library.
+
+```lua
+local color = require("color")
+local buffer = require("doubleBuffering")
+local GUI = require("GUI")
+
+--------------------------------------------------------------------------------
+
+-- Create a function that will draw your switch to screen buffer
+-- It's recommended to use local function because it will exists in memory as single copy for each switch
+local function switchDraw(switch)
+	local bodyX = switch.x + switch.width - switch.bodyWidth
+	-- Draw a switch text
+	buffer.drawText(switch.x, switch.y, switch.colors.text, switch.text)
+	-- Draw a background with passive color
+	buffer.drawRectangle(bodyX, switch.y, switch.bodyWidth, 1, switch.colors.passive, 0x0, " ")
+	buffer.drawText(bodyX + switch.bodyWidth, switch.y, switch.colors.passive, "⠆")
+	-- Draw a background with active color
+	buffer.drawText(bodyX - 1, switch.y, switch.colors.active, "⠰")
+	buffer.drawRectangle(bodyX, switch.y, switch.pipePosition - 1, 1, switch.colors.active, 0x0, " ")
+	-- Draw a switch "pipe"
+	buffer.drawText(bodyX + switch.pipePosition - 2, switch.y, switch.colors.pipe, "⠰")
+	buffer.drawRectangle(bodyX + switch.pipePosition - 1, switch.y, 2, 1, switch.colors.pipe, 0x0, " ")
+	buffer.drawText(bodyX + switch.pipePosition + 1, switch.y, switch.colors.pipe, "⠆")
+end
+
+-- Create a switch event handler that is called after clicking on it.
+-- Again, use local functions for stuff like this
+local function switchEventHandler(mainContainer, switch, event)
+	if event == "touch" then
+		-- Change switch state to opposite
+		switch.state = not switch.state
+		-- Add an animation to switch that fill move "pipe" to correct side
+		local animation = switch:addAnimation(
+			-- As an animation frame handler you need a function that will set "pipe" position dependent of current animation position
+			-- Remember that animation.position is always in [0.0; 1.0] range
+			-- If switch state has a false value, you need to invert animation position to play it reversed visually
+			function(mainContainer, animation)
+				if switch.state then
+					switch.pipePosition = math.round(1 + animation.position * (switch.bodyWidth - 2))
+				else	
+					switch.pipePosition = math.round(1 + (1 - animation.position) * (switch.bodyWidth - 2))
+				end
+			end,
+			-- Specify a function that is called after animation finishing
+			function(mainContainer, animation)
+				-- Remove animation object from switch
+				animation:remove()
+				-- You can also create callback-functions support like this
+				if switch.onStateChanged then
+					switch.onStateChanged()
+				end
+			end
+		)
+		-- Start playing your animation
+		animation:start(switch.animationDuration)
+	end
+end
+
+-- This function will create a new switch object and fill it with required properties
+local function newSwitch(x, y, totalWidth, bodyWidth, activeColor, passiveColor, pipeColor, textColor, text, switchState)
+	-- Create object that inherits GUI.object
+	local switch = GUI.object(x, y, totalWidth, 1)
+
+	-- Specify some variables for you purpose
+	switch.colors = {
+		active = activeColor,
+		passive = passiveColor,
+		pipe = pipeColor,
+		text = textColor
+	}
+	switch.bodyWidth = bodyWidth
+	switch.text = text
+	switch.state = switchState
+	-- You can set any animation duration, even a few hours if you want to
+	switch.animationDuration = 0.3	
+	-- Position of "pipe" will be in range [1; bodyWidth - 1] cause it have 2 pixels width
+	switch.pipePosition = switch.state and switch.bodyWidth - 1 or 1
+
+	switch.draw = switchDraw
+	switch.eventHandler = switchEventHandler
+
+	return switch
+end
+
+--------------------------------------------------------------------------------
+
+-- Now let's create main container and fill it with our cool widget
+local mainContainer = GUI.fullScreenContainer()
+mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+-- First, specify required switch count
+-- Next, create some variables dependent of it: HUE from HSB color space, coordinates and animation duration
+-- So in fact every next switch will have different color and longer animation duration
+local count = 168
+local hue = 0
+local hueStep = 360 / count
+local x, y = 3, 2
+local animationDurationMin = 0.3
+local animationDurationMax = 1.5
+local animationDuration = animationDurationMin
+local animationDurationStep = (animationDurationMax - animationDurationMin) / count
+
+-- Add specified count of swithes to main container
+for i = 1, count do
+	local switchColor = color.HSBToInteger(hue, 1, 1)
+	local switch = mainContainer:addChild(
+		newSwitch(x, y, 19, 7,
+			switchColor,
+			0x1D1D1D,
+			0xEEEEEE,
+			switchColor,
+			"Switch " .. i .. ":",
+			math.random(2) == 2
+		)
+	)
+
+	switch.animationDuration = animationDuration
+
+	y = y + switch.height + 1
+	hue = hue + hueStep
+	animationDuration = animationDuration + animationDurationStep
+
+	if y >= mainContainer.height then
+		x, y = x + switch.width + 3, 2
+	end
+end
+
+--------------------------------------------------------------------------------
+
+mainContainer:drawOnScreen(true)
+mainContainer:startEventHandling()
+```
+
+Result: 
+
+![Imgur](http://i.imgur.com/f5aO73U.gif)
