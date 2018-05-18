@@ -1713,7 +1713,7 @@ local function layoutRemoveColumn(layout, column)
 	return layout
 end
 
-local function layoutsetSize(layout, columnCount, rowCount)
+local function layoutSetGridSize(layout, columnCount, rowCount)
 	layout.cells = {}
 	layout.rowSizes = {}
 	layout.columnSizes = {}
@@ -1810,7 +1810,7 @@ function GUI.layout(x, y, width, height, columnCount, rowCount)
 
 	layout.setPosition = layoutSetPosition
 	layout.setDirection = layoutSetDirection
-	layout.setSize = layoutsetSize
+	layout.setGridSize = layoutSetGridSize
 	layout.setSpacing = layoutSetSpacing
 	layout.setAlignment = layoutSetAlignment
 	layout.setMargin = layoutSetMargin
@@ -1822,7 +1822,7 @@ function GUI.layout(x, y, width, height, columnCount, rowCount)
 	layout.addChild = layoutAddChild
 	layout.draw = layoutDraw
 
-	layoutsetSize(layout, columnCount, rowCount)
+	layout:setGridSize(columnCount, rowCount)
 
 	return layout
 end
