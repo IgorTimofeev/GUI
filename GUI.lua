@@ -43,7 +43,15 @@ local GUI = {
 
 	COLOR_BACKGROUND_CONTAINER_TITLE = 0xE1E1E1,
 	COLOR_BACKGROUND_CONTAINER_TRANSPARENCY = 0.3,
-	COLOR_WINDOWS_SHADOW_TRANSPARENCY = 0.5,
+
+	COLOR_WINDOW_BACKGROUND_PANEL = 0xF0F0F0,
+	COLOR_WINDOW_TITLE_BACKGROUND = 0xE1E1E1,
+	COLOR_WINDOW_TITLE_TEXT = 0x2D2D2D,
+	COLOR_WINDOW_TAB_BAR_DEFAULT_BACKGROUND = 0x2D2D2D,
+	COLOR_WINDOW_TAB_BAR_DEFAULT_TEXT = 0xF0F0F0,
+	COLOR_WINDOW_TAB_BAR_SELECTED_BACKGROUND = 0xF0F0F0,
+	COLOR_WINDOW_TAB_BAR_SELECTED_TEXT = 0x2D2D2D,
+	COLOR_WINDOW_TRANSPARENCY_SHADOW = 0.5,
 
 	PALETTE_CONFIG_PATH = "/lib/.palette.cfg",
 
@@ -877,7 +885,7 @@ end
 
 --------------------------------------------------------------------------------
 
-function GUI.error(...)
+function GUI.alert(...)
 	local args = {...}
 	for i = 1, #args do
 		if type(args[i]) == "table" then
@@ -1110,19 +1118,22 @@ local function colorSelectorEventHandler(mainContainer, object, e1, ...)
 		local eventData = {...}
 		object.pressed = true
 
-		local palette = GUI.addPalette(mainContainer, false, object.color)
-		
-		palette.onCancel = function()
+		local palette = mainContainer:addChild(GUI.palette(1, 1, object.color))
+		palette.localX, palette.localY = math.floor(mainContainer.width / 2 - palette.width / 2), math.floor(mainContainer.height / 2 - palette.height / 2)
+
+		palette.cancelButton.onTouch = function()
 			object.pressed = false
+			palette:remove()
 			mainContainer:drawOnScreen()
+
 			if object.onTouch then
 				object.onTouch(mainContainer, object, e1, table.unpack(eventData))
 			end
 		end
 
-		palette.onSubmit = function()
+		palette.submitButton.onTouch = function()
 			object.color = palette.color.integer
-			palette.onCancel()
+			palette.cancelButton.onTouch()
 		end
 		
 		mainContainer:drawOnScreen()
@@ -1656,7 +1667,7 @@ local function layoutAddColumn(layout, sizePolicy, size)
 		size = size
 	})
 	layoutCalculatePercentageSize(false, layout.columnSizes, #layout.columnSizes)
-	-- GUI.error(layout.columnSizes)
+	-- GUI.alert(layout.columnSizes)
 
 	return layout
 end
@@ -1674,7 +1685,7 @@ local function layoutAddRow(layout, sizePolicy, size)
 	})
 
 	layoutCalculatePercentageSize(false, layout.rowSizes, #layout.rowSizes)
-	-- GUI.error(layout.rowSizes)
+	-- GUI.alert(layout.rowSizes)
 
 	return layout
 end
@@ -1703,7 +1714,7 @@ local function layoutRemoveColumn(layout, column)
 	return layout
 end
 
-local function layoutSetSize(layout, columnCount, rowCount)
+local function layoutsetSize(layout, columnCount, rowCount)
 	layout.cells = {}
 	layout.rowSizes = {}
 	layout.columnSizes = {}
@@ -1800,7 +1811,7 @@ function GUI.layout(x, y, width, height, columnCount, rowCount)
 
 	layout.setPosition = layoutSetPosition
 	layout.setDirection = layoutSetDirection
-	layout.setSize = layoutSetSize
+	layout.setSize = layoutsetSize
 	layout.setSpacing = layoutSetSpacing
 	layout.setAlignment = layoutSetAlignment
 	layout.setMargin = layoutSetMargin
@@ -1812,7 +1823,7 @@ function GUI.layout(x, y, width, height, columnCount, rowCount)
 	layout.addChild = layoutAddChild
 	layout.draw = layoutDraw
 
-	layoutSetSize(layout, columnCount, rowCount)
+	layoutsetSize(layout, columnCount, rowCount)
 
 	return layout
 end
@@ -3204,7 +3215,7 @@ local function paletteShow(palette)
 end
 
 function GUI.palette(x, y, startColor)
-	local palette = GUI.container(x, y, 71, 25)
+	local palette = GUI.window(x, y, 71, 25)
 	
 	palette.color = {hsb = {}, rgb = {}}
 	palette:addChild(GUI.panel(1, 1, palette.width, palette.height, 0xF0F0F0))
@@ -3489,36 +3500,6 @@ end
 
 --------------------------------------------------------------------------------
 
-function GUI.addPalette(parentContainer, addPanel, color)
-	local container = GUI.addBackgroundContainer(parentContainer, addPanel, false, nil)
-
-	local palette = container:addChild(GUI.windowFromContainer(GUI.palette(1, 1, color or 0x9900FF)))
-	palette.localX, palette.localY = math.floor(container.width / 2 - palette.width / 2), math.floor(container.height / 2 - palette.height / 2)
-
-	local function onAnyTouch()
-		container:remove()
-		palette:getFirstParent():drawOnScreen()
-	end
-
-	palette.cancelButton.onTouch = function()
-		onAnyTouch()
-		if palette.onCancel then
-			palette.onCancel()
-		end
-	end
-
-	palette.submitButton.onTouch = function()
-		onAnyTouch()
-		if palette.onSubmit then
-			palette.onSubmit()
-		end
-	end
-
-	return palette
-end
-
---------------------------------------------------------------------------------
-
 local function listUpdate(object)
 	object.backgroundPanel.width, object.backgroundPanel.height = object.width, object.height
 	object.backgroundPanel.colors.background = object.colors.default.background
@@ -3616,10 +3597,15 @@ local function listGetItem(object, index)
 	return object.itemsLayout.children[index]
 end
 
-function GUI.list(x, y, width, height, itemSize, spacing, backgroundColor, textColor, backgroundAlternatingColor, textAlternatingColor, backgroundSelectedColor, textSelectedColor, offsetMode)
-	local object = GUI.container(x, y, width, height)
+local function listDraw(list)
+	list:update()
+	containerDraw(list)
+end
 
-	object.colors = {
+function GUI.list(x, y, width, height, itemSize, spacing, backgroundColor, textColor, backgroundAlternatingColor, textAlternatingColor, backgroundSelectedColor, textSelectedColor, offsetMode)
+	local list = GUI.container(x, y, width, height)
+
+	list.colors = {
 		default = {
 			background = backgroundColor,
 			text = textColor
@@ -3634,97 +3620,28 @@ function GUI.list(x, y, width, height, itemSize, spacing, backgroundColor, textC
 		},
 	}
 
-	object.selectedItem = 1
-	object.select = listSelect
-	object.deselect = listDeselect
-	object.offsetMode = offsetMode
-	object.itemSize = itemSize
+	list.selectedItem = 1
+	list.select = listSelect
+	list.deselect = listDeselect
+	list.offsetMode = offsetMode
+	list.itemSize = itemSize
 
-	object.backgroundPanel = object:addChild(GUI.panel(1, 1, width, height, backgroundColor))
-	object.itemsLayout = object:addChild(GUI.layout(1, 1, width, height, 1, 1))
+	list.backgroundPanel = list:addChild(GUI.panel(1, 1, width, height, backgroundColor))
+	list.itemsLayout = list:addChild(GUI.layout(1, 1, width, height, 1, 1))
 	
-	object.update = listUpdate
-	object.addItem = listAddItem
-	object.getItem = listGetItem
-	object.setAlignment = listSetAlignment
-	object.setSpacing = listSetSpacing
-	object.setDirection = listSetDirection
+	list.update = listUpdate
+	list.addItem = listAddItem
+	list.getItem = listGetItem
+	list.setAlignment = listSetAlignment
+	list.setSpacing = listSetSpacing
+	list.setDirection = listSetDirection
+	list.draw = listDraw
 
-	object:setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
-	object:setSpacing(spacing)
-	object:setDirection(GUI.DIRECTION_VERTICAL)
+	list:setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
+	list:setSpacing(spacing)
+	list:setDirection(GUI.DIRECTION_VERTICAL)
 
-	return object
-end
-
---------------------------------------------------------------------------------
-
-function windowDraw(window)
-	containerDraw(window)
-	GUI.drawShadow(window.x, window.y, window.width, window.height, GUI.COLOR_WINDOW_SHADOW_TRANSPARENCY, true)
-
-	return window
-end
-
-local function windowCheck(window, x, y)
-	local child
-	for i = #window.children, 1, -1 do
-		child = window.children[i]
-		
-		if child.children then
-			if windowCheck(child, x, y) then
-				return true
-			end
-		elseif child.eventHandler and not child.hidden and not child.disabled and GUI.isPointInside(child, x, y) then
-			return true
-		end
-	end
-end
-
-local function windowEventHandler(mainContainer, window, e1, e2, e3, e4)
-	if e1 == "touch" then
-		if not windowCheck(window, e3, e4) then
-			window.lastTouchX, window.lastTouchY = e3, e4
-		end
-		
-		if window ~= window.parent.children[#window.parent.children] then
-			window:moveToFront()
-			mainContainer:drawOnScreen()
-		end
-	elseif e1 == "drag" and window.lastTouchX and not windowCheck(window, e3, e4) then
-		local xOffset, yOffset = e3 - window.lastTouchX, e4 - window.lastTouchY
-		if xOffset ~= 0 or yOffset ~= 0 then
-			window.localX, window.localY = window.localX + xOffset, window.localY + yOffset
-			window.lastTouchX, window.lastTouchY = e3, e4
-			
-			mainContainer:drawOnScreen()
-		end
-	elseif e1 == "drop" then
-		window.lastTouchX, window.lastTouchY = nil, nil
-	end
-end
-
-local function windowResize(window, width, height)
-	window.width, window.height = width, height
-	if window.onResize then
-		window.onResize(width, height)
-	end
-
-	return window
-end
-
-function GUI.windowFromContainer(container)
-	container.eventHandler = windowEventHandler
-	container.draw = windowDraw
-
-	return container
-end
-
-function GUI.window(x, y, width, height)
-	local window = GUI.windowFromContainer(GUI.container(x, y, width, height))
-	window.resize = windowResize
-
-	return window
+	return list
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -3885,15 +3802,16 @@ local function dropDownMenuReposition(menu)
 	menu.itemsContainer.width, menu.itemsContainer.height = menu.width, menu.height
 	menu.prevButton.width, menu.nextButton.width = menu.width, menu.width
 	menu.nextButton.localY = menu.height
-	menu.prevButton.hidden = menu.itemsContainer.children[1].localY >= 1
-	menu.nextButton.hidden = menu.itemsContainer.children[#menu.itemsContainer.children].localY + menu.itemsContainer.children[#menu.itemsContainer.children].height - 1 <= menu.height
-	
+
 	local y = menu.itemsContainer.children[1].localY
 	for i = 1, #menu.itemsContainer.children do
 		menu.itemsContainer.children[i].localY = y
 		menu.itemsContainer.children[i].width = menu.itemsContainer.width
 		y = y + menu.itemsContainer.children[i].height
 	end
+
+	menu.prevButton.hidden = menu.itemsContainer.children[1].localY >= 1
+	menu.nextButton.hidden = menu.itemsContainer.children[#menu.itemsContainer.children].localY + menu.itemsContainer.children[#menu.itemsContainer.children].height - 1 <= menu.height
 end
 
 local function dropDownMenuUpdate(menu)
@@ -4233,77 +4151,143 @@ end
 
 ---------------------------------------------------------------------------------------------------
 
--- local mainContainer = GUI.fullScreenContainer()
--- mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D)).eventHandler = function(mainContainer, object, e1, e2, e3, e4)
--- 	if e1 == "touch" then
--- 		local contextMenu = GUI.addContextMenu(mainContainer, e3, e4)
--- 		contextMenu:addItem("New")
--- 		contextMenu:addItem("Open").onTouch = function()
--- 			-- Do something to open file or whatever
--- 		end
+function windowDraw(window)
+	containerDraw(window)
+	GUI.drawShadow(window.x, window.y, window.width, window.height, GUI.COLOR_WINDOW_TRANSPARENCY_SHADOW, true)
 
--- 		local subMenu = contextMenu:addSubMenu("Open with")
--- 		subMenu:addItem("Explorer.app")
--- 		subMenu:addItem("Viewer.app")
--- 		subMenu:addItem("Finder.app")
--- 		subMenu:addSeparator()
--- 		subMenu:addItem("Browse...")
+	return window
+end
 
--- 		contextMenu:addSeparator()
--- 		contextMenu:addItem("Save", true)
--- 		contextMenu:addItem("Save as")
--- 		contextMenu:addSeparator()
--- 		for i = 1, 25 do
--- 			contextMenu:addItem("Do something " .. i).onTouch = function()
--- 				GUI.error("Meaf")
--- 			end
--- 		end
+local function windowCheck(window, x, y)
+	local child
+	for i = #window.children, 1, -1 do
+		child = window.children[i]
+		
+		if child.children then
+			if windowCheck(child, x, y) then
+				return true
+			end
+		elseif child.eventHandler and not child.hidden and not child.disabled and GUI.isPointInside(child, x, y) then
+			return true
+		end
+	end
+end
 
--- 		mainContainer:drawOnScreen()
--- 	end
--- end
+local function windowEventHandler(mainContainer, window, e1, e2, e3, e4)
+	if e1 == "touch" then
+		if not windowCheck(window, e3, e4) then
+			window.lastTouchX, window.lastTouchY = e3, e4
+		end
+		
+		if window ~= window.parent.children[#window.parent.children] then
+			window:moveToFront()
+			mainContainer:drawOnScreen()
+		end
+	elseif e1 == "drag" and window.lastTouchX and not windowCheck(window, e3, e4) then
+		local xOffset, yOffset = e3 - window.lastTouchX, e4 - window.lastTouchY
+		if xOffset ~= 0 or yOffset ~= 0 then
+			window.localX, window.localY = window.localX + xOffset, window.localY + yOffset
+			window.lastTouchX, window.lastTouchY = e3, e4
+			
+			mainContainer:drawOnScreen()
+		end
+	elseif e1 == "drop" then
+		window.lastTouchX, window.lastTouchY = nil, nil
+	end
+end
 
--- mainContainer:drawOnScreen(true)
--- mainContainer:startEventHandling()
+local function windowResize(window, width, height)
+	window.width, window.height = width, height
+	if window.onResize then
+		window.onResize(width, height)
+	end
 
+	return window
+end
 
+local function windowMaximize(window)
+	if window.maximized then
+		window.localX, window.localY = window.oldGeometryX, window.oldGeometryY
+		window:resize(window.oldGeometryWidth, window.oldGeometryHeight)
+	else
+		window.oldGeometryX, window.oldGeometryY, window.oldGeometryWidth, window.oldGeometryHeight = window.localX, window.localY, window.width, window.height
+		window.localX, window.localY = 1, 1
+		window:resize(window.parent.width, window.parent.height)
+	end
 
+	window.maximized = not window.maximized
+	window:getFirstParent():drawOnScreen()
+end
 
+local function windowMinimize(window)
+	window.hidden = not window.hidden
+	window:getFirstParent():drawOnScreen()
+end
 
--- local mainContainer = GUI.fullScreenContainer()
--- mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local function windowClose(window)
+	window:remove()
+	window:getFirstParent():drawOnScreen()
+end
 
--- local comboBox = mainContainer:addChild(GUI.comboBox(3, 2, 30, 3, 0xEEEEEE, 0x2D2D2D, 0xCCCCCC, 0x888888))
--- comboBox:addItem(".PNG")
--- comboBox:addItem(".JPG").onTouch = function()
--- 	local contextMenu = GUI.addContextMenu(mainContainer, 3, 2)
--- 	contextMenu:addItem("New")
--- 	contextMenu:addItem("Open").onTouch = function()
--- 		-- Do something to open file or whatever
--- 	end
+function GUI.window(x, y, width, height)
+	local window = GUI.container(x, y, width, height)
+	
+	window.resize = windowResize
+	window.maximize = windowMaximize
+	window.minimize = windowMinimize
+	window.close = windowClose
+	window.eventHandler = windowEventHandler
+	window.draw = windowDraw
 
--- 	local subMenu = contextMenu:addSubMenu("Open with")
--- 	subMenu:addItem("Explorer.app")
--- 	subMenu:addItem("Viewer.app")
--- 	subMenu:addItem("Finder.app")
--- 	subMenu:addSeparator()
--- 	subMenu:addItem("Browse...")
+	return window
+end
 
--- 	contextMenu:addSeparator()
--- 	contextMenu:addItem("Save", true)
--- 	contextMenu:addItem("Save as")
--- 	contextMenu:addSeparator()
--- 	for i = 1, 25 do
--- 		contextMenu:addItem("Do something " .. i).onTouch = function()
--- 			GUI.error("Meaf")
--- 		end
--- 	end
--- end
--- comboBox:addItem(".GIF")
--- comboBox:addItem(".PIC")
+function GUI.filledWindow(x, y, width, height, backgroundColor)
+	local window = GUI.window(x, y, width, height)
 
--- mainContainer:drawOnScreen(true)
--- mainContainer:startEventHandling()
+	window.backgroundPanel = window:addChild(GUI.panel(1, 1, width, height, backgroundColor))
+	window.actionButtons = window:addChild(GUI.actionButtons(2, 2, false))
+
+	return window
+end
+
+function GUI.titledWindow(x, y, width, height, title, addTitlePanel)
+	local window = GUI.filledWindow(x, y, width, height, GUI.COLOR_WINDOW_BACKGROUND_PANEL)
+
+	if addTitlePanel then
+		window.titlePanel = window:addChild(GUI.panel(1, 1, width, 1, GUI.COLOR_WINDOW_TITLE_BACKGROUND))
+		window.backgroundPanel.localY, window.backgroundPanel.height = 2, window.height - 1
+	end
+
+	window.titleLabel = window:addChild(GUI.label(1, 1, width, height, GUI.COLOR_WINDOW_TITLE_TEXT, title)):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
+	window.actionButtons.localY = 1
+	window.actionButtons:moveToFront()
+
+	return window
+end
+
+function GUI.tabbedWindow(x, y, width, height, ...)
+	local window = GUI.filledWindow(x, y, width, height, GUI.COLOR_WINDOW_BACKGROUND_PANEL)
+
+	window.tabBar = window:addChild(GUI.tabBar(1, 1, window.width, 3, 2, 0, GUI.COLOR_WINDOW_TAB_BAR_DEFAULT_BACKGROUND, GUI.COLOR_WINDOW_TAB_BAR_DEFAULT_TEXT, GUI.COLOR_WINDOW_TAB_BAR_DEFAULT_BACKGROUND, GUI.COLOR_WINDOW_TAB_BAR_DEFAULT_TEXT, GUI.COLOR_WINDOW_TAB_BAR_SELECTED_BACKGROUND, GUI.COLOR_WINDOW_TAB_BAR_SELECTED_TEXT, true))
+	
+	window.backgroundPanel.localY, window.backgroundPanel.height = 4, window.height - 3
+	window.actionButtons:moveToFront()
+	window.actionButtons.localY = 2
+
+	return window
+end
+
+---------------------------------------------------------------------------------------------------
+
+function GUI.tabBar(...)
+	local tabBar = GUI.list(...)
+
+	tabBar:setDirection(GUI.DIRECTION_HORIZONTAL)
+	tabBar:setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
+
+	return tabBar
+end
 
 ---------------------------------------------------------------------------------------------------
 
