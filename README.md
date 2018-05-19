@@ -51,6 +51,7 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [   GUI.palette](#guipalettex-y-initialcolor-table-palette) |
 | [Standalone methods:](#standalone-methods) |
 | [   GUI.alert](#guialertvarargs) |
+| [   GUI.addContextMenu](#guiaddcontextmenuparentcontainer-x-y-backgroundcolor-textcolor-backgroundpressedcolor-textpressedcolor-disabledcolor-separatorcolor-backgroundtransparency-shadowtransparency-table-contextmenu) |
 | [   GUI.highlightString](#guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
 | [   GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel-table-filesystemdialog) |
 | [   GUI.addBackgroundContainer](#guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title-table-palette) |
