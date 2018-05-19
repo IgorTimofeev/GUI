@@ -318,7 +318,7 @@ This is a rather boring section of the documentation, but it is still necessary 
 
 Still not tired? Now think how I fucked up writing them during the library development. Shitty constants...
 
-![](https://i.imgur.com/RDg5Qnz.jpg)
+![](https://i.imgur.com/ubwCv1W.jpg?1)
 
 | Type | Constant | Value | Description |
 | ------ | ------ | ------ | ------ |
