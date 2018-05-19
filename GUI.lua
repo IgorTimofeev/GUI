@@ -45,6 +45,7 @@ local GUI = {
 	BACKGROUND_CONTAINER_PANEL_TRANSPARENCY = 0.3,
 
 	WINDOW_BACKGROUND_PANEL_COLOR = 0xF0F0F0,
+	WINDOW_SHADOW_TRANSPARENCY = 0.6,
 	WINDOW_TITLE_BACKGROUND_COLOR = 0xE1E1E1,
 	WINDOW_TITLE_TEXT_COLOR = 0x2D2D2D,
 	WINDOW_TAB_BAR_DEFAULT_BACKGROUND_COLOR = 0x2D2D2D,
@@ -3979,11 +3980,11 @@ local function contextMenuUpdate(menu)
 		dropDownMenuReposition(menu)
 
 		local bufferWidth, bufferHeight = buffer.getResolution()
-		if menu.localY + menu.maximumHeight >= bufferHeight then
-			menu.localY = bufferHeight - menu.maximumHeight
-		end
 		if menu.localX + menu.width + 1 >= bufferWidth then
 			menu.localX = bufferWidth - menu.width - 1
+		end
+		if menu.localY + menu.height >= bufferHeight then
+			menu.localY = bufferHeight - menu.height
 		end
 	end
 end
