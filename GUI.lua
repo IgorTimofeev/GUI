@@ -3775,8 +3775,8 @@ local function dropDownMenuItemEventHandler(mainContainer, object, e1, ...)
 				object.pressed = false
 				object.parent.parent.parent:remove()
 
-				if object.parent.parent.onClose then
-					object.parent.parent.onClose(object:indexOf())
+				if object.parent.parent.onMenuClosed then
+					object.parent.parent.onMenuClosed(object:indexOf())
 				end
 
 				if object.onTouch then
@@ -3904,8 +3904,8 @@ end
 local function dropDownMenuBackgroundObjectEventHandler(mainContainer, object, e1)
 	if e1 == "touch" then
 		for i = 1, #object.parent.children do
-			if object.parent.children[i].onClose then
-				object.parent.children[i].onClose()
+			if object.parent.children[i].onMenuClosed then
+				object.parent.children[i].onMenuClosed()
 			end
 		end
 
@@ -4124,7 +4124,7 @@ function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBa
 		GUI.CONTEXT_MENU_SHADOW_TRANSPARENCY
 	)
 
-	comboBox.dropDownMenu.onClose = function(index)
+	comboBox.dropDownMenu.onMenuClosed = function(index)
 		comboBox.pressed = false
 		comboBox.selectedItem = index or comboBox.selectedItem
 		comboBox:getFirstParent():drawOnScreen()

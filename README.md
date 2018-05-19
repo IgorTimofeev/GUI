@@ -1956,7 +1956,7 @@ This object has following properties:
 | *function* | :**addSeparator**()| Add an separator to context menu |
 | *function* | :**removeItem**(*int* index): *table* item | Remove item from context menu by it's index |
 | *function* | :**addSubMenu**(*string* text, [*boolean* disabled]): *table* contextMenu| Add another context menu to this context menu. The returned menu object is independent and supports all the methods described above  |
-| *callback-function* | .**onClose**(*int* selectedIndex)| This function is called after user selects a menu item or closes it. If an element has been selected, this function will have and selected item index as a parameter |
+| *callback-function* | .**onMenuClosed**(*int* selectedIndex)| This function is called after user selects a menu item or closes it. If an element has been selected, this function will have and selected item index as a parameter |
 
 Example of implementation:
 
