@@ -333,13 +333,13 @@ Still not tired? Now think how I fucked up writing them during the library devel
 | *int* | GUI.**BACKGROUND_CONTAINER_TITLE_COLOR** | 0xE1E1E1 | Background container title color |
 | *float* | GUI.**BACKGROUND_CONTAINER_PANEL_TRANSPARENCY** | 0.3 | Background container panel transparency |
 | *int* | GUI.**WINDOW_BACKGROUND_PANEL_COLOR** | 0xF0F0F0 | Window background panel color |
+| *float* | GUI.**WINDOW_SHADOW_TRANSPARENCY** | 0.6 | Window shadow transparency |
 | *int* | GUI.**WINDOW_TITLE_BACKGROUND_COLOR** | 0xE1E1E1 | Window title background color |
 | *int* | GUI.**WINDOW_TITLE_TEXT_COLOR** | 0x2D2D2D | Window title text color |
 | *int* | GUI.**WINDOW_TAB_BAR_DEFAULT_BACKGROUND_COLOR** | 0x2D2D2D | Window tab bar default background color |
 | *int* | GUI.**WINDOW_TAB_BAR_DEFAULT_TEXT_COLOR** | 0xF0F0F0 | Window tab bar default text color |
 | *int* | GUI.**WINDOW_TAB_BAR_SELECTED_BACKGROUND_COLOR** | 0xF0F0F0 | Window tab bar selected background color |
 | *int* | GUI.**WINDOW_TAB_BAR_SELECTED_TEXT_COLOR** | 0x2D2D2D | Window tab bar selected text color |
-| *float* | GUI.**WINDOW_SHADOW_TRANSPARENCY** | 0.5 | Window shadow transparency |
 | *string* | GUI.**PALETTE_CONFIG_PATH** | "/lib/.palette.cfg" | Path where GUI.**palette** favourites colors are being saved |
 | *table* | GUI.**LUA_SYNTAX_PATTERNS** | {...} | Required patterns for Lua syntax highlighting by GUI.**highlightString**(...) method |
 | *table* | GUI.**LUA_SYNTAX_COLORS** | {...} | Default color scheme for Lua syntax highlighting by GUI.**highlightString**(...) method |
