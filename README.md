@@ -1646,7 +1646,7 @@ This object has following properties:
 | *table* | .**cells**| Three-dismensional table with rows/columns indices. Each .**cells**[row][column] table contains data with cell alignment/direction/spacing/fitting/calculated width and height |
 | *boolean* | .**showGrid**| Toggle grid borders rendering. The default value is **false** |
 | *function* | :**setPosition**(*int* column, *int* row, *object* child): *object* child| Assign the specified grid cell to the layout child object. One cell can contain as many objects as you want |
-| *function* | :**setSize**(*int* columnCount, *int* columnCount): *table* layout | Set size of the layout grid. All objects located outside the range of new size must be assigned to required cells again via :**setPosition**(...)  |
+| *function* | :**setGridSize**(*int* columnCount, *int* columnCount): *table* layout | Set size of the layout grid. All objects located outside the range of new size must be assigned to required cells again via :**setPosition**(...)  |
 | *function* | :**setColumnWidth**(*int* column, *enum* sizePolicy, *float* size): *table* layout | Set width of the specified column. The value can be one of two types: GUI.**SIZE_POLICY_ABSOLUTE** or GUI.**SIZE_POLICY_RELATIVE**. In the first case, the width exists as pixels, and does not change when layout size is changed. The second one exists as the percentage width of the column: if you specify a relative value, and there are other columns to the right of the selected column, their relative width will be automatically recalculated to the desired percentage values. Relative width must be a number in **[0.0; 1.0]** range |
 | *function* | :**setRowHeight**(*int* row, *enum* sizePolicy, *float* size): *table* layout | Set height of the specified row. The behavior of the function is similar to **:setColumnWidth**(...) |
 | *function* | :**addColumn**(*enum* sizePolicy, *float* size): *table* layout | Add an empty column to layout grid with specified size |
@@ -1692,7 +1692,7 @@ layout.children[1].onTouch = function()
 	-- Enable layout grid rendering
 	layout.showGrid = true
 	-- Change layout grid size
-	layout:setSize(3, 1)
+	layout:setGridSize(3, 1)
 	-- Change cell spacing for each column
 	for column = 1, 3 do
 		layout:setSpacing(column, 1, 4)
