@@ -2015,7 +2015,7 @@ GUI.**addFilesystemDialog**(parentContainer, addPanel, ...): *table* filesystemD
 | ------ | ------ | ------ |
 | *table* | parentContainer | Container to which palette will be added |
 | *boolean* | addPanel | Necessity to add a semi-transparent dark background panel |
-| *varargs* | ... | Multiple parameters that comes to GUI.**fileSystemDialog** starting from **width** |
+| *varargs* | ... | Multiple parameters that comes to GUI.**filesystemDialog** starting from **width** |
 
 This method creates a filesystem dialor in specified container with a nice drop-down animation and allows you to work with it in the same way as with a conventional JUI. It is useful for manual work with the file system, if there is no desire to work with GUI.**filesystemChooser**
 
