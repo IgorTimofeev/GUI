@@ -31,6 +31,11 @@ local GUI = {
 	IO_MODE_BOTH = 13,
 	IO_MODE_OPEN = 14,
 	IO_MODE_SAVE = 15,
+
+	BUTTON_PRESS_DURATION = 0.2,
+	BUTTON_ANIMATION_DURATION = 0.2,
+	SWITCH_ANIMATION_DURATION = 0.3,
+	FILESYSTEM_DIALOG_ANIMATION_DURATION = 0.5,
 	
 	CONTEXT_MENU_SEPARATOR_COLOR = 0x878787,
 	CONTEXT_MENU_DEFAULT_TEXT_COLOR = 0x2D2D2D,
@@ -234,8 +239,6 @@ end
 local function containerObjectRemove(object)
 	table.remove(object.parent.children, containerObjectIndexOf(object))
 end
-
---------------------------------------------------------------------------------
 
 local function containerObjectAnimationStart(animation, duration)
 	animation.position = 0
@@ -506,6 +509,66 @@ end
 
 --------------------------------------------------------------------------------
 
+local function pressableDraw(pressable)
+	local background = pressable.pressed and pressable.colors.pressed.background or pressable.disabled and pressable.colors.disabled.background or pressable.colors.default.background
+	local text = pressable.pressed and pressable.colors.pressed.text or pressable.disabled and pressable.colors.disabled.text or pressable.colors.default.text
+
+	if background then
+		buffer.drawRectangle(pressable.x, pressable.y, pressable.width, pressable.height, background, text, " ")
+	end
+	buffer.drawText(math.floor(pressable.x + pressable.width / 2 - unicode.len(pressable.text) / 2), math.floor(pressable.y + pressable.height / 2), text, pressable.text)
+end
+
+local function pressableHandlePress(mainContainer, pressable, ...)
+	pressable.pressed = not pressable.pressed
+	mainContainer:drawOnScreen()
+
+	if not pressable.switchMode then
+		pressable.pressed = not pressable.pressed
+		os.sleep(GUI.BUTTON_PRESS_DURATION)
+		
+		mainContainer:drawOnScreen()
+	end
+
+	if pressable.onTouch then
+		pressable.onTouch(mainContainer, pressable, ...)
+	end
+end
+
+local function pressableEventHandler(mainContainer, pressable, e1, ...)
+	if e1 == "touch" then
+		pressableHandlePress(mainContainer, pressable, e1, ...)
+	end
+end
+
+local function pressable(x, y, width, height, backgroundColor, textColor, backgroundPressedColor, textPressedColor, backgroundDisabledColor, textDisabledColor, text)
+	local pressable = GUI.object(x, y, width, height)
+
+	pressable.colors = {
+		default = {
+			background = backgroundColor,
+			text = textColor
+		},
+		pressed = {
+			background = backgroundPressedColor,
+			text = textPressedColor
+		},
+		disabled = {
+			background = backgroundDisabledColor,
+			text = textDisabledColor
+		}
+	}
+
+	pressable.pressed = false
+	pressable.text = text
+	pressable.draw = pressableDraw
+	pressable.eventHandler = pressableEventHandler
+
+	return pressable
+end
+
+--------------------------------------------------------------------------------
+
 local function buttonPlayAnimation(button, onFinish)
 	button.animationStarted = true
 	button:addAnimation(
@@ -548,21 +611,7 @@ local function buttonPress(button, mainContainer, object, ...)
 			end
 		end)
 	else
-		button.pressed = not button.pressed
-
-		mainContainer:drawOnScreen()
-
-		if not button.switchMode then
-			button.pressed = not button.pressed
-			
-			os.sleep(0.2)
-			
-			mainContainer:drawOnScreen()
-		end
-
-		if button.onTouch then
-			button.onTouch(mainContainer, button, ...)
-		end
+		pressableHandlePress(mainContainer, button, ...)
 	end
 end
 
@@ -635,29 +684,13 @@ local function roundedButtonDraw(button)
 end
 
 local function buttonCreate(x, y, width, height, backgroundColor, textColor, backgroundPressedColor, textPressedColor, text)
-	local button = GUI.object(x, y, width, height)
+	local button = pressable(x, y, width, height, backgroundColor, textColor, backgroundPressedColor, textPressedColor, 0x878787, 0xA5A5A5, text)
 
-	button.colors = {
-		default = {
-			background = backgroundColor,
-			text = textColor
-		},
-		pressed = {
-			background = backgroundPressedColor,
-			text = textPressedColor
-		},
-		disabled = {
-			background = 0x878787,
-			text = 0xA5A5A5
-		}
-	}
+	button.animationDuration = GUI.BUTTON_ANIMATION_DURATION
+	button.animated = true
+
 	button.animationCurrentBackground = backgroundColor
 	button.animationCurrentText = textColor
-
-	button.text = text
-	button.animationDuration = 0.2
-	button.animated = true
-	button.pressed = false
 	
 	button.press = buttonPress
 	button.eventHandler = buttonEventHandler
@@ -672,36 +705,42 @@ end
 function GUI.button(...)
 	local button = buttonCreate(...)
 	button.draw = buttonDraw
+
 	return button
 end
 
 function GUI.adaptiveButton(...)
 	local button = adaptiveButtonCreate(...)
 	button.draw = buttonDraw
+
 	return button
 end
 
 function GUI.framedButton(...)
 	local button = buttonCreate(...)
 	button.draw = framedButtonDraw
+
 	return button
 end
 
 function GUI.adaptiveFramedButton(...)
 	local button = adaptiveButtonCreate(...)
 	button.draw = framedButtonDraw
+
 	return button
 end
 
 function GUI.roundedButton(...)
 	local button = buttonCreate(...)
 	button.draw = roundedButtonDraw
+
 	return button
 end
 
 function GUI.adaptiveRoundedButton(...)
 	local button = adaptiveButtonCreate(...)
 	button.draw = roundedButtonDraw
+
 	return button
 end
 
@@ -778,57 +817,6 @@ function GUI.actionButtons(x, y, fatSymbol)
 	container.maximize = container:addChild(GUI.button(5, 1, 1, 1, nil, 0x00B640, nil, 0x006D40, symbol))
 
 	return container
-end
-
---------------------------------------------------------------------------------
-
-local function menuDraw(menu)
-	buffer.drawRectangle(menu.x, menu.y, menu.width, 1, menu.colors.default.background, menu.colors.default.text, " ", menu.colors.transparency)
-	menu:reimplementedDraw()
-end
-
-local function menuItemEventHandler(mainContainer, object, e1, ...)
-	if e1 == "touch" then
-		if object.onTouch then
-			object.pressed = true
-			mainContainer:drawOnScreen()
-
-			object.onTouch(e1, ...)
-			
-			object.pressed = false
-			mainContainer:drawOnScreen()
-		end
-	end
-end
-
-local function menuAddItem(menu, text, textColor)
-	local x = 2; for i = 1, #menu.children do x = x + unicode.len(menu.children[i].text) + 2; end
-	local item = menu:addChild(GUI.adaptiveButton(x, 1, 1, 0, nil, textColor or menu.colors.default.text, menu.colors.selected.background, menu.colors.selected.text, text))
-	item.animated = false
-	item.eventHandler = menuItemEventHandler
-
-	return item
-end
-
-function GUI.menu(x, y, width, backgroundColor, textColor, backgroundPressedColor, textPressedColor, backgroundTransparency)
-	local menu = GUI.container(x, y, width, 1)
-	
-	menu.colors = {
-		default = {
-			background = backgroundColor,
-			text = textColor,
-		},
-		selected = {
-			background = backgroundPressedColor,
-			text = textPressedColor,
-		},
-		transparency = backgroundTransparency
-	}
-	menu.addItem = menuAddItem
-	menu.reimplementedDraw = menu.draw
-	menu.draw = menuDraw
-
-	return menu
 end
 
 --------------------------------------------------------------------------------
@@ -1425,7 +1413,7 @@ function GUI.switch(x, y, width, activeColor, passiveColor, pipeColor, state)
 	switch.state = state or false
 	switch.update = switchUpdate
 	switch.animated = true
-	switch.animationDuration = 0.3
+	switch.animationDuration = GUI.SWITCH_ANIMATION_DURATION
 	switch.setState = switchSetState
 
 	switch:setState(state)
@@ -1903,6 +1891,7 @@ function GUI.filesystemDialog(x, y, width, height, submitButtonText, cancelButto
 
 	filesystemDialog.filesystemTree = filesystemDialog:addChild(GUI.filesystemTree(1, 1, width, height - 3, 0xE1E1E1, 0x3C3C3C, 0x3C3C3C, 0xA5A5A5, 0x3C3C3C, 0xE1E1E1, 0xB4B4B4, 0xA5A5A5, 0xC3C3C3, 0x4B4B4B))
 	filesystemDialog.filesystemTree.workPath = path
+	filesystemDialog.animationDuration = GUI.FILESYSTEM_DIALOG_ANIMATION_DURATION
 
 	filesystemDialog.draw = filesystemDialogDraw
 	filesystemDialog.setMode = filesystemDialogSetMode
@@ -1923,7 +1912,7 @@ local function filesystemDialogShow(filesystemDialog)
 		function(mainContainer, animation)
 			animation:remove()
 		end
-	):start(0.5)
+	):start(filesystemDialog.animationDuration)
 
 	return filesystemDialog
 end
@@ -3565,10 +3554,9 @@ local function listItemEventHandler(mainContainer, object, e1, ...)
 end
 
 local function listAddItem(object, text)
-	local item = object.itemsLayout:addChild(GUI.button(1, 1, 1, 1, 0, 0, 0, 0, text))
+	local item = object.itemsLayout:addChild(pressable(1, 1, 1, 1, 0, 0, 0, 0, 0, 0, text))
 	
 	item.switchMode = true
-	item.animated = false
 	item.eventHandler = listItemEventHandler
 
 	object:update()
@@ -3753,6 +3741,14 @@ local function dropDownMenuItemDraw(item)
 	return item
 end
 
+local function dropDownMenuReleaseItems(menu)
+	for i = 1, #menu.itemsContainer.children do
+		menu.itemsContainer.children[i].pressed = false
+	end
+
+	return menu
+end
+
 local function dropDownMenuItemEventHandler(mainContainer, object, e1, ...)
 	if e1 == "touch" then
 		if object.type == 1 and not object.pressed then
@@ -3760,7 +3756,7 @@ local function dropDownMenuItemEventHandler(mainContainer, object, e1, ...)
 			mainContainer:drawOnScreen()
 
 			if object.subMenu then
-				object.subMenu.hidden = false
+				object.parent.parent.parent:addChild(object.subMenu:releaseItems())
 				object.subMenu.localX = object.parent.parent.localX + object.parent.parent.width
 				object.subMenu.localY = object.parent.parent.localY + object.localY - 1
 				if buffer.getWidth() - object.parent.parent.localX - object.parent.parent.width + 1 < object.subMenu.width then
@@ -3771,8 +3767,6 @@ local function dropDownMenuItemEventHandler(mainContainer, object, e1, ...)
 				mainContainer:drawOnScreen()
 			else
 				os.sleep(0.2)
-
-				object.pressed = false
 				object.parent.parent.parent:remove()
 
 				if object.parent.parent.onMenuClosed then
@@ -3903,7 +3897,7 @@ end
 
 local function dropDownMenuBackgroundObjectEventHandler(mainContainer, object, e1)
 	if e1 == "touch" then
-		for i = 1, #object.parent.children do
+		for i = 2, #object.parent.children do
 			if object.parent.children[i].onMenuClosed then
 				object.parent.children[i].onMenuClosed()
 			end
@@ -3917,8 +3911,9 @@ end
 local function dropDownMenuAdd(parentContainer, menu)
 	local container = parentContainer:addChild(GUI.container(1, 1, parentContainer.width, parentContainer.height))
 	container:addChild(GUI.object(1, 1, container.width, container.height)).eventHandler = dropDownMenuBackgroundObjectEventHandler
+	
 
-	return container:addChild(menu)
+	return container:addChild(menu:releaseItems())
 end
 
 function GUI.dropDownMenu(x, y, width, maximumHeight, itemHeight, backgroundColor, textColor, backgroundPressedColor, textPressedColor, disabledColor, separatorColor, backgroundTransparency, shadowTransparency)
@@ -3950,6 +3945,7 @@ function GUI.dropDownMenu(x, y, width, maximumHeight, itemHeight, backgroundColo
 	menu.prevButton.onTouch = dropDownMenuPrevButtonOnTouch
 	menu.nextButton.onTouch = dropDownMenuNextButtonOnTouch
 
+	menu.releaseItems = dropDownMenuReleaseItems
 	menu.itemHeight = itemHeight
 	menu.addSeparator = dropDownMenuAddSeparator
 	menu.addItem = dropDownMenuAddItem
@@ -3980,10 +3976,10 @@ local function contextMenuUpdate(menu)
 		dropDownMenuReposition(menu)
 
 		local bufferWidth, bufferHeight = buffer.getResolution()
-		if menu.localX + menu.width + 1 >= bufferWidth then
+		if menu.x + menu.width + 1 >= bufferWidth then
 			menu.localX = bufferWidth - menu.width - 1
 		end
-		if menu.localY + menu.height >= bufferHeight then
+		if menu.y + menu.height >= bufferHeight then
 			menu.localY = bufferHeight - menu.height
 		end
 	end
@@ -3993,9 +3989,8 @@ local contextMenuCreate, contextMenuAddSubMenu
 
 contextMenuAddSubMenu = function(menu, text, disabled)
 	local item = menu:addItem(text, disabled, "►")
-	item.subMenu = menu.parent:addChild(contextMenuCreate(1, 1))
+	item.subMenu = contextMenuCreate(1, 1)
 	item.subMenu.colors = menu.colors
-	item.subMenu.hidden = true
 	
 	return item.subMenu
 end
@@ -4023,8 +4018,12 @@ contextMenuCreate = function(x, y, backgroundColor, textColor, backgroundPressed
 	return menu
 end
 
-function GUI.addContextMenu(parentContainer, ...)
-	return dropDownMenuAdd(parentContainer, contextMenuCreate(...))
+function GUI.addContextMenu(parentContainer, arg1, ...)
+	if type(arg1) == "table" then
+		return dropDownMenuAdd(parentContainer, arg1, ...)
+	else
+		return dropDownMenuAdd(parentContainer, contextMenuCreate(arg1, ...))
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -4288,6 +4287,78 @@ function GUI.tabBar(...)
 
 	return tabBar
 end
+
+--------------------------------------------------------------------------------
+
+local function menuDraw(menu)
+	buffer.drawRectangle(menu.x, menu.y, menu.width, 1, menu.colors.default.background, menu.colors.default.text, " ", menu.colors.transparency)
+	layoutDraw(menu)
+end
+
+local function menuAddItem(menu, text, textColor)
+	local item = menu:addChild(pressable(1, 1, unicode.len(text) + 2, 1, nil, textColor or menu.colors.default.text, menu.colors.selected.background, menu.colors.selected.text, 0x0, 0x0, text))
+	item.eventHandler = pressableEventHandler
+
+	return item
+end
+
+local function menuContextMenuItemOnTouch(mainContainer, item)
+	item.contextMenu.x, item.contextMenu.y = item.x, item.y + 1
+	dropDownMenuAdd(mainContainer, item.contextMenu)
+
+	mainContainer:drawOnScreen()
+end
+
+local function menuAddContextMenu(menu, ...)
+	local item = menu:addItem(...)
+
+	item.switchMode = true
+	item.onTouch = menuContextMenuItemOnTouch
+	item.contextMenu = contextMenuCreate(1, 1)
+	item.contextMenu.onMenuClosed = function()
+		item.pressed = false
+		item:getFirstParent():drawOnScreen()
+	end
+
+	return item.contextMenu
+end
+
+function GUI.menu(x, y, width, backgroundColor, textColor, backgroundPressedColor, textPressedColor, backgroundTransparency)
+	local menu = GUI.layout(x, y, width, 1, 1, 1)
+	
+	menu:setDirection(1, 1, GUI.DIRECTION_HORIZONTAL)
+	menu:setAlignment(1, 1, GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
+	menu:setSpacing(1, 1, 0)
+	menu:setMargin(1, 1, 1, 0)
+
+	menu.colors = {
+		default = {
+			background = backgroundColor,
+			text = textColor,
+		},
+		selected = {
+			background = backgroundPressedColor,
+			text = textPressedColor,
+		},
+		transparency = backgroundTransparency
+	}
+	
+	menu.addContextMenu = menuAddContextMenu
+	menu.addItem = menuAddItem
+	menu.draw = menuDraw
+
+	return menu
+end
+
+---------------------------------------------------------------------------------------------------
+
+-- local mainContainer = GUI.fullScreenContainer()
+-- mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+
+-- --
+
+-- mainContainer:drawOnScreen(true)
+-- mainContainer:startEventHandling()
 
 ---------------------------------------------------------------------------------------------------
 

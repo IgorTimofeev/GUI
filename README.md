@@ -982,6 +982,7 @@ This object has following properties:
 | Type | Property | Description |
 | ------ | ------ | ------ |
 | *function* | :**addItem**(*string* text, *int* color): *table* item | Add a new item to Menu. You can specify .**onTouch**() function to item if desired |
+| *function* | :**addContextMenu**(*string* text, *int* color): *table* contextMenu | Add a context menu to this menu. The behavior of returned object is the same as GUI.**addContextMenu**(...): *table* contextMenu |
 
 Example of implementation:
 
@@ -993,20 +994,22 @@ local GUI = require("GUI")
 local mainContainer = GUI.fullScreenContainer()
 mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
 
-local menu = mainContainer:addChild(GUI.menu(1, 1, mainContainer.width, 0xEEEEEE, 0x666666, 0x3366CC, 0xFFFFFF, nil))
-menu:addItem("MineCode IDE", 0x0)
-local item = menu:addItem("File")
-item.onTouch = function()
-	local contextMenu = GUI.contextMenu(item.x, item.y + 1)
-	contextMenu:addItem("New")
-	contextMenu:addItem("Open").onTouch = function()
-		GUI.alert("Open was pressed")
-	end
-	contextMenu:addSeparator()
-	contextMenu:addItem("Save")
-	contextMenu:addItem("Save as")
-	contextMenu:show()
+-- Add menu object to main container
+local menu = mainContainer:addChild(GUI.menu(1, 1, mainContainer.width, 0xEEEEEE, 0x666666, 0x3366CC, 0xFFFFFF))
+-- Add first item with black color. Attack a callback-function to it
+menu:addItem("MineCode IDE", 0x0).onTouch = function()
+	GUI.alert("Hello world!")
 end
+-- Add context menu and few items to it
+local contextMenu = menu:addContextMenu("File")
+contextMenu:addItem("New")
+contextMenu:addItem("Open").onTouch = function()
+	GUI.alert("Open item was pressed")
+end
+contextMenu:addSeparator()
+contextMenu:addItem("Save")
+contextMenu:addItem("Save as")
+-- Add whatever you want
 menu:addItem("Edit")
 menu:addItem("View")
 menu:addItem("About")
@@ -1019,7 +1022,7 @@ mainContainer:startEventHandling()
 
 Result:
 
-![](http://i.imgur.com/b1Tmge5.gif)
+![](https://i.imgur.com/OHOhvcy.gif)
 
 GUI.**comboBox**(x, y, width, elementHeight, backgroundColor, textColor, arrowBackgroundColor, arrowTextColor): *table* comboBox
 ------------------------------------------------------------------------
