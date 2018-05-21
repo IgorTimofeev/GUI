@@ -322,6 +322,10 @@ Still not tired? Now think how I fucked up writing them during the library devel
 
 | Type | Constant | Value | Description |
 | ------ | ------ | ------ | ------ |
+| *float* | GUI.**BUTTON_PRESS_DURATION** | 0.2 | Button pressing duration with disabled animation |
+| *float* | GUI.**BUTTON_ANIMATION_DURATION** | 0.2 | Button pressing animation duration |
+| *float* | GUI.**SWITCH_ANIMATION_DURATION** | 0.3 | Switch state changing animation duration |
+| *float* | GUI.**FILESYSTEM_DIALOG_ANIMATION_DURATION** | 0.5 | Filesystem dialog showing animation duration |
 | *int* | GUI.**CONTEXT_MENU_SEPARATOR_COLOR** | 0x878787 | Context menu separator color |
 | *int* | GUI.**CONTEXT_MENU_DEFAULT_TEXT_COLOR** | 0x2D2D2D | Context menu default item text color |
 | *int* | GUI.**CONTEXT_MENU_DEFAULT_BACKGROUND_COLOR** | 0xFFFFFF | Context menu default item background color |
