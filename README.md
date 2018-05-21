@@ -171,7 +171,7 @@ This object has following properties:
 | Type | Property | Description |
 | ------ | ------ | ------ |
 | *table* | .**children** | Table that contains all child objects of this container |
-| *function* | :**addChild**(*table* child, [*int* atIndex]): *table* child| Add specified object to the container as a child. When you do this, the object's global coordinates will become local. If the optional parameter **atIndex** is specified, then the element will be added to the corresponding position in container.**children** table |
+| *function* | :**addChild**(*table* child[, *int* atIndex]): *table* child| Add specified object to the container as a child. When you do this, the object's global coordinates will become local. If the optional parameter **atIndex** is specified, then the element will be added to the corresponding position in container.**children** table |
 | *function* | :**removeChildren**([*int* fromIndex, *int* toIndex]): *table* container | Remove all child elements of the container. If the optional parameters of the element indices are specified, the deletion will be performed in the appropriate range |
 | *function* | :**startEventHandling**([*float* delay]): *table* container | Run the event processing for this container and analyse events for all it's child objects. The  **delay** parameter is similar to computer.**pullSignal** one |
 | *function* | :**stopEventHandling**(): *table* container | Stop processing events for this container |
@@ -351,7 +351,7 @@ Ready-to-use objects
 
 The objects are listed below comes with the library and are written on the instructions of this documentation. If you want, you can make absolutely similar or much more technically advanced widgets without any difficulties.
 
-GUI.**panel**(x, y, width, height, color, [transparency]): *table* panel
+GUI.**panel**(x, y, width, height, color[, transparency]): *table* panel
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -602,7 +602,7 @@ Result:
 
 ![](https://i.imgur.com/Q2sX0P5.gif)
 
-GUI.**actionButtons**(x, y, [fat]): *table* actionButtons
+GUI.**actionButtons**(x, y[, fat]): *table* actionButtons
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -647,7 +647,7 @@ Result:
 
 ![](https://i.imgur.com/lYUS7fl.png)
 
-GUI.**input**(x, y, width, height, backgroundColor, textColor, placeholderTextColor, backgroundFocusedColor, textFocusedColor, text, [placeholderText, eraseTextOnFocus, textMask]): *table* input
+GUI.**input**(x, y, width, height, backgroundColor, textColor, placeholderTextColor, backgroundFocusedColor, textFocusedColor, text[, placeholderText, eraseTextOnFocus, textMask]): *table* input
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -700,7 +700,7 @@ Result:
 
 ![](http://i.imgur.com/njPN0eg.gif)
 
-GUI.**slider**(x, y, width, primaryColor, secondaryColor, pipeColor, valueColor, minimumValue, maximumValue, value, [showCornerValues, currentValuePrefix, currentValuePostfix]): *table* slider
+GUI.**slider**(x, y, width, primaryColor, secondaryColor, pipeColor, valueColor, minimumValue, maximumValue, value[, showCornerValues, currentValuePrefix, currentValuePostfix]): *table* slider
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -891,7 +891,7 @@ Result:
 
 ![](http://i.imgur.com/QVxu2N0.gif)
 
-GUI.**list**(x, y, width, height, itemSize, spacing, backgroundColor, textColor, alternateBackgroundColor, alternateTextColor, backgroundSelectedColor, textSelectedColor, [offsetMode]): *table* list
+GUI.**list**(x, y, width, height, itemSize, spacing, backgroundColor, textColor, alternateBackgroundColor, alternateTextColor, backgroundSelectedColor, textSelectedColor[, offsetMode]): *table* list
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -962,7 +962,7 @@ Result:
 
 ![](https://i.imgur.com/lYzufn2.gif)
 
-GUI.**menu**(x, y, width, backgroundColor, textColor, backgroundPressedColor, textPressedColor, [backgroundTransparency]): *table* menu
+GUI.**menu**(x, y, width, backgroundColor, textColor, backgroundPressedColor, textPressedColor[, backgroundTransparency]): *table* menu
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -981,8 +981,8 @@ This object has following properties:
 
 | Type | Property | Description |
 | ------ | ------ | ------ |
-| *function* | :**addItem**(*string* text, *int* color): *table* item | Add a new item to Menu. You can specify .**onTouch**() function to item if desired |
-| *function* | :**addContextMenu**(*string* text, *int* color): *table* contextMenu | Add a context menu to this menu. The behavior of returned object is the same as GUI.**addContextMenu**(...): *table* contextMenu |
+| *function* | :**addItem**(*string* text[, *int* color]): *table* item | Add a new item to Menu. You can specify .**onTouch**() function to item if desired |
+| *function* | :**addContextMenu**(*string* text[, *int* color]): *table* contextMenu | Add a context menu to this menu. The behavior of returned object is the same as GUI.**addContextMenu**(...): *table* contextMenu |
 
 Example of implementation:
 
@@ -1139,7 +1139,7 @@ Result:
 
 ![](https://i.imgur.com/PvARN8j.gif)
 
-GUI.**progressBar**(x, y, width, primaryColor, secondaryColor, valueColor, value, [thin, showValue, valuePrefix, valuePostfix]): *table* progressBar
+GUI.**progressBar**(x, y, width, primaryColor, secondaryColor, valueColor, value[, thin, showValue, valuePrefix, valuePostfix]): *table* progressBar
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1444,7 +1444,7 @@ This object has following properties:
 
 | Type | Property | Description |
 | ------ | ------ | ------ |
-| *function* | :**set**( *int* x, *int* y, *boolean* state, [*int* color] )| Set the corresponding pixel value to the local coordinates of the BrailleCanvas. If there is already an existing pixel in this position, the value of its color will be replaced by a new one. If the color argument is not specified, then the pixel color will remain the same |
+| *function* | :**set**( *int* x, *int* y, *boolean* state[, *int* color] )| Set the corresponding pixel value to the local coordinates of the BrailleCanvas. If there is already an existing pixel in this position, the value of its color will be replaced by a new one. If the color argument is not specified, then the pixel color will remain the same |
 | *function* | :**get**( *int* x, *int* y ): *boolean* state, *int* color, *char* symbol | Get the state, color, and the symbol of the current braille pixel |
 | *function* | :**fill**( *int* x, *int* y, *int* width, *int* height, *boolean* state, *int* color ) | Works similarly to the :**set**() method, however it allows editing entire canvas |
 | *function* | :**clear**() | Clear canvas content |
@@ -1556,7 +1556,7 @@ Result:
 
 ![](https://i.imgur.com/XrqDvBk.png)
 
-GUI.**textBox**(x, y, width, height, backgroundColor, textColor, lines, currentLine, horizontalOffset, verticalOffset, [autoWrap, autoHeight]): *table* textBox
+GUI.**textBox**(x, y, width, height, backgroundColor, textColor, lines, currentLine, horizontalOffset, verticalOffset[, autoWrap, autoHeight]): *table* textBox
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1661,7 +1661,7 @@ This object has following properties:
 | *function* | :**setAlignment**(*int* column, *int* row, *enum* horizontalAlignment, *enum* verticalAlignment): *table* layout | Assign the method for aligning child objects to the grid cell borders. Following values and any combination of them can be used: GUI.**ALIGNMENT_HORIZONTAL_LEFT**, GUI.**ALIGNMENT_HORIZONTAL_CENTER**, GUI.**ALIGNMENT_HORIZONTAL_RIGHT**, GUI.**ALIGNMENT_VERTICAL_TOP**, GUI.**ALIGNMENT_VERTICAL_CENTER** or GUI.**ALIGNMENT_VERTICAL_BOTTOM** |
 | *function* | :**setSpacing**(*int* column, *int* row, *int* spacing): *table* layout | Assign the specified grid cell distance in pixels between child objects. The default value is **1** |
 | *function* | :**setMargin**(*int* column, *int* row, *int* horizontalMargin, *int* verticalMargin): *table* layout | Assign the specified grid cell indents (margins) in pixels, depending on the current **alignment** of this cell |
-| *function* | :**setFitting**(*int* column, *int* row, *int* horizontalFitting, *int* verticalFitting, [*int* horizontalOffset, *int* verticalOffset] ): *table* layout | Assign the specified grid cell automatic resizing of child objects by horizonal, vertical or both directions. By default new child sizes will be equal the cell size. If optional parameters are specified, then it is possible to set an size reducing, i.e. the size of objects will be equal to **Cell size - Offset value** |
+| *function* | :**setFitting**(*int* column, *int* row, *int* horizontalFitting, *int* verticalFitting[, *int* horizontalOffset, *int* verticalOffset] ): *table* layout | Assign the specified grid cell automatic resizing of child objects by horizonal, vertical or both directions. By default new child sizes will be equal the cell size. If optional parameters are specified, then it is possible to set an size reducing, i.e. the size of objects will be equal to **Cell size - Offset value** |
 | *function* | :**update**(): *table* layout | Forcibly recalculate child objects position. By default this function is being called automatically, but in some cases it can be helful |
 
 Example of implementation:
@@ -1931,7 +1931,7 @@ Result:
 
 ![](http://i.imgur.com/s8mA2FL.png?1)
 
-GUI.**addContextMenu**(parentContainer, x, y, [backgroundColor, textColor, backgroundPressedColor, textPressedColor, disabledColor, separatorColor, backgroundTransparency, shadowTransparency]): *table* contextMenu
+GUI.**addContextMenu**(parentContainer, x, y[, backgroundColor, textColor, backgroundPressedColor, textPressedColor, disabledColor, separatorColor, backgroundTransparency, shadowTransparency]): *table* contextMenu
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1955,10 +1955,10 @@ This object has following properties:
 
 | Type | Property | Description |
 | ------ | ------ | ------ |
-| *function* | :**addItem**(*string* text, [*boolean* disabled, *string* shortcut, *int* color]): *table* item | Add new item to context menu. If **disabled** parameter is specified, item will be shown but not available for clicking You can also specify .**onTouch**() function to added item to do some stuff if desired |
+| *function* | :**addItem**(*string* text[, *boolean* disabled, *string* shortcut, *int* color]): *table* item | Add new item to context menu. If **disabled** parameter is specified, item will be shown but not available for clicking You can also specify .**onTouch**() function to added item to do some stuff if desired |
 | *function* | :**addSeparator**()| Add an separator to context menu |
 | *function* | :**removeItem**(*int* index): *table* item | Remove item from context menu by it's index |
-| *function* | :**addSubMenu**(*string* text, [*boolean* disabled]): *table* contextMenu| Add another context menu to this context menu. The returned menu object is independent and supports all the methods described above  |
+| *function* | :**addSubMenu**(*string* text[, *boolean* disabled]): *table* contextMenu| Add another context menu to this context menu. The returned menu object is independent and supports all the methods described above  |
 | *callback-function* | .**onMenuClosed**(*int* selectedIndex)| This function is called after user selects a menu item or closes it. If an element has been selected, this function will have and selected item index as a parameter |
 
 Example of implementation:
@@ -2058,7 +2058,7 @@ Result:
 
 ![](https://i.imgur.com/4WqJBVk.gif)
 
-GUI.**addBackgroundContainer**(parentContainer, addPanel, addLayout, [title]): *table* palette
+GUI.**addBackgroundContainer**(parentContainer, addPanel, addLayout[, title]): *table* palette
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
