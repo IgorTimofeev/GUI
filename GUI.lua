@@ -3581,8 +3581,21 @@ local function listSetDirection(object, ...)
 	return object
 end
 
-local function listGetItem(object, index)
-	return object.itemsLayout.children[index]
+local function listGetItem(object, what)
+	if type(what) == "number" then
+		return object.itemsLayout.children[what]
+	else
+		local children = object.itemsLayout.children
+		for i = 1, #children do
+			if children[i].text == what then
+				return children[i], i
+			end
+		end
+	end
+end
+
+local function listCount(object)
+	return #object.itemsLayout.children
 end
 
 local function listDraw(list)
@@ -3620,6 +3633,7 @@ function GUI.list(x, y, width, height, itemSize, spacing, backgroundColor, textC
 	list.update = listUpdate
 	list.addItem = listAddItem
 	list.getItem = listGetItem
+	list.count = listCount
 	list.setAlignment = listSetAlignment
 	list.setSpacing = listSetSpacing
 	list.setDirection = listSetDirection
@@ -4041,8 +4055,17 @@ local function comboBoxDraw(object)
 	return object
 end
 
-local function comboBoxGetItem(object, index)
-	return object.dropDownMenu.itemsContainer.children[index]
+local function comboBoxGetItem(object, what)
+	if type(what) == "number" then
+		return object.dropDownMenu.itemsContainer.children[what]
+	else
+		local children = object.dropDownMenu.itemsContainer.children
+		for i = 1, #children do
+			if children[i].text == what then
+				return children[i], i
+			end
+		end
+	end
 end
 
 local function comboBoxRemoveItem(object, index)
@@ -4061,14 +4084,6 @@ local function comboBoxClear(object)
 	object.selectedItem = 1
 
 	return object
-end
-
-local function comboBoxIndexOfItem(object, text)
-	for i = 1, #object.dropDownMenu.itemsContainer.children do
-		if object.dropDownMenu.itemsContainer.children[i].text == text then
-			return i
-		end
-	end
 end
 
 local function comboBoxEventHandler(mainContainer, object, e1, ...)
@@ -4140,7 +4155,6 @@ function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBa
 	comboBox.draw = comboBoxDraw
 	comboBox.select = comboBoxSelect
 	comboBox.clear = comboBoxClear
-	comboBox.indexOfItem = comboBoxIndexOfItem
 	comboBox.getItem = comboBoxGetItem
 	comboBox.count = comboBoxCount
 	comboBox.eventHandler = comboBoxEventHandler
@@ -4162,12 +4176,21 @@ local function windowCheck(window, x, y)
 	for i = #window.children, 1, -1 do
 		child = window.children[i]
 		
-		if child.children then
-			if windowCheck(child, x, y) then
-				return true
+		if not child.hidden and not child.disabled and GUI.isPointInside(child, x, y) then
+			if child.children then
+				local result = windowCheck(child, x, y)
+				if result == true then
+					return true
+				elseif result == false then
+					return false
+				end
+			else
+				if child.eventHandler then
+					return true
+				else
+					return false
+				end
 			end
-		elseif child.eventHandler and not child.hidden and not child.disabled and GUI.isPointInside(child, x, y) then
-			return true
 		end
 	end
 end

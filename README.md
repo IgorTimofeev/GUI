@@ -1052,7 +1052,6 @@ This object has following properties:
 | *function* | :**addSeparator**()| Add a new visual separator |
 | *function* | :**removeItem**( *int*  index) | Remove item by it's index |
 | *function* | :**getItem**( *int* index ): *table* item| Get item by it's index |
-| *function* | :**indexOfItem**( *string* itemText ): *int* index | Get index of item by it's text (iterative method) |
 | *function* | :**clear**()| Remove all items |
 | *function* | :**count**(): *int* count| Get items count |
 
