@@ -1051,7 +1051,7 @@ This object has following properties:
 | *function* | :**addItem**(*string* text, *boolean* disabled, *string* shortcut, *int* color): *table* item| Add a new item to ComboBox. If **disabled** parameter is specified, this item will not react to mouse clicking. You can specify .**onTouch**() function to item if desired |
 | *function* | :**addSeparator**()| Add a new visual separator |
 | *function* | :**removeItem**( *int*  index) | Remove item by it's index |
-| *function* | :**getItem**( *int* index ): *table* item| Get item by it's index |
+| *function* | :**getItem**( *int*/*string* index/name ): *table* item| Get item by it's index or name |
 | *function* | :**clear**()| Remove all items |
 | *function* | :**count**(): *int* count| Get items count |
 
