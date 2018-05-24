@@ -353,101 +353,73 @@ local function containerDrawOnScreen(container, ...)
 	buffer.drawChanges(...)
 end
 
-local function containerHandler(isScreenEvent, mainContainer, currentContainer, intersectionX1, intersectionY1, intersectionX2, intersectionY2, e1, e2, e3, e4, ...)
-	local child, newIntersectionX1, newIntersectionY1, newIntersectionX2, newIntersectionY2
+local function containerStartEventHandling(container, eventPullTimeout)
+	local animation, animationIndex, animationOnFinishMethods, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32
+	
+	local function handle(isScreenEvent, currentContainer, intersectionX1, intersectionY1, intersectionX2, intersectionY2)
+		if not isScreenEvent or intersectionX1 and e3 >= intersectionX1 and e3 <= intersectionX2 and e4 >= intersectionY1 and e4 <= intersectionY2 then
+			local currentContainerPassed, child, newIntersectionX1, newIntersectionY1, newIntersectionX2, newIntersectionY2
 
-	if not isScreenEvent or intersectionX1 and e3 >= intersectionX1 and e4 >= intersectionY1 and e3 <= intersectionX2 and e4 <= intersectionY2 then
-		if currentContainer.eventHandler then
-			if isScreenEvent then
-				if
-					e3 >= currentContainer.x and
-					e4 >= currentContainer.y and
-					e3 <= currentContainer.x + currentContainer.width - 1 and
-					e4 <= currentContainer.y + currentContainer.height - 1 and
-					not currentContainer.disabled
-				then
-					currentContainer.eventHandler(mainContainer, currentContainer, e1, e2, e3, e4, ...)
+			if isScreenEvent and e3 >= currentContainer.x and e3 <= currentContainer.x + currentContainer.width - 1 and e4 >= currentContainer.y and e4 <= currentContainer.y + currentContainer.height - 1 then
+				if currentContainer.eventHandler and not currentContainer.disabled then
+					currentContainer.eventHandler(container, currentContainer, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32)
 				end
-			else
-				currentContainer.eventHandler(mainContainer, currentContainer, e1, e2, e3, e4, ...)
+
+				currentContainerPassed = true
+			elseif currentContainer.eventHandler then
+				currentContainer.eventHandler(container, currentContainer, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32)
 			end
-		end
 
-		for i = #currentContainer.children, 1, -1 do
-			child = currentContainer.children[i]
+			for i = #currentContainer.children, 1, -1 do
+				child = currentContainer.children[i]
 
-			if not child.hidden then
-				if child.children then
-					newIntersectionX1, newIntersectionY1, newIntersectionX2, newIntersectionY2 = getRectangleIntersection(
-						intersectionX1,
-						intersectionY1,
-						intersectionX2,
-						intersectionY2,
-						child.x,
-						child.y,
-						child.x + child.width - 1,
-						child.y + child.height - 1
-					)
+				if not child.hidden then
+					if child.children then
+						newIntersectionX1, newIntersectionY1, newIntersectionX2, newIntersectionY2 = getRectangleIntersection(intersectionX1, intersectionY1, intersectionX2, intersectionY2, child.x, child.y, child.x + child.width - 1, child.y + child.height - 1)
 
-					if newIntersectionX1 and containerHandler(isScreenEvent, mainContainer, child, newIntersectionX1, newIntersectionY1, newIntersectionX2, newIntersectionY2, e1, e2, e3, e4, ...) then
-						return true
-					end
-				else
-					if isScreenEvent then
-						if
-							e3 >= child.x and
-							e4 >= child.y and
-							e3 <= child.x + child.width - 1 and
-							e4 <= child.y + child.height - 1
-						then
-							if child.eventHandler and not child.disabled then
-								child.eventHandler(mainContainer, child, e1, e2, e3, e4, ...)
-							end
-
+						if newIntersectionX1 and handle(isScreenEvent, child, newIntersectionX1, newIntersectionY1, newIntersectionX2, newIntersectionY2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32) then
 							return true
 						end
-					elseif child.eventHandler then
-						child.eventHandler(mainContainer, child, e1, e2, e3, e4, ...)
+					else
+						if isScreenEvent then
+							if e3 >= child.x and e3 <= child.x + child.width - 1 and e4 >= child.y and e4 <= child.y + child.height - 1 then
+								if child.eventHandler and not child.disabled then
+									child.eventHandler(container, child, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32)
+								end
+
+								if not child.passScreenEvents then
+									return true
+								end
+							end
+						elseif child.eventHandler then
+							child.eventHandler(container, child, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32)
+						end
 					end
 				end
+			end
+
+			if currentContainerPassed and not currentContainer.passScreenEvents then
+				return true
 			end
 		end
 	end
-end
 
-local function containerStartEventHandling(container, eventHandlingDelay)
-	container.eventHandlingDelay = eventHandlingDelay
+	container.eventPullTimeout = eventPullTimeout
 
-	local animationIndex, animation, animationOnFinishMethods, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32
 	repeat
-		e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32 = event.pull(container.animations and 0 or container.eventHandlingDelay)
+		e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32 = event.pull(container.animations and 0 or container.eventPullTimeout)
 		
-		containerHandler(
-			(
-				e1 == "touch" or
-				e1 == "drag" or
-				e1 == "drop" or
-				e1 == "scroll" or
-				e1 == "double_touch"
-			),
-			container,
-			container,
-			container.x,
-			container.y,
-			container.x + container.width - 1,
-			container.y + container.height - 1,
-			e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32
-		)
+		handle(e1 == "touch" or e1 == "drag" or e1 == "drop" or e1 == "scroll" or e1 == "double_touch", container, container.x, container.y, container.x + container.width - 1, container.y + container.height - 1)
 
 		if container.animations then
 			animationIndex, animationOnFinishMethods = 1, {}
-
 			-- Продрачиваем анимации и вызываем обработчики кадров
 			while animationIndex <= #container.animations do
 				animation = container.animations[animationIndex]
 
 				if animation.removeLater then
 					table.remove(container.animations, animationIndex)
+
 					if #container.animations == 0 then
 						container.animations = nil
 						break
@@ -459,8 +431,7 @@ local function containerStartEventHandling(container, eventHandlingDelay)
 						if animation.position < 1 then
 							animation.frameHandler(container, animation)
 						else
-							animation.position = 1
-							animation.started = false
+							animation.position, animation.started = 1, false
 							animation.frameHandler(container, animation)
 							
 							if animation.onFinish then
@@ -499,6 +470,7 @@ function GUI.container(x, y, width, height)
 	container.returnData = containerReturnData
 	container.startEventHandling = containerStartEventHandling
 	container.stopEventHandling = containerStopEventHandling
+	container.passScreenEvents = true
 
 	return container
 end
@@ -1057,6 +1029,7 @@ end
 function GUI.codeView(x, y, width, height, fromSymbol, fromLine, maximumLineLength, selections, highlights, syntaxPatterns, syntaxColorScheme, syntaxHighlight, lines)	
 	local codeView = GUI.container(x, y, width, height)
 	
+	codeView.passScreenEvents = false
 	codeView.lines = lines
 	codeView.fromSymbol = fromSymbol
 	codeView.fromLine = fromLine
@@ -1720,7 +1693,7 @@ local function layoutSetGridSize(layout, columnCount, rowCount)
 end
 
 local function layoutDraw(layout)
-	layoutUpdate(layout)
+	layout:update()
 	containerDraw(layout)
 	
 	if layout.showGrid then
@@ -2700,181 +2673,25 @@ local function inputDraw(input)
 		local background = buffer.rawGet(index)
 		buffer.rawSet(index, background, input.colors.cursor, input.cursorSymbol)
 	end
-
-	if input.autoCompleteEnabled then
-		input.autoComplete.x = input.x
-		if input.autoCompleteVerticalAlignment == GUI.ALIGNMENT_VERTICAL_TOP then
-			input.autoComplete.y = input.y - input.autoComplete.height
-		else
-			input.autoComplete.y = input.y + input.height
-		end
-		input.autoComplete.width = input.width
-		input.autoComplete:draw()
-	end
 end
 
-local function inputStartInput(input)
+local function inputCursorBlink(mainContainer, input, state)
+	input.cursorBlinkState = state
+	input.cursorBlinkUptime = computer.uptime()
+	mainContainer:drawOnScreen()
+end
+
+local function inputStopInput(input)
 	local mainContainer = input:getFirstParent()
 
-	local textOnStart = input.text
-	input.focused = true
-	
-	if input.historyEnabled then
-		input.historyIndex = input.historyIndex + 1
-	end
-
-	if input.eraseTextOnFocus then
-		input.text = ""
-	end
-
-	input.cursorBlinkState = true
-	input:setCursorPosition(unicode.len(input.text) + 1)
-
-	if input.autoCompleteEnabled then
-		input.autoCompleteMatchMethod()
-	end
-
-	mainContainer:drawOnScreen()
-
-	local e1, e2, e3, e4, e5, e6
-	while true do
-		e1, e2, e3, e4, e5, e6 = event.pull(input.cursorBlinkDelay)
-		
-		if e1 == "touch" or e1 == "drag" then
-			if GUI.isPointInside(input, e3, e4) then
-				input:setCursorPosition(input.textCutFrom + e3 - input.x - input.textOffset)
-				
-				input.cursorBlinkState = true
-				mainContainer:drawOnScreen()
-			elseif GUI.isPointInside(input.autoComplete, e3, e4) then
-				input.autoComplete.eventHandler(mainContainer, input.autoComplete, e1, e2, e3, e4, e5, e6)
-			else
-				input.cursorBlinkState = false
-				break
-			end
-		elseif e1 == "scroll" then
-			input.autoComplete.eventHandler(mainContainer, input.autoComplete, e1, e2, e3, e4, e5, e6)
-		elseif e1 == "key_down" then
-			-- Return
-			if e4 == 28 then
-				if input.autoCompleteEnabled and input.autoComplete.itemCount > 0 then
-					input.autoComplete.eventHandler(mainContainer, input.autoComplete, e1, e2, e3, e4, e5, e6)
-				else
-					if input.historyEnabled then
-						-- Очистка истории
-						for i = 1, (#input.history - input.historyLimit) do
-							table.remove(input.history, 1)
-						end
-
-						-- Добавление введенных данных в историю
-						if input.history[#input.history] ~= input.text and unicode.len(input.text) > 0 then
-							table.insert(input.history, input.text)
-						end
-						input.historyIndex = #input.history
-					end
-
-					input.cursorBlinkState = false
-					break
-				end
-			-- Arrows up/down/left/right
-			elseif e4 == 200 then
-				if input.autoCompleteEnabled and input.autoComplete.selectedItem > 1 then
-					input.autoComplete.eventHandler(mainContainer, input.autoComplete, e1, e2, e3, e4, e5, e6)
-				else
-					if input.historyEnabled and #input.history > 0 then
-						-- Добавление уже введенного текста в историю при стрелке вверх
-						if input.historyIndex == #input.history + 1 and unicode.len(input.text) > 0 then
-							input.history[input.historyIndex] = input.text
-						end
-
-						input.historyIndex = input.historyIndex - 1
-						if input.historyIndex > #input.history then
-							input.historyIndex = #input.history
-						elseif input.historyIndex < 1 then
-							input.historyIndex = 1
-						end
-
-						input.text = input.history[input.historyIndex]
-						input:setCursorPosition(unicode.len(input.text) + 1)
-
-						if input.autoCompleteEnabled then
-							input.autoCompleteMatchMethod()
-						end
-					end
-				end
-			elseif e4 == 208 then
-				if input.autoCompleteEnabled and input.historyIndex == #input.history + 1 then
-					input.autoComplete.eventHandler(mainContainer, input.autoComplete, e1, e2, e3, e4, e5, e6)
-				else
-					if input.historyEnabled and #input.history > 0 then
-						input.historyIndex = input.historyIndex + 1
-						if input.historyIndex > #input.history then
-							input.historyIndex = #input.history
-						elseif input.historyIndex < 1 then
-							input.historyIndex = 1
-						end
-						
-						input.text = input.history[input.historyIndex]
-						input:setCursorPosition(unicode.len(input.text) + 1)
-
-						if input.autoCompleteEnabled then
-							input.autoCompleteMatchMethod()
-						end
-					end
-				end
-			elseif e4 == 203 then
-				input:setCursorPosition(input.cursorPosition - 1)
-			elseif e4 == 205 then	
-				input:setCursorPosition(input.cursorPosition + 1)
-			-- Backspace
-			elseif e4 == 14 then
-				input.text = unicode.sub(unicode.sub(input.text, 1, input.cursorPosition - 1), 1, -2) .. unicode.sub(input.text, input.cursorPosition, -1)
-				input:setCursorPosition(input.cursorPosition - 1)
-				
-				if input.autoCompleteEnabled then
-					input.autoCompleteMatchMethod()
-				end
-			-- Delete
-			elseif e4 == 211 then
-				input.text = unicode.sub(input.text, 1, input.cursorPosition - 1) .. unicode.sub(input.text, input.cursorPosition + 1, -1)
-				
-				if input.autoCompleteEnabled then
-					input.autoCompleteMatchMethod()
-				end
-			else
-				local char = unicode.char(e3)
-				if not keyboard.isControl(e3) then
-					input.text = unicode.sub(input.text, 1, input.cursorPosition - 1) .. char .. unicode.sub(input.text, input.cursorPosition, -1)
-					input:setCursorPosition(input.cursorPosition + 1)
-
-					if input.autoCompleteEnabled then
-						input.autoCompleteMatchMethod()
-					end
-				end
-			end
-
-			input.cursorBlinkState = true
-			mainContainer:drawOnScreen()
-		elseif e1 == "clipboard" then
-			input.text = unicode.sub(input.text, 1, input.cursorPosition - 1) .. e3 .. unicode.sub(input.text, input.cursorPosition, -1)
-			input:setCursorPosition(input.cursorPosition + unicode.len(e3))
-			
-			input.cursorBlinkState = true
-			mainContainer:drawOnScreen()
-		elseif not e1 then
-			input.cursorBlinkState = not input.cursorBlinkState
-			mainContainer:drawOnScreen()
-		end
-	end
-
+	input.stopInputObject:remove()
 	input.focused = false
-	if input.autoCompleteEnabled then
-		input.autoComplete:clear()
-	end
 
 	if input.validator then
 		if not input.validator(input.text) then
-			input.text = textOnStart
+			input.text = input.startText
+			input.startText = nil
+
 			input:setCursorPosition(unicode.len(input.text) + 1)
 		end
 	end
@@ -2883,12 +2700,114 @@ local function inputStartInput(input)
 		input.onInputFinished(mainContainer, input)
 	end
 
-	mainContainer:drawOnScreen()
+	inputCursorBlink(mainContainer, input, false)
 end
 
-local function inputEventHandler(mainContainer, input, e1)
-	if e1 == "touch" then
-		input:startInput()
+local function inputStartInput(input)
+	local mainContainer = input:getFirstParent()
+
+	input.startText = input.text
+	input.focused = true
+
+	if input.historyEnabled then
+		input.historyIndex = input.historyIndex + 1
+	end
+
+	if input.eraseTextOnFocus then
+		input.text = ""
+	end
+	
+	input:setCursorPosition(unicode.len(input.text) + 1)
+
+	input.stopInputObject.width, input.stopInputObject.height = mainContainer.width, mainContainer.height
+	mainContainer:addChild(input.stopInputObject, input:indexOf())
+
+	inputCursorBlink(mainContainer, input, true)
+end
+
+local function inputEventHandler(mainContainer, input, e1, e2, e3, e4, e5, e6)
+	if e1 == "touch" or e1 == "drag" then
+		if input.focused then
+			input:setCursorPosition(input.textCutFrom + e3 - input.x - input.textOffset)
+			inputCursorBlink(mainContainer, input, true)
+		else
+			input:startInput()
+		end
+	elseif e1 == "key_down" and input.focused then
+		-- Return
+		if e4 == 28 then
+			if input.historyEnabled then
+				-- Очистка истории
+				for i = 1, (#input.history - input.historyLimit) do
+					table.remove(input.history, 1)
+				end
+
+				-- Добавление введенных данных в историю
+				if input.history[#input.history] ~= input.text and unicode.len(input.text) > 0 then
+					table.insert(input.history, input.text)
+				end
+				input.historyIndex = #input.history
+			end
+
+			inputStopInput(input)
+			return
+		-- Arrows up/down/left/right
+		elseif e4 == 200 then
+			if input.historyEnabled and #input.history > 0 then
+				-- Добавление уже введенного текста в историю при стрелке вверх
+				if input.historyIndex == #input.history + 1 and unicode.len(input.text) > 0 then
+					input.history[input.historyIndex] = input.text
+				end
+
+				input.historyIndex = input.historyIndex - 1
+				if input.historyIndex > #input.history then
+					input.historyIndex = #input.history
+				elseif input.historyIndex < 1 then
+					input.historyIndex = 1
+				end
+
+				input.text = input.history[input.historyIndex]
+				input:setCursorPosition(unicode.len(input.text) + 1)
+			end
+		elseif e4 == 208 then
+			if input.historyEnabled and #input.history > 0 then
+				input.historyIndex = input.historyIndex + 1
+				if input.historyIndex > #input.history then
+					input.historyIndex = #input.history
+				elseif input.historyIndex < 1 then
+					input.historyIndex = 1
+				end
+				
+				input.text = input.history[input.historyIndex]
+				input:setCursorPosition(unicode.len(input.text) + 1)
+			end
+		elseif e4 == 203 then
+			input:setCursorPosition(input.cursorPosition - 1)
+		elseif e4 == 205 then	
+			input:setCursorPosition(input.cursorPosition + 1)
+		-- Backspace
+		elseif e4 == 14 then
+			input.text = unicode.sub(unicode.sub(input.text, 1, input.cursorPosition - 1), 1, -2) .. unicode.sub(input.text, input.cursorPosition, -1)
+			input:setCursorPosition(input.cursorPosition - 1)
+		-- Delete
+		elseif e4 == 211 then
+			input.text = unicode.sub(input.text, 1, input.cursorPosition - 1) .. unicode.sub(input.text, input.cursorPosition + 1, -1)
+		else
+			local char = unicode.char(e3)
+			if not keyboard.isControl(e3) then
+				input.text = unicode.sub(input.text, 1, input.cursorPosition - 1) .. char .. unicode.sub(input.text, input.cursorPosition, -1)
+				input:setCursorPosition(input.cursorPosition + 1)
+			end
+		end
+
+		inputCursorBlink(mainContainer, input, true)
+	elseif e1 == "clipboard" and input.focused then
+		input.text = unicode.sub(input.text, 1, input.cursorPosition - 1) .. e3 .. unicode.sub(input.text, input.cursorPosition, -1)
+		input:setCursorPosition(input.cursorPosition + unicode.len(e3))
+		
+		inputCursorBlink(mainContainer, input, true)
+	elseif not e1 and input.focused and computer.uptime() - input.cursorBlinkUptime > input.cursorBlinkDelay then
+		inputCursorBlink(mainContainer, input, not input.cursorBlinkState)
 	end
 end
 
@@ -2927,14 +2846,17 @@ function GUI.input(x, y, width, height, backgroundColor, textColor, placeholderT
 	input.historyIndex = 0
 	input.historyEnabled = false
 
+	input.stopInputObject = GUI.object(1, 1, 1, 1)
+	input.stopInputObject.eventHandler = function(mainContainer, object, e1)
+		if e1 == "touch" then
+			inputStopInput(input)
+		end
+	end
+
 	input.textDrawMethod = inputTextDrawMethod
 	input.draw = inputDraw
 	input.eventHandler = inputEventHandler
 	input.startInput = inputStartInput
-
-	input.autoComplete = GUI.autoComplete(1, 1, 30, 7, 0xE1E1E1, 0x969696, 0x3C3C3C, 0x3C3C3C, 0x969696, 0xE1E1E1, 0xC3C3C3, 0x4B4B4B)
-	input.autoCompleteEnabled = false
-	input.autoCompleteVerticalAlignment = GUI.ALIGNMENT_VERTICAL_BOTTOM
 
 	return input
 end
@@ -3226,6 +3148,7 @@ function GUI.palette(x, y, startColor)
 		paletteDrawBigCrestPixel(object.x + 2, object.y, "│")
 		paletteDrawBigCrestPixel(object.x + 2, object.y + 2, "│")
 	end
+	bigCrest.passScreenEvents = true
 	
 	local miniImage = palette:addChild(GUI.image(53, 1, image.create(3, 25)))
 	
@@ -3410,7 +3333,6 @@ function GUI.palette(x, y, startColor)
 			mainContainer:drawOnScreen()
 		end
 	end
-	bigCrest.eventHandler = bigImage.eventHandler
 	
 	miniImage.eventHandler = function(mainContainer, object, e1, e2, e3, e4)
 		if e1 == "touch" or e1 == "drag" then
@@ -3489,122 +3411,104 @@ end
 
 --------------------------------------------------------------------------------
 
-local function listUpdate(object)
-	object.backgroundPanel.width, object.backgroundPanel.height = object.width, object.height
-	object.backgroundPanel.colors.background = object.colors.default.background
-	object.itemsLayout.width, object.itemsLayout.height = object.width, object.height
-
+local function listUpdate(list)
 	local step, child = false
-	for i = 1, #object.itemsLayout.children do
-		child = object.itemsLayout.children[i]
-		
+	for i = 1, #list.children do
+		child = list.children[i]
 		-- Жмяканье пизды
-		child.pressed = i == object.selectedItem
+		child.pressed = i == list.selectedItem
 		
 		-- Цвет залупы
 		if step then
-			child.colors.default = object.colors.alternating
+			child.colors.default = list.colors.alternating
 		else
-			child.colors.default = object.colors.default
+			child.colors.default = list.colors.default
 		end
-		child.colors.pressed, step = object.colors.selected, not step
+		child.colors.pressed, step = list.colors.selected, not step
 		
 		-- Размеры хуйни
-		if object.itemsLayout.cells[1][1].direction == GUI.DIRECTION_HORIZONTAL then
-			if object.offsetMode then
-				child.width, child.height = object.itemSize * 2 + unicode.len(child.text), object.height
+		if list.cells[1][1].direction == GUI.DIRECTION_HORIZONTAL then
+			if list.offsetMode then
+				child.width, child.height = list.itemSize * 2 + unicode.len(child.text), list.height
 			else
-				child.width, child.height = object.itemSize, object.height
+				child.width, child.height = list.itemSize, list.height
 			end
 		else
-			if object.offsetMode then
-				child.width, child.height = object.width, object.itemSize * 2 + 1
+			if list.offsetMode then
+				child.width, child.height = list.width, list.itemSize * 2 + 1
 			else
-				child.width, child.height = object.width, object.itemSize
+				child.width, child.height = list.width, list.itemSize
 			end
 		end
 	end
 
-	return list
+	layoutUpdate(list)
 end
 
-local function listSelect(object, index)
-	object.selectedItem = index
-	object:update()
-
-	return object
-end
-
-local function listDeselect(object)
-	object.selectedItem = nil
-	object:update()
-
-	return object
-end
-
-local function listItemEventHandler(mainContainer, object, e1, ...)
+local function listItemEventHandler(mainContainer, item, e1, ...)
 	if e1 == "touch" or e1 == "drag" then
-		object.parent.parent:select(object:indexOf())
+		item.parent.selectedItem = item:indexOf()
+		item.parent:update()
 		mainContainer:drawOnScreen()
 
-		if object.onTouch then
-			object.onTouch(mainContainer, object, e1, ...)
+		if item.onTouch then
+			item.onTouch(mainContainer, item, e1, ...)
 		end
 	end
 end
 
-local function listAddItem(object, text)
-	local item = object.itemsLayout:addChild(pressable(1, 1, 1, 1, 0, 0, 0, 0, 0, 0, text))
+local function listAddItem(list, text)
+	local item = list:addChild(pressable(1, 1, 1, 1, 0, 0, 0, 0, 0, 0, text))
 	
 	item.switchMode = true
 	item.eventHandler = listItemEventHandler
 
-	object:update()
-
 	return item
 end
 
-local function listSetAlignment(object, ...)
-	object.itemsLayout:setAlignment(1, 1, ...)
-	return object
+local function listSetAlignment(list, ...)
+	layoutSetAlignment(list, 1, 1, ...)
+	return list
 end
 
-local function listSetSpacing(object, ...)
-	object.itemsLayout:setSpacing(1, 1, ...)
-	return object
+local function listSetSpacing(list, ...)
+	layoutSetSpacing(list, 1, 1, ...)
+	return list
 end
 
-local function listSetDirection(object, ...)
-	object.itemsLayout:setDirection(1, 1, ...)
-	object:update()
-
-	return object
+local function listSetDirection(list, ...)
+	layoutSetDirection(list, 1, 1, ...)
+	return list
 end
 
-local function listGetItem(object, what)
+local function listSetFitting(list, ...)
+	layoutSetFitting(list, 1, 1, ...)
+	return list
+end
+
+local function listGetItem(list, what)
 	if type(what) == "number" then
-		return object.itemsLayout.children[what]
+		return list.children[what]
 	else
-		local children = object.itemsLayout.children
-		for i = 1, #children do
-			if children[i].text == what then
-				return children[i], i
+		for i = 1, #list.children do
+			if list.children[i].text == what then
+				return list.children[i], i
 			end
 		end
 	end
 end
 
-local function listCount(object)
-	return #object.itemsLayout.children
+local function listCount(list)
+	return #list.children
 end
 
 local function listDraw(list)
-	list:update()
-	containerDraw(list)
+	buffer.drawRectangle(list.x, list.y, list.width, list.height, list.colors.default.background, list.colors.default.text, " ")
+	layoutDraw(list)
 end
 
 function GUI.list(x, y, width, height, itemSize, spacing, backgroundColor, textColor, backgroundAlternatingColor, textAlternatingColor, backgroundSelectedColor, textSelectedColor, offsetMode)
-	local list = GUI.container(x, y, width, height)
+	local list = GUI.layout(x, y, width, height, 1, 1)
 
 	list.colors = {
 		default = {
@@ -3621,22 +3525,19 @@ function GUI.list(x, y, width, height, itemSize, spacing, backgroundColor, textC
 		},
 	}
 
+	list.passScreenEvents = false
 	list.selectedItem = 1
-	list.select = listSelect
-	list.deselect = listDeselect
 	list.offsetMode = offsetMode
 	list.itemSize = itemSize
-
-	list.backgroundPanel = list:addChild(GUI.panel(1, 1, width, height, backgroundColor))
-	list.itemsLayout = list:addChild(GUI.layout(1, 1, width, height, 1, 1))
 	
-	list.update = listUpdate
 	list.addItem = listAddItem
 	list.getItem = listGetItem
 	list.count = listCount
 	list.setAlignment = listSetAlignment
 	list.setSpacing = listSetSpacing
 	list.setDirection = listSetDirection
+	list.setFitting = listSetFitting
+	list.update = listUpdate
 	list.draw = listDraw
 
 	list:setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
@@ -4185,10 +4086,12 @@ local function windowCheck(window, x, y)
 					return false
 				end
 			else
-				if child.eventHandler then
-					return true
-				else
-					return false
+				if not child.passScreenEvents then
+					if child.eventHandler then
+						return true
+					else
+						return false
+					end
 				end
 			end
 		end
@@ -4254,6 +4157,8 @@ end
 function GUI.window(x, y, width, height)
 	local window = GUI.container(x, y, width, height)
 	
+	window.passScreenEvents = false
+
 	window.resize = windowResize
 	window.maximize = windowMaximize
 	window.minimize = windowMinimize
@@ -4366,6 +4271,7 @@ function GUI.menu(x, y, width, backgroundColor, textColor, backgroundPressedColo
 		transparency = backgroundTransparency
 	}
 	
+	menu.passScreenEvents = false
 	menu.addContextMenu = menuAddContextMenu
 	menu.addItem = menuAddItem
 	menu.draw = menuDraw
@@ -4378,10 +4284,8 @@ end
 -- local mainContainer = GUI.fullScreenContainer()
 -- mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
 
--- --
-
 -- mainContainer:drawOnScreen(true)
--- mainContainer:startEventHandling()
+-- mainContainer:startEventHandling(0)
 
 ---------------------------------------------------------------------------------------------------
 

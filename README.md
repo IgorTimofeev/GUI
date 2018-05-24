@@ -30,7 +30,7 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [   GUI.switch](#guiswitchx-y-width-primarycolor-secondarycolor-pipecolor-state-table-switch) |
 | [   GUI.switchAndLabel](#guiswitchandlabelx-y-width-switchwidth-primarycolor-secondarycolor-pipecolor-textcolor-text-switchstate-table-switchandlabel) |
 | [   GUI.colorSelector](#guicolorselectorx-y-width-height-color-text-table-colorselector) |
-| [   GUI.list](#guilistx-y-width-height-itemsize-spacing-backgroundcolor-textcolor-alternatebackgroundcolor-alternatetextcolor-backgroundselectedcolor-textselectedcolor--offsetmode-table-list) |
+| [   GUI.list](#guilistx-y-width-height-itemsize-spacing-backgroundcolor-textcolor-alternatebackgroundcolor-alternatetextcolor-backgroundselectedcolor-textselectedcolor-offsetmode-table-list) |
 | [   GUI.comboBox](#guicomboboxx-y-width-elementheight-backgroundcolor-textcolor-arrowbackgroundcolor-arrowtextcolor-table-combobox) |
 | [   GUI.menu](#guimenux-y-width-backgroundcolor-textcolor-backgroundpressedcolor-textpressedcolor-backgroundtransparency-table-menu) |
 | [   GUI.resizer](#guiresizerx-y-width-height-resizercolor-arrowcolor-table-resizer) |
@@ -160,9 +160,11 @@ The first parameter is a pointer to the table of the "main" container, the secon
 | 0 | Mouse button |
 | "ECS" | Username |
 
-The key detail of the event handler is that if the event is a "**screen**" (touch, drag, drop, scroll), then the child object event handler will be called only for this object, and event processing for the remaining unprocessed child objects will be finished.
+The key detail of the event handlers is that if the event belongs to **screen** (touch, drag, drop, scroll), then the child object event handler will be called, and event processing for the remaining unprocessed child objects will be finished.
 
-If the event does not belong to the screen, or the object **does not have** event handler method, the processing of the remaining child elements will continue as always. You can see the logic and the order of event processing in the following image:
+There is also an option to make any object **transparent** for screen events: just set .**passScreenEvents** = **true** variable for desired object. With this option it's event hanlder will be called as always, but event processing will continue for rest objects in container. This feature works with containers too.
+
+And if the event does not belong to the screen, or the object **does not have** event handler method, the processing of the remaining child elements will continue as always. You can see the logic and the order of event processing in the following image:
 
 ![](https://i.imgur.com/eHqIFNN.png)
 
@@ -170,6 +172,7 @@ This object has following properties:
 
 | Type | Property | Description |
 | ------ | ------ | ------ |
+| *table* | .**passScreenEvents** | Optional variable that allows screen events to pass througs objects |
 | *table* | .**children** | Table that contains all child objects of this container |
 | *function* | :**addChild**(*table* child[, *int* atIndex]): *table* child| Add specified object to the container as a child. When you do this, the object's global coordinates will become local. If the optional parameter **atIndex** is specified, then the element will be added to the corresponding position in container.**children** table |
 | *function* | :**removeChildren**([*int* fromIndex, *int* toIndex]): *table* container | Remove all child elements of the container. If the optional parameters of the element indices are specified, the deletion will be performed in the appropriate range |
@@ -676,6 +679,7 @@ This object has following properties:
 | Type | Property | Description |
 | ------ | ------ | ------ |
 | *string* | .**text** | A variable that contains current displayed text of an object |
+| *boolean* | .**historyEnabled** | Optional property that allows widget to remember text that user inputs and to navigate through it's history via arrows buttons. Set to **false** by default |
 | *function* | :**startInput**() | Method for activation of text inputting |
 | *callback-function* | .**validator**(*string* text) | The function that is called after the text is entered in the input field. If it returns **true**, the text in the text field will be changed to the entered text, otherwise the entered data will be ignored |
 | *callback-function* | .**onInputFinished**() | The function that is called after entering data in the input field: it's a handy thing if you want to do something after entering text. If the object has .**validator** function, and if the text does not pass the check through it, then .**onInputFinished** will not be called |
@@ -922,8 +926,6 @@ This object has following properties:
 | *int* | .**selectedItem** | Index of currently selected item |
 | *function* | :**addItem**(*string* text): *table* item| Add new item to object. You can specify .**onTouch**() function to if desired |
 | *function* | :**getItem**(*int* index): *table* item| Get item by it's index |
-| *function* | :**select**(*int* index): *table* list| Select item from List by it's index |
-| *function* | :**deselect**(): *table* list| Deselect selected elements |
 | *function* | :**setAlignment**(*enum* horizontalAlignment, *enum* verticalAlignment): *table* list| Set list items alignment. By default it's set to GUI.**ALIGNMENT_HORIZONTAL_LEFT** and GUI.**ALIGNMENT_VERTICAL_TOP** |
 | *function* | :**setDirection**(*enum* direction): *table* list| Choose an items display option for List boundaries. The default alignment is **left** and **top** |
 | *function* | :**setSpacing**(*int* spacing): *table* list| Set spacing between List items |
