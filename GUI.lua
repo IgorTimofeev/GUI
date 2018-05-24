@@ -2681,9 +2681,7 @@ local function inputCursorBlink(mainContainer, input, state)
 	mainContainer:drawOnScreen()
 end
 
-local function inputStopInput(input)
-	local mainContainer = input:getFirstParent()
-
+local function inputStopInput(mainContainer, input)
 	input.stopInputObject:remove()
 	input.focused = false
 
@@ -2749,7 +2747,7 @@ local function inputEventHandler(mainContainer, input, e1, e2, e3, e4, e5, e6)
 				input.historyIndex = #input.history
 			end
 
-			inputStopInput(input)
+			inputStopInput(mainContainer, input)
 			return
 		-- Arrows up/down/left/right
 		elseif e4 == 200 then
@@ -2852,7 +2850,7 @@ function GUI.input(x, y, width, height, backgroundColor, textColor, placeholderT
 			if GUI.isPointInside(input, e3, e4) then
 				input.eventHandler(mainContainer, input, e1, e2, e3, e4, ...)
 			else
-				inputStopInput(input)
+				inputStopInput(mainContainer, input)
 			end
 		end
 	end
