@@ -43,7 +43,7 @@ local GUI = {
 	CONTEXT_MENU_PRESSED_BACKGROUND_COLOR = 0x3366CC,
 	CONTEXT_MENU_PRESSED_TEXT_COLOR = 0xFFFFFF,
 	CONTEXT_MENU_DISABLED_COLOR = 0x878787,
-	CONTEXT_MENU_BACKGROUND_TRANSPARENCY = 0.24,
+	CONTEXT_MENU_BACKGROUND_TRANSPARENCY = 0.18,
 	CONTEXT_MENU_SHADOW_TRANSPARENCY = 0.4,
 
 	BACKGROUND_CONTAINER_TITLE_COLOR = 0xE1E1E1,
@@ -357,15 +357,22 @@ local function containerStartEventHandling(container, eventPullTimeout)
 	local animation, animationIndex, animationOnFinishMethods, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32
 	
 	local function handle(isScreenEvent, currentContainer, intersectionX1, intersectionY1, intersectionX2, intersectionY2)
-		if not isScreenEvent or intersectionX1 and e3 >= intersectionX1 and e3 <= intersectionX2 and e4 >= intersectionY1 and e4 <= intersectionY2 then
+		if
+			not isScreenEvent or
+			intersectionX1 and
+			e3 >= intersectionX1 and
+			e3 <= intersectionX2 and
+			e4 >= intersectionY1 and
+			e4 <= intersectionY2
+		then
 			local currentContainerPassed, child, newIntersectionX1, newIntersectionY1, newIntersectionX2, newIntersectionY2
 
-			if isScreenEvent and e3 >= currentContainer.x and e3 <= currentContainer.x + currentContainer.width - 1 and e4 >= currentContainer.y and e4 <= currentContainer.y + currentContainer.height - 1 then
+			if isScreenEvent then
 				if currentContainer.eventHandler and not currentContainer.disabled then
 					currentContainer.eventHandler(container, currentContainer, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32)
 				end
 
-				currentContainerPassed = true
+				currentContainerPassed = not currentContainer.passScreenEvents
 			elseif currentContainer.eventHandler then
 				currentContainer.eventHandler(container, currentContainer, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32)
 			end
@@ -375,14 +382,39 @@ local function containerStartEventHandling(container, eventPullTimeout)
 
 				if not child.hidden then
 					if child.children then
-						newIntersectionX1, newIntersectionY1, newIntersectionX2, newIntersectionY2 = getRectangleIntersection(intersectionX1, intersectionY1, intersectionX2, intersectionY2, child.x, child.y, child.x + child.width - 1, child.y + child.height - 1)
+						newIntersectionX1, newIntersectionY1, newIntersectionX2, newIntersectionY2 = getRectangleIntersection(
+							intersectionX1,
+							intersectionY1,
+							intersectionX2,
+							intersectionY2,
+							child.x,
+							child.y,
+							child.x + child.width - 1,
+							child.y + child.height - 1
+						)
 
-						if newIntersectionX1 and handle(isScreenEvent, child, newIntersectionX1, newIntersectionY1, newIntersectionX2, newIntersectionY2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32) then
+						if 
+							newIntersectionX1 and
+							handle(
+								isScreenEvent,
+								child,
+								newIntersectionX1,
+								newIntersectionY1,
+								newIntersectionX2,
+								newIntersectionY2,
+								e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32
+							)
+						then
 							return true
 						end
 					else
 						if isScreenEvent then
-							if e3 >= child.x and e3 <= child.x + child.width - 1 and e4 >= child.y and e4 <= child.y + child.height - 1 then
+							if 
+								e3 >= child.x and
+								e3 <= child.x + child.width - 1 and
+								e4 >= child.y and
+								e4 <= child.y + child.height - 1
+							then
 								if child.eventHandler and not child.disabled then
 									child.eventHandler(container, child, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32)
 								end
@@ -398,7 +430,7 @@ local function containerStartEventHandling(container, eventPullTimeout)
 				end
 			end
 
-			if currentContainerPassed and not currentContainer.passScreenEvents then
+			if currentContainerPassed then
 				return true
 			end
 		end
@@ -409,7 +441,18 @@ local function containerStartEventHandling(container, eventPullTimeout)
 	repeat
 		e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32 = event.pull(container.animations and 0 or container.eventPullTimeout)
 		
-		handle(e1 == "touch" or e1 == "drag" or e1 == "drop" or e1 == "scroll" or e1 == "double_touch", container, container.x, container.y, container.x + container.width - 1, container.y + container.height - 1)
+		handle(
+			e1 == "touch" or
+			e1 == "drag" or
+			e1 == "drop" or
+			e1 == "scroll" or
+			e1 == "double_touch",
+			container,
+			container.x,
+			container.y,
+			container.x + container.width - 1,
+			container.y + container.height - 1
+		)
 
 		if container.animations then
 			animationIndex, animationOnFinishMethods = 1, {}
@@ -453,6 +496,8 @@ local function containerStartEventHandling(container, eventPullTimeout)
 			end
 		end
 	until container.needClose
+
+	container.needClose = nil
 end
 
 local function containerStopEventHandling(container)
@@ -2448,7 +2493,7 @@ end
 
 --------------------------------------------------------------------------------
 
-local function textBoxCalculate(object)
+local function textBoxUpdate(object)
 	local doubleVerticalOffset = object.offset.vertical * 2
 	object.textWidth = object.width - object.offset.horizontal * 2 - (object.scrollBarEnabled and 1 or 0)
 
@@ -2478,7 +2523,7 @@ local function textBoxCalculate(object)
 end
 
 local function textBoxDraw(object)
-	textBoxCalculate(object)
+	object:update()
 
 	if object.colors.background then
 		buffer.drawRectangle(object.x, object.y, object.width, object.height, object.colors.background, object.colors.text, " ", object.colors.transparency)
@@ -2572,16 +2617,12 @@ end
 function GUI.textBox(x, y, width, height, backgroundColor, textColor, lines, currentLine, horizontalOffset, verticalOffset, autoWrap, autoHeight)
 	local object = GUI.object(x, y, width, height)
 	
-	object.eventHandler = textBoxScrollEventHandler
 	object.colors = {
 		text = textColor,
 		background = backgroundColor
 	}
-	object.setAlignment = GUI.setAlignment
-	object:setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
 	object.lines = lines
 	object.currentLine = currentLine or 1
-	object.draw = textBoxDraw
 	object.scrollUp = scrollUpTextBox
 	object.scrollDown = scrollDownTextBox
 	object.scrollToStart = scrollToStartTextBox
@@ -2591,8 +2632,14 @@ function GUI.textBox(x, y, width, height, backgroundColor, textColor, lines, cur
 	object.autoHeight = autoHeight
 	object.scrollBar = GUI.scrollBar(1, 1, 1, 1, 0xC3C3C3, 0x4B4B4B, 1, 1, 1, 1, 1, true)
 	object.scrollBarEnabled = false
+	
+	object.eventHandler = textBoxScrollEventHandler
+	object.draw = textBoxDraw
+	object.update = textBoxUpdate
 
-	textBoxCalculate(object)
+	object.setAlignment = GUI.setAlignment
+	object:setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
+	object:update()
 
 	return object
 end
@@ -4256,11 +4303,6 @@ end
 function GUI.menu(x, y, width, backgroundColor, textColor, backgroundPressedColor, textPressedColor, backgroundTransparency)
 	local menu = GUI.layout(x, y, width, 1, 1, 1)
 	
-	menu:setDirection(1, 1, GUI.DIRECTION_HORIZONTAL)
-	menu:setAlignment(1, 1, GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
-	menu:setSpacing(1, 1, 0)
-	menu:setMargin(1, 1, 1, 0)
-
 	menu.colors = {
 		default = {
 			background = backgroundColor,
@@ -4277,6 +4319,11 @@ function GUI.menu(x, y, width, backgroundColor, textColor, backgroundPressedColo
 	menu.addContextMenu = menuAddContextMenu
 	menu.addItem = menuAddItem
 	menu.draw = menuDraw
+
+	menu:setDirection(1, 1, GUI.DIRECTION_HORIZONTAL)
+	menu:setAlignment(1, 1, GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
+	menu:setSpacing(1, 1, 0)
+	menu:setMargin(1, 1, 1, 0)
 
 	return menu
 end
