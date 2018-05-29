@@ -408,6 +408,11 @@ local function containerStartEventHandling(container, eventPullTimeout)
 							return true
 						end
 					else
+						if container.needConsume then
+							container.needConsume = nil
+							return true
+						end
+
 						if isScreenEvent then
 							if 
 								e3 >= child.x and
@@ -504,6 +509,10 @@ local function containerStopEventHandling(container)
 	container.needClose = true
 end
 
+local function containerConsumeEvent(container)
+	container.needConsume = true
+end
+
 function GUI.container(x, y, width, height)
 	local container = GUI.object(x, y, width, height)
 
@@ -516,6 +525,7 @@ function GUI.container(x, y, width, height)
 	container.startEventHandling = containerStartEventHandling
 	container.stopEventHandling = containerStopEventHandling
 	container.passScreenEvents = true
+	container.consumeEvent = containerConsumeEvent
 
 	return container
 end
@@ -2779,6 +2789,8 @@ local function inputEventHandler(mainContainer, input, e1, e2, e3, e4, e5, e6)
 			input:startInput()
 		end
 	elseif e1 == "key_down" and input.focused then
+		mainContainer:consumeEvent()
+
 		-- Return
 		if e4 == 28 then
 			if input.historyEnabled then
@@ -2851,6 +2863,7 @@ local function inputEventHandler(mainContainer, input, e1, e2, e3, e4, e5, e6)
 		input:setCursorPosition(input.cursorPosition + unicode.len(e3))
 		
 		inputCursorBlink(mainContainer, input, true)
+		mainContainer:consumeEvent()
 	elseif not e1 and input.focused and computer.uptime() - input.cursorBlinkUptime > input.cursorBlinkDelay then
 		inputCursorBlink(mainContainer, input, not input.cursorBlinkState)
 	end

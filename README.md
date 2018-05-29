@@ -162,6 +162,8 @@ The first parameter is a pointer to the table of the "main" container, the secon
 
 The key detail of the event handlers is that if the event belongs to **screen** (touch, drag, drop, scroll), then the child object event handler will be called, and event processing for the remaining unprocessed child objects will be finished.
 
+If you want to skip some event during event processing, call :**consumeEvent**() method. This will prevent all unprocessed child objects to handle current event data.
+
 There is also an option to make any object **transparent** for screen events: just set .**passScreenEvents** = **true** variable for desired object. With this option it's event hanlder will be called as always, but event processing will continue for rest objects in container. This feature works with containers too.
 
 And if the event does not belong to the screen, or the object **does not have** event handler method, the processing of the remaining child elements will continue as always. You can see the logic and the order of event processing in the following image:
@@ -175,9 +177,10 @@ This object has following properties:
 | *table* | .**passScreenEvents** | Optional variable that allows screen events to pass througs objects |
 | *table* | .**children** | Table that contains all child objects of this container |
 | *function* | :**addChild**(*table* child[, *int* atIndex]): *table* child| Add specified object to the container as a child. When you do this, the object's global coordinates will become local. If the optional parameter **atIndex** is specified, then the element will be added to the corresponding position in container.**children** table |
-| *function* | :**removeChildren**([*int* fromIndex, *int* toIndex]): *table* container | Remove all child elements of the container. If the optional parameters of the element indices are specified, the deletion will be performed in the appropriate range |
-| *function* | :**startEventHandling**([*float* delay]): *table* container | Run the event processing for this container and analyse events for all it's child objects. The  **delay** parameter is similar to computer.**pullSignal** one |
-| *function* | :**stopEventHandling**(): *table* container | Stop processing events for this container |
+| *function* | :**removeChildren**([*int* fromIndex, *int* toIndex]) | Remove all child elements of the container. If the optional parameters of the element indices are specified, the deletion will be performed in the appropriate range |
+| *function* | :**startEventHandling**([*float* delay]) | Run the event processing for this container and analyse events for all it's child objects. The  **delay** parameter is similar to computer.**pullSignal** one |
+| *function* | :**stopEventHandling**() | Stop processing events for this container |
+| *function* | :**consumeEvent**() | Consume currently processing event and skip it's handling for rest unprocessed child objects |
 | *function* | :**draw**() | Recursively renders the contents of the container in the order of the queue of its children. I draw your attention to the fact that this method only draws data into the screen buffer. To display changes on the screen, you must use the doubleBuffering.**drawChanges**() method or use method below |
 | *function* | :**drawOnScreen**([*boolean* force]) | This method is similar to :**draw**() with the only difference that after drawing data into the screen buffer, it will automatically display changes on the screen. That is, in fact, it exists solely for the convenience of writing code |
 
