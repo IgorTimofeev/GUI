@@ -3443,12 +3443,7 @@ function GUI.addBackgroundContainer(parentContainer, addPanel, addLayout, title)
 	end
 
 	if addLayout then
-		container.layout = container:addChild(GUI.layout(1, 1, container.width, container.height, 3, 1))
-		container.layout.defaultColumn = 2
-		container.layout:setColumnWidth(1, GUI.SIZE_POLICY_RELATIVE, 0.375)
-		container.layout:setColumnWidth(2, GUI.SIZE_POLICY_RELATIVE, 0.25)
-		container.layout:setColumnWidth(3, GUI.SIZE_POLICY_RELATIVE, 0.375)
-		container.layout:setFitting(2, 1, true, false)
+		container.layout = container:addChild(GUI.layout(1, 1, container.width, container.height, 1, 1))
 
 		if title then
 			container.label = container.layout:addChild(GUI.label(1, 1, 1, 1, GUI.BACKGROUND_CONTAINER_TITLE_COLOR, title)):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
