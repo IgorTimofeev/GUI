@@ -46,6 +46,7 @@ local GUI = {
 	CONTEXT_MENU_BACKGROUND_TRANSPARENCY = 0.18,
 	CONTEXT_MENU_SHADOW_TRANSPARENCY = 0.4,
 
+	BACKGROUND_CONTAINER_PANEL_COLOR = 0x0,
 	BACKGROUND_CONTAINER_TITLE_COLOR = 0xE1E1E1,
 	BACKGROUND_CONTAINER_PANEL_TRANSPARENCY = 0.3,
 
@@ -774,7 +775,7 @@ end
 --------------------------------------------------------------------------------
 
 local function drawPanel(object)
-	buffer.drawRectangle(object.x, object.y, object.width, object.height, object.colors.background, 0x000000, " ", object.colors.transparency)
+	buffer.drawRectangle(object.x, object.y, object.width, object.height, object.colors.background, 0x0, " ", object.colors.transparency)
 	return object
 end
 
@@ -884,12 +885,12 @@ end
 
 function GUI.drawShadow(x, y, width, height, transparency, thin)
 	if thin then
-		buffer.drawRectangle(x + width, y + 1, 1, height - 1, 0x000000, 0x000000, " ", transparency)
-		buffer.drawText(x + 1, y + height, 0x000000, string.rep("▀", width), transparency)
-		buffer.drawText(x + width, y, 0x000000, "▄", transparency)
+		buffer.drawRectangle(x + width, y + 1, 1, height - 1, 0x0, 0x0, " ", transparency)
+		buffer.drawText(x + 1, y + height, 0x0, string.rep("▀", width), transparency)
+		buffer.drawText(x + width, y, 0x0, "▄", transparency)
 	else
-		buffer.drawRectangle(x + width, y + 1, 2, height, 0x000000, 0x000000, " ", transparency)
-		buffer.drawRectangle(x + 2, y + height, width - 2, 1, 0x000000, 0x000000, " ", transparency)
+		buffer.drawRectangle(x + width, y + 1, 2, height, 0x0, 0x0, " ", transparency)
+		buffer.drawRectangle(x + 2, y + height, width - 2, 1, 0x0, 0x0, " ", transparency)
 	end
 end
 
@@ -1108,7 +1109,7 @@ end
 --------------------------------------------------------------------------------
 
 local function colorSelectorDraw(colorSelector)
-	local overlayColor = colorSelector.color < 0x7FFFFF and 0xFFFFFF or 0x000000
+	local overlayColor = colorSelector.color < 0x7FFFFF and 0xFFFFFF or 0x0
 		
 	buffer.drawRectangle(
 		colorSelector.x,
@@ -1384,14 +1385,14 @@ end
 
 local function switchDraw(switch)
 	buffer.drawText(switch.x - 1, switch.y, switch.colors.passive, "⠰")
-	buffer.drawRectangle(switch.x, switch.y, switch.width, 1, switch.colors.passive, 0x000000, " ")
+	buffer.drawRectangle(switch.x, switch.y, switch.width, 1, switch.colors.passive, 0x0, " ")
 	buffer.drawText(switch.x + switch.width, switch.y, switch.colors.passive, "⠆")
 
 	buffer.drawText(switch.x - 1, switch.y, switch.colors.active, "⠰")
-	buffer.drawRectangle(switch.x, switch.y, switch.pipePosition - 1, 1, switch.colors.active, 0x000000, " ")
+	buffer.drawRectangle(switch.x, switch.y, switch.pipePosition - 1, 1, switch.colors.active, 0x0, " ")
 
 	buffer.drawText(switch.x + switch.pipePosition - 2, switch.y, switch.colors.pipe, "⠰")
-	buffer.drawRectangle(switch.x + switch.pipePosition - 1, switch.y, 2, 1, switch.colors.pipe, 0x000000, " ")
+	buffer.drawRectangle(switch.x + switch.pipePosition - 1, switch.y, 2, 1, switch.colors.pipe, 0x0, " ")
 	buffer.drawText(switch.x + switch.pipePosition + 1, switch.y, switch.colors.pipe, "⠆")
 	
 	return switch
@@ -3336,10 +3337,10 @@ function GUI.palette(x, y, startColor)
 
 	local y = 10
 	for i = 1, #inputs do
-		palette:addChild(GUI.label(58, y, 2, 1, 0x000000, inputs[i].shortcut))
+		palette:addChild(GUI.label(58, y, 2, 1, 0x0, inputs[i].shortcut))
 		
 		local validator, onInputFinished = inputs[i].validator, inputs[i].onInputFinished
-		inputs[i] = palette:addChild(GUI.input(61, y, 9, 1, 0xFFFFFF, 0x696969, 0x696969, 0xFFFFFF, 0x000000, "", "", true))
+		inputs[i] = palette:addChild(GUI.input(61, y, 9, 1, 0xFFFFFF, 0x696969, 0x696969, 0xFFFFFF, 0x0, "", "", true))
 		inputs[i].validator = validator
 		inputs[i].onInputFinished = onInputFinished
 		
@@ -3446,7 +3447,7 @@ function GUI.addBackgroundContainer(parentContainer, addPanel, addLayout, title)
 	local container = parentContainer:addChild(GUI.container(1, 1, parentContainer.width, parentContainer.height))
 	
 	if addPanel then
-		container.panel = container:addChild(GUI.panel(1, 1, container.width, container.height, 0x0, GUI.BACKGROUND_CONTAINER_PANEL_TRANSPARENCY))
+		container.panel = container:addChild(GUI.panel(1, 1, container.width, container.height, GUI.BACKGROUND_CONTAINER_PANEL_COLOR, GUI.BACKGROUND_CONTAINER_PANEL_TRANSPARENCY))
 		container.panel.eventHandler = function(parentContainer, object, e1)
 			if e1 == "touch" then
 				container:remove()

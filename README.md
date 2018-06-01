@@ -340,6 +340,7 @@ Still not tired? Now think how I fucked up writing them during the library devel
 | *int* | GUI.**CONTEXT_MENU_DISABLED_COLOR** | 0x878787 | Context menu disabled item text color |
 | *float* | GUI.**CONTEXT_MENU_BACKGROUND_TRANSPARENCY** | 0.24 | Context menu background transparency |
 | *float* | GUI.**CONTEXT_MENU_SHADOW_TRANSPARENCY** | 0.4 | Context menu shadow transparency |
+| *int* | GUI.**BACKGROUND_CONTAINER_PANEL_COLOR** | 0x0 | Background container panel color |
 | *int* | GUI.**BACKGROUND_CONTAINER_TITLE_COLOR** | 0xE1E1E1 | Background container title color |
 | *float* | GUI.**BACKGROUND_CONTAINER_PANEL_TRANSPARENCY** | 0.3 | Background container panel transparency |
 | *int* | GUI.**WINDOW_BACKGROUND_PANEL_COLOR** | 0xF0F0F0 | Window background panel color |
