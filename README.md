@@ -238,6 +238,7 @@ After adding an object to the container using the :**addChild()** method, it acq
 | Type | Property | Description |
 | ------ | ------ | ------ |
 | *table* | .**parent** | A pointer to the parent container of the object |
+| *table* | .**firstParent** | A pointer to the first created container in children hierarchy. For exmaple, if there are many nested containers on screen, this field corresponds to the "main container" of them |
 | *int* | .**localX** | Local position on the x-axis in the parent container |
 | *int* | .**localY** | Local position on the y-axis in the parent container |
 | *function* | :**indexOf**() | Get the index of this object in the parent container (iterative method) |
@@ -245,7 +246,6 @@ After adding an object to the container using the :**addChild()** method, it acq
 | *function* | :**moveBackward**() | Move the object "forward" in the container children hierarchy |
 | *function* | :**moveToFront**() | Move the object to the end of the container children hierarchy |
 | *function* | :**moveToBack**() | Move the object to the beginning of the container children hierarchy |
-| *function* | :**getFirstParent**() | Recursively get the first parent container. If there are many nested containers, the method will return the first in the hierarchy and the "main" of them |
 | *function* | :**remove**() | Remove this object from the parent container. Roughly speaking, this is a convenient way of self-destruction |
 | *function* | :**addAnimation**(*function* frameHandler, *function* onFinish): *table* animation | Add an animation to this object, see below |
 | [*callback-function* | .**eventHandler**(*container* mainContainer, *object* object, ... *varargs* eventData) ]| An optional method for handling system events, called by the parent container handler. If it exists in the object under consideration, it will be called with the appropriate arguments |

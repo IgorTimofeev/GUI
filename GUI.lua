@@ -228,15 +228,6 @@ local function containerObjectMoveToBack(object)
 	return object
 end
 
-local function containerObjectGetFirstParent(object)
-	local currentParent = object.parent
-	while currentParent.parent do
-		currentParent = currentParent.parent
-	end
-
-	return currentParent
-end
-
 local function containerObjectRemove(object)
 	table.remove(object.parent.children, containerObjectIndexOf(object))
 end
@@ -270,14 +261,13 @@ local function containerObjectAddAnimation(object, frameHandler, onFinish)
 		onFinish = onFinish,
 	}
 
-	local firstParent = object:getFirstParent()
-	firstParent.animations = firstParent.animations or {}
-	table.insert(firstParent.animations, animation)
+	object.firstParent.animations = object.firstParent.animations or {}
+	table.insert(object.firstParent.animations, animation)
 
 	return animation
 end
 
-function containerAddChild(container, object, atIndex)
+local function containerAddChild(container, object, atIndex)
 	object.localX = object.x
 	object.localY = object.y
 	object.indexOf = containerObjectIndexOf
@@ -285,10 +275,20 @@ function containerAddChild(container, object, atIndex)
 	object.moveToBack = containerObjectMoveToBack
 	object.moveForward = containerObjectMoveForward
 	object.moveBackward = containerObjectMoveBackward
-	object.getFirstParent = containerObjectGetFirstParent
 	object.remove = containerObjectRemove
-	object.parent = container
 	object.addAnimation = containerObjectAddAnimation
+
+	local function updateFirstParent(object, firstParent)
+		object.firstParent = firstParent
+		if object.children then
+			for i = 1, #object.children do
+				updateFirstParent(object.children[i], firstParent)
+			end
+		end
+	end
+
+	object.parent = container
+	updateFirstParent(object, container.firstParent or container)
 
 	if atIndex then
 		table.insert(container.children, atIndex, object)
@@ -1684,7 +1684,6 @@ local function layoutAddColumn(layout, sizePolicy, size)
 		size = size
 	})
 	layoutCalculatePercentageSize(false, layout.columnSizes, #layout.columnSizes)
-	-- GUI.alert(layout.columnSizes)
 
 	return layout
 end
@@ -1702,7 +1701,6 @@ local function layoutAddRow(layout, sizePolicy, size)
 	})
 
 	layoutCalculatePercentageSize(false, layout.rowSizes, #layout.rowSizes)
-	-- GUI.alert(layout.rowSizes)
 
 	return layout
 end
@@ -1956,9 +1954,8 @@ function GUI.addFilesystemDialog(parentContainer, addPanel, ...)
 	filesystemDialog.localY = -filesystemDialog.height
 
 	local function onAnyTouch()
-		local firstParent = filesystemDialog:getFirstParent()
 		container:remove()
-		firstParent:drawOnScreen()
+		filesystemDialog.firstParent:drawOnScreen()
 	end
 
 	filesystemDialog.cancelButton.onTouch = function()
@@ -2760,8 +2757,6 @@ local function inputStopInput(mainContainer, input)
 end
 
 local function inputStartInput(input)
-	local mainContainer = input:getFirstParent()
-
 	input.startText = input.text
 	input.focused = true
 
@@ -2775,10 +2770,10 @@ local function inputStartInput(input)
 	
 	input:setCursorPosition(unicode.len(input.text) + 1)
 
-	input.stopInputObject.width, input.stopInputObject.height = mainContainer.width, mainContainer.height
-	mainContainer:addChild(input.stopInputObject)
+	input.stopInputObject.width, input.stopInputObject.height = input.firstParent.width, input.firstParent.height
+	input.firstParent:addChild(input.stopInputObject)
 
-	inputCursorBlink(mainContainer, input, true)
+	inputCursorBlink(input.firstParent, input, true)
 end
 
 local function inputEventHandler(mainContainer, input, e1, e2, e3, e4, e5, e6)
@@ -3289,7 +3284,7 @@ function GUI.palette(x, y, startColor)
 	local function onAnyInputFinished()
 		paletteRefreshBigImage()
 		paletteUpdateCrestsCoordinates()
-		palette:getFirstParent():drawOnScreen()
+		palette.firstParent:drawOnScreen()
 	end
 
 	local function onHexInputFinished()
@@ -3740,11 +3735,15 @@ local function dropDownMenuItemEventHandler(mainContainer, object, e1, ...)
 				mainContainer:drawOnScreen()
 			else
 				os.sleep(0.2)
-				object.parent.parent.parent:remove()
-
-				if object.parent.parent.onMenuClosed then
-					object.parent.parent.onMenuClosed(object:indexOf())
+				
+				local objectIndex = object:indexOf()
+				for i = 2, #object.parent.parent.parent.children do
+					if object.parent.parent.parent.children[i].onMenuClosed then
+						object.parent.parent.parent.children[i].onMenuClosed(objectIndex)
+					end
 				end
+
+				object.parent.parent.parent:remove()
 
 				if object.onTouch then
 					object.onTouch()
@@ -3885,7 +3884,6 @@ local function dropDownMenuAdd(parentContainer, menu)
 	local container = parentContainer:addChild(GUI.container(1, 1, parentContainer.width, parentContainer.height))
 	container:addChild(GUI.object(1, 1, container.width, container.height)).eventHandler = dropDownMenuBackgroundObjectEventHandler
 	
-
 	return container:addChild(menu:releaseItems())
 end
 
@@ -4100,7 +4098,7 @@ function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBa
 	comboBox.dropDownMenu.onMenuClosed = function(index)
 		comboBox.pressed = false
 		comboBox.selectedItem = index or comboBox.selectedItem
-		comboBox:getFirstParent():drawOnScreen()
+		comboBox.firstParent:drawOnScreen()
 		
 		if index and comboBox.onItemSelected then
 			comboBox.onItemSelected(index)
@@ -4112,7 +4110,6 @@ function GUI.comboBox(x, y, width, itemSize, backgroundColor, textColor, arrowBa
 	comboBox.removeItem = comboBoxRemoveItem
 	comboBox.addSeparator = comboBoxAddSeparator
 	comboBox.draw = comboBoxDraw
-	comboBox.select = comboBoxSelect
 	comboBox.clear = comboBoxClear
 	comboBox.getItem = comboBoxGetItem
 	comboBox.count = comboBoxCount
@@ -4199,17 +4196,17 @@ local function windowMaximize(window)
 	end
 
 	window.maximized = not window.maximized
-	window:getFirstParent():drawOnScreen()
+	window.firstParent:drawOnScreen()
 end
 
 local function windowMinimize(window)
 	window.hidden = not window.hidden
-	window:getFirstParent():drawOnScreen()
+	window.firstParent:drawOnScreen()
 end
 
 local function windowClose(window)
 	window:remove()
-	window:getFirstParent():drawOnScreen()
+	window.firstParent:drawOnScreen()
 end
 
 function GUI.window(x, y, width, height)
@@ -4303,7 +4300,7 @@ local function menuAddContextMenu(menu, ...)
 	item.contextMenu = contextMenuCreate(1, 1)
 	item.contextMenu.onMenuClosed = function()
 		item.pressed = false
-		item:getFirstParent():drawOnScreen()
+		item.firstParent:drawOnScreen()
 	end
 
 	return item.contextMenu
@@ -4342,7 +4339,7 @@ end
 -- local mainContainer = GUI.fullScreenContainer()
 -- mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
 
--- mainContainer:drawOnScreen(true)
+-- mainContainer:drawOnScreen()
 -- mainContainer:startEventHandling(0)
 
 ---------------------------------------------------------------------------------------------------
