@@ -308,7 +308,7 @@ This is a rather boring section of the documentation, but it is still necessary 
 | ------ | ------ | ------ |
 | *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | Align something to left side horizontally |
 | *enum* | GUI.**ALIGNMENT_HORIZONTAL_CENTER** | Align something to center side horizontally |
-| *enum* | GUI.**ALIGNMENT_HORIZONTAL_LEFT** | Align something to right side horizontally |
+| *enum* | GUI.**ALIGNMENT_HORIZONTAL_RIGHT** | Align something to right side horizontally |
 | *enum* | GUI.**ALIGNMENT_VERTICAL_TOP** | Align something to top side vertically |
 | *enum* | GUI.**ALIGNMENT_VERTICAL_CENTER** | Align something to center vertically |
 | *enum* | GUI.**ALIGNMENT_VERTICAL_BOTTOM** | Align something to bottom side vertically |
