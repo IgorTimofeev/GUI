@@ -313,7 +313,7 @@ This is a rather boring section of the documentation, but it is still necessary 
 | *enum* | GUI.**ALIGNMENT_VERTICAL_CENTER** | Align something to center vertically |
 | *enum* | GUI.**ALIGNMENT_VERTICAL_BOTTOM** | Align something to bottom side vertically |
 | *enum* | GUI.**DIRECTION_HORIZONTAL** | Horizontal direction of something |
-| *enum* | GUI.**DIRECTION_VERTICAL** | Horizontal direction of something |
+| *enum* | GUI.**DIRECTION_VERTICAL** | Vertical direction of something |
 | *enum* | GUI.**SIZE_POLICY_ABSOLUTE** | Calculate sizes of something as absolute values |
 | *enum* | GUI.**SIZE_POLICY_RELATIVE** | Calculate sizes of something as relative (percentage) values |
 | *enum* | GUI.**IO_MODE_FILE** | Mode for working with files |
