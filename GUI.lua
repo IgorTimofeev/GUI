@@ -4336,10 +4336,61 @@ end
 
 ---------------------------------------------------------------------------------------------------
 
+local function progressIndicatorDraw(self)
+	local color = self.active and (self.position == 1 and self.colors.primary or self.colors.secondary) or self.colors.passive
+	buffer.drawText(self.x + 1, self.y, color, "⢀")
+	buffer.drawText(self.x + 2, self.y, color, "⡀")
+
+	color = self.active and (self.position == 2 and self.colors.primary or self.colors.secondary) or self.colors.passive
+	buffer.drawText(self.x + 3, self.y + 1, color, "⠆")
+	buffer.drawText(self.x + 2, self.y + 1, color, "⢈")
+
+	color = self.active and (self.position == 3 and self.colors.primary or self.colors.secondary) or self.colors.passive
+	buffer.drawText(self.x + 1, self.y + 2, color, "⠈")
+	buffer.drawText(self.x + 2, self.y + 2, color, "⠁")
+
+	color = self.active and (self.position == 4 and self.colors.primary or self.colors.secondary) or self.colors.passive
+	buffer.drawText(self.x, self.y + 1, color, "⠰")
+	buffer.drawText(self.x + 1, self.y + 1, color, "⡁")
+end
+
+local function progressIndicatorRoll(self)
+	self.position = self.position + 1
+	if self.position > 4 then
+		self.position = 1
+	end
+end
+
+local function progressIndicatorReset(self, state)
+	self.active = state
+	self.position = 1
+end
+
+function GUI.progressIndicator(x, y, passiveColor, primaryColor, secondaryColor)
+	local object = GUI.object(x, y, 4, 3)
+	
+	object.colors = {
+		passive = passiveColor,
+		primary = primaryColor,
+		secondary = secondaryColor
+	}
+
+	object.active = false
+	object.reset = progressIndicatorReset
+	object.draw = progressIndicatorDraw
+	object.roll = progressIndicatorRoll
+
+	object:reset()
+
+	return object
+end
+
+---------------------------------------------------------------------------------------------------
+
 -- local mainContainer = GUI.fullScreenContainer()
 -- mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
 
--- mainContainer:drawOnScreen()
+-- mainContainer:drawOnScreen(true)
 -- mainContainer:startEventHandling(0)
 
 ---------------------------------------------------------------------------------------------------
