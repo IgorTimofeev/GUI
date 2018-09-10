@@ -4147,14 +4147,19 @@ local function windowCheck(window, x, y)
 	end
 end
 
-local function windowEventHandler(mainContainer, window, e1, e2, e3, e4)
+local function windowEventHandler(mainContainer, window, e1, e2, e3, e4, ...)
 	if e1 == "touch" then
 		if not windowCheck(window, e3, e4) then
 			window.lastTouchX, window.lastTouchY = e3, e4
 		end
-		
+
 		if window ~= window.parent.children[#window.parent.children] then
 			window:moveToFront()
+			
+			if window.onFocus then
+				window.onFocus(mainContainer, window, e1, e2, e3, e4, ...)
+			end
+
 			mainContainer:drawOnScreen()
 		end
 	elseif e1 == "drag" and window.lastTouchX and not windowCheck(window, e3, e4) then
@@ -4222,7 +4227,7 @@ function GUI.filledWindow(x, y, width, height, backgroundColor)
 	local window = GUI.window(x, y, width, height)
 
 	window.backgroundPanel = window:addChild(GUI.panel(1, 1, width, height, backgroundColor))
-	window.actionButtons = window:addChild(GUI.actionButtons(2, 2, false))
+	window.actionButtons = window:addChild(GUI.actionButtons(2, 2, true))
 
 	return window
 end
@@ -4279,6 +4284,18 @@ local function menuAddItem(menu, text, textColor)
 	return item
 end
 
+local function menuGetItem(menu, what)
+	if type(what) == "number" then
+		return menu.children[what]
+	else
+		for i = 1, #menu.children do
+			if menu.children[i].text == what then
+				return menu.children[i], i
+			end
+		end
+	end
+end
+
 local function menuContextMenuItemOnTouch(mainContainer, item)
 	item.contextMenu.x, item.contextMenu.y = item.x, item.y + 1
 	dropDownMenuAdd(mainContainer, item.contextMenu)
@@ -4318,6 +4335,7 @@ function GUI.menu(x, y, width, backgroundColor, textColor, backgroundPressedColo
 	menu.passScreenEvents = false
 	menu.addContextMenu = menuAddContextMenu
 	menu.addItem = menuAddItem
+	menu.getItem = menuGetItem
 	menu.draw = menuDraw
 
 	menu:setDirection(1, 1, GUI.DIRECTION_HORIZONTAL)
