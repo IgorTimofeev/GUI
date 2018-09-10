@@ -4133,20 +4133,14 @@ local function windowCheck(window, x, y)
 		child = window.children[i]
 		
 		if not child.hidden and not child.disabled and GUI.isPointInside(child, x, y) then
-			if child.children then
+			if not child.passScreenEvents and child.eventHandler then
+				return true
+			elseif child.children then
 				local result = windowCheck(child, x, y)
 				if result == true then
 					return true
 				elseif result == false then
 					return false
-				end
-			else
-				if not child.passScreenEvents then
-					if child.eventHandler then
-						return true
-					else
-						return false
-					end
 				end
 			end
 		end
@@ -4337,19 +4331,19 @@ end
 ---------------------------------------------------------------------------------------------------
 
 local function progressIndicatorDraw(self)
-	local color = self.active and (self.position == 1 and self.colors.primary or self.colors.secondary) or self.colors.passive
+	local color = self.active and (self.position == 1 and self.colors.secondary or self.colors.primary) or self.colors.passive
 	buffer.drawText(self.x + 1, self.y, color, "⢀")
 	buffer.drawText(self.x + 2, self.y, color, "⡀")
 
-	color = self.active and (self.position == 2 and self.colors.primary or self.colors.secondary) or self.colors.passive
+	color = self.active and (self.position == 2 and self.colors.secondary or self.colors.primary) or self.colors.passive
 	buffer.drawText(self.x + 3, self.y + 1, color, "⠆")
 	buffer.drawText(self.x + 2, self.y + 1, color, "⢈")
 
-	color = self.active and (self.position == 3 and self.colors.primary or self.colors.secondary) or self.colors.passive
+	color = self.active and (self.position == 3 and self.colors.secondary or self.colors.primary) or self.colors.passive
 	buffer.drawText(self.x + 1, self.y + 2, color, "⠈")
 	buffer.drawText(self.x + 2, self.y + 2, color, "⠁")
 
-	color = self.active and (self.position == 4 and self.colors.primary or self.colors.secondary) or self.colors.passive
+	color = self.active and (self.position == 4 and self.colors.secondary or self.colors.primary) or self.colors.passive
 	buffer.drawText(self.x, self.y + 1, color, "⠰")
 	buffer.drawText(self.x + 1, self.y + 1, color, "⡁")
 end
