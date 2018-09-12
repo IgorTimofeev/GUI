@@ -59,7 +59,7 @@ local GUI = {
 	WINDOW_TAB_BAR_SELECTED_BACKGROUND_COLOR = 0xF0F0F0,
 	WINDOW_TAB_BAR_SELECTED_TEXT_COLOR = 0x2D2D2D,
 
-	PALETTE_CONFIG_PATH = "/lib/.palette.cfg",
+	PALETTE_CONFIG_PATH = filesystem.path(getCurrentScript()) .. ".palette.cfg",
 
 	LUA_SYNTAX_COLOR_SCHEME = {
 		background = 0x1E1E1E,
@@ -169,16 +169,16 @@ function GUI.getAlignmentCoordinates(x, y, width1, height1, horizontalAlignment,
 end
 
 function GUI.getMarginCoordinates(x, y, horizontalAlignment, verticalAlignment, horizontalMargin, verticalMargin)
-	if horizontalAlignment == GUI.ALIGNMENT_HORIZONTAL_LEFT then
-		x = x + horizontalMargin
-	elseif horizontalAlignment == GUI.ALIGNMENT_HORIZONTAL_RIGHT then
+	if horizontalAlignment == GUI.ALIGNMENT_HORIZONTAL_RIGHT then
 		x = x - horizontalMargin
+	else
+		x = x + horizontalMargin
 	end
-
-	if verticalAlignment == GUI.ALIGNMENT_VERTICAL_TOP then
-		y = y + verticalMargin
-	elseif verticalAlignment == GUI.ALIGNMENT_VERTICAL_BOTTOM then
+	
+	if verticalAlignment == GUI.ALIGNMENT_VERTICAL_BOTTOM then
 		y = y - verticalMargin
+	else
+		y = y + verticalMargin
 	end
 
 	return x, y
@@ -1482,7 +1482,7 @@ local function layoutUpdate(layout)
 		layoutGetCalculatedSize(layout.rowSizes, row, rowPercentageTotalSize)
 		for column = 1, #layout.columnSizes do
 			layoutGetCalculatedSize(layout.columnSizes, column, columnPercentageTotalSize)
-			layout.cells[row][column].width, layout.cells[row][column].height = 0, 0
+			layout.cells[row][column].childrenWidth, layout.cells[row][column].childrenHeight = 0, 0
 		end
 	end
 
@@ -1508,11 +1508,11 @@ local function layoutUpdate(layout)
 
 				-- Направление и расчет размеров
 				if cell.direction == GUI.DIRECTION_HORIZONTAL then
-					cell.width = cell.width + child.width + cell.spacing
-					cell.height = math.max(cell.height, child.height)
+					cell.childrenWidth = cell.childrenWidth + child.width + cell.spacing
+					cell.childrenHeight = math.max(cell.childrenHeight, child.height)
 				else
-					cell.width = math.max(cell.width, child.width)
-					cell.height = cell.height + child.height + cell.spacing
+					cell.childrenWidth = math.max(cell.childrenWidth, child.width)
+					cell.childrenHeight = cell.childrenHeight + child.height + cell.spacing
 				end
 			else
 				error("Layout child with index " .. i .. " has been assigned to cell (" .. layoutColumn .. "x" .. layoutRow .. ") out of layout grid range")
@@ -1532,8 +1532,8 @@ local function layoutUpdate(layout)
 				layout.rowSizes[row].calculatedSize,
 				cell.horizontalAlignment,
 				cell.verticalAlignment,
-				cell.width - (cell.direction == GUI.DIRECTION_HORIZONTAL and cell.spacing or 0),
-				cell.height - (cell.direction == GUI.DIRECTION_VERTICAL and cell.spacing or 0)
+				cell.childrenWidth - (cell.direction == GUI.DIRECTION_HORIZONTAL and cell.spacing or 0),
+				cell.childrenHeight - (cell.direction == GUI.DIRECTION_VERTICAL and cell.spacing or 0)
 			)
 
 			-- Учитываем отступы от краев ячейки
@@ -1564,8 +1564,8 @@ local function layoutUpdate(layout)
 			child.localX, cell.localY = GUI.getAlignmentCoordinates(
 				cell.x,
 				cell.y,
-				cell.width,
-				cell.height,
+				cell.childrenWidth,
+				cell.childrenHeight,
 				cell.horizontalAlignment,
 				cell.verticalAlignment,
 				child.width,
