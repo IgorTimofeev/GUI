@@ -1294,7 +1294,7 @@ This object has following properties:
 | ------ | ------ | ------ |
 | *callback-function* | .**onSubmit**( *string* path ) | This function is called after choosing file or directory and pressing submit button in dialog window. One single parameter is an absolute path to selected item |
 | *callback-function* | .**onCancel**(  )| This function is called after pressing cancel button in dialog window |
-| *function* | :**setMode**( *enum* IOMode, *enum* showMode ) | This is method for setting window mode. First parameter is needed to tell window what to do: to open or to save items. It can be GUI.**IO_MODE_OPEN**, GUI.**IO_MODE_SAVE** or GUI.**IO_MODE_BOTH**. The second one is needed to setting showing mode. It can be GUI.**IO_MODE_FILE**, GUI.**IO_MODE_FILE** or GUI.**IO_MODE_BOTH** |
+| *function* | :**setMode**( *enum* IOMode, *enum* showMode ) | This is method for setting window mode. First parameter is needed to tell window what to do: to open or to save items. It can be GUI.**IO_MODE_OPEN**, GUI.**IO_MODE_SAVE** or GUI.**IO_MODE_BOTH**. The second one is needed to setting showing mode. It can be GUI.**IO_MODE_FILE**, GUI.**IO_MODE_DIRECTORY** or GUI.**IO_MODE_BOTH** |
 | *function* | :**addExtensionFilter**( *string* extension )| Add a filter to the specified file extension. After that, only files witch specified extension well be able to be selected |
 
 Example of implementation:
