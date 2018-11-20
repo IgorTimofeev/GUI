@@ -3639,10 +3639,12 @@ function GUI.highlightString(x, y, width, fromChar, indentationWidth, patterns, 
 	local counter, symbols, colors, stringLength, bufferIndex, newFrameBackgrounds, newFrameForegrounds, newFrameSymbols, searchFrom, starting, ending = indentationWidth, {}, {}, unicode.len(s), buffer.getIndex(x, y), buffer.getNewFrameTables()
 	local toChar = math.min(stringLength, fromChar + width - 1)
 
-	for i = 1, stringLength do
+	-- Пидорасим на символы
+	for i = fromChar, toChar do
 		symbols[i] = unicode.sub(s, i, i)
 	end
 
+	-- Вгоняем в цветовую карту синтаксическую подсветку
 	for j = 1, #patterns, 4 do
 		searchFrom = 1
 		
@@ -3676,7 +3678,7 @@ function GUI.highlightString(x, y, width, fromChar, indentationWidth, patterns, 
 		end
 	end
 
-	-- А тута уже сам текст
+	-- Рисуем текст
 	for i = fromChar, toChar do
 		newFrameForegrounds[bufferIndex], newFrameSymbols[bufferIndex] = colors[i] or colorScheme.text, symbols[i] or " "
 		bufferIndex = bufferIndex + 1
