@@ -1,7 +1,8 @@
+
 About
 ======
 
-GUI is a multifunctional graphics library, especially designed and optimized for low-performance computers. You can realize all of your most perverted fantasies using it: from habitual buttons, sliders and charts to complex animated interfaces. Extreme performance of the library is achieved by using double buffering and complex color grouping and processing algorithms.
+GUI is a multifunctional graphics library, especially designed and optimized for low-performance computers. You can realize all of your most perverted fantasies using it: from regular buttons, sliders and charts to complex animated interfaces. Extreme performance of the library is achieved by using double buffering and complex color grouping and processing algorithms.
 
 For example, my OS, IDE and 3D-engine are fully implemented by the methods of this library:
 
@@ -81,7 +82,9 @@ However, you can download dependencies manually, if required. They are listed in
 Containers
 ======
 
-The library is divided into two main concepts: containers and widgets. Containers is intended for grouping widgets, processing their positions and handle their events. With widgets the user interacts directly: they can be buttons, scrollbars, sliders, etc. But first let's talk about containers:
+The library is divided into two main concepts: containers and widgets. Containers is designed for grouping widgets, processing their positions and handle their events. Widgets is designed for user interactions: they can be buttons, scrollbars, sliders, etc. 
+
+First let's talk about containers:
 
 GUI.**container**( x, y, width, height ): *table* container
 -----------------------------------------------------------
@@ -92,7 +95,7 @@ GUI.**container**( x, y, width, height ): *table* container
 | *int* | width | Container's width |
 | *int* | height | Container's height |
 
-Each container is a grouper for other objects, its behavior is very similar to a folder that contains a few of nested files and other folders. To create a container fit by screen size, use this:
+Container is a grouper for other objects, its behavior is very similar to a folder that contains a some nested files and other folders. To create a container fit by screen size, use this:
 
 ```lua
 GUI.fullScreenContainer()
@@ -104,21 +107,21 @@ All container child objects are stored in container.**children** table. To add a
 container:addChild(<Object>)
 ```
 
-After adding an object to the container, it will have two positions: the first one is local, it is used to position objects inside the containers:
-
-```lua
-object.localX = 2
-object.localY = 4
-```
-
-The second position is global (screen). It allows you to get the current coordinate of the object on the screen and perform some drawing operations. These coordinates are **read-only** and they are calculated automatically, so most of the time the user interacts with local coordinates:
+After adding object to container, it will get two positions. The first one is **read-only** and represents current object position on screen. It's being calculated automatically and most of the time is used for performing some drawing operations:
 
 ```lua
 object.x = 10
 object.y = 20
 ```
 
-After adding an object to the container, its global and local coordinates will be equivalent. The system of hierarchy and positioning container's children is well presented in the following image:
+The second position is local and is used to locate child objects inside parent containers. Most of the time, the developer will work with the local position:
+
+```lua
+object.localX = 2
+object.localY = 4
+```
+
+The hierarchy and positioning of container's children is well presented in the following image:
 
 ![](https://i.imgur.com/GJmDQ2j.png)
 
@@ -126,11 +129,11 @@ Containers also have an important feature: any child that extends beyond the bou
 
 ![](https://i.imgur.com/SBuL1it.png)
 
-Of course, you can add to container some other containers, and add a new ones to the added ones, creating complex hierarchical chains and grouping the child objects at your discretion.
+Of course, you can add to container another container, add a new ones to the added ones, creating complex hierarchical chains and grouping the child objects at your discretion.
 
 Finally, the most important feature of containers is the automated event processing. For example, it allows buttons to be pressed when user interacts with screen and it allows text input fields receive data from the keyboard.
 
-Each container can start processing events, after which it becomes "main". To do it, To do this, use the following:
+Every container can start processing events, after which it becomes "main". To do it, To do this, use the following:
 
 ```lua
 container:startEventHandling([delay])
