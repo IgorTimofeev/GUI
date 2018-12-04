@@ -3737,6 +3737,8 @@ local function dropDownMenuItemEventHandler(mainContainer, object, e1, ...)
 				mainContainer:drawOnScreen()
 			else
 				os.sleep(0.2)
+
+				object.parent.parent.parent:remove()
 				
 				local objectIndex = object:indexOf()
 				for i = 2, #object.parent.parent.parent.children do
@@ -3744,8 +3746,6 @@ local function dropDownMenuItemEventHandler(mainContainer, object, e1, ...)
 						object.parent.parent.parent.children[i].onMenuClosed(objectIndex)
 					end
 				end
-
-				object.parent.parent.parent:remove()
 
 				if object.onTouch then
 					object.onTouch()
