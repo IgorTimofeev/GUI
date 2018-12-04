@@ -671,19 +671,19 @@ end
 
 local function buttonDraw(button)
 	local backgroundColor, textColor = buttonGetColors(button)
+	
 	if backgroundColor then
 		buffer.drawRectangle(button.x, button.y, button.width, button.height, backgroundColor, textColor, " ", button.colors.transparency)
 	end
-
 	buttonDrawText(button, textColor)
 end
 
 local function framedButtonDraw(button)
 	local backgroundColor, textColor = buttonGetColors(button)
+	
 	if backgroundColor then
 		buffer.drawFrame(button.x, button.y, button.width, button.height, backgroundColor)
 	end
-
 	buttonDrawText(button, textColor)
 end
 
@@ -708,6 +708,14 @@ local function roundedButtonDraw(button)
 		end
 	end
 
+	buttonDrawText(button, textColor)
+end
+
+local function tagButtonDraw(button)
+	local backgroundColor, textColor = buttonGetColors(button)
+	
+	buffer.drawRectangle(button.x, button.y, button.width, button.height, backgroundColor, textColor, " ")
+	buffer.drawText(button.x - 1, button.y, backgroundColor, "◀")
 	buttonDrawText(button, textColor)
 end
 
@@ -768,6 +776,20 @@ end
 function GUI.adaptiveRoundedButton(...)
 	local button = adaptiveButtonCreate(...)
 	button.draw = roundedButtonDraw
+
+	return button
+end
+
+function GUI.tagButton(...)
+	local button = buttonCreate(...)
+	button.draw = tagButtonDraw
+
+	return button
+end
+
+function GUI.adaptiveTagButton(...)
+	local button = adaptiveButtonCreate(...)
+	button.draw = tagButtonDraw
 
 	return button
 end
