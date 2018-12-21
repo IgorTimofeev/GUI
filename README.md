@@ -56,7 +56,6 @@ Let the abundance of text below not frighten you: this documentation has many il
 | [   GUI.highlightString](#guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
 | [   GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel-table-filesystemdialog) |
 | [   GUI.addBackgroundContainer](#guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title-table-palette) |
-| [   GUI.isPointInside](#guiispointinsideobject-x-y-boolean-result) |
 | [   GUI.getAlignmentCoordinates](#guigetalignmentcoordinatesfirstobjectx-firstobjecty-firstobjectwidth-firstobjectheight-firstobjecthorizontalalignment-firstobjectverticalalignment-secondobjectwidth-secondobjectheight-int-x-int-y) |
 | [   GUI.getMarginCoordinates](#guigetalignmentcoordinatesx-y-horizontalalignment-verticalalignment-horizontalmargin-verticalmargin-int-x-int-y) |
 | [Practical example #1: Creating an animated widget](#practical-example--1-creating-an-animated-widget) |
@@ -2162,16 +2161,6 @@ buffer.drawChanges(true)
 Result:
 
 ![](https://i.imgur.com/kYRHeMu.png)
-
-GUI.**isPointInside**(object, x, y): *boolean* result
-------------------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *table* | object | Pointer to any object |
-| *int* | x | Coordinate by x-axis on screen |
-| *int* | y | Coordinate by y-axis on screen |
-
-This method checks whether the specified point is inside the boundaries of the specified object. This method is useful in rare cases for manual verification.
 
 GUI.**getAlignmentCoordinates**(firstObjectX, firstObjectY, firstObjectWidth, firstObjectHeight, firstObjectHorizontalAlignment, firstObjectVerticalAlignment, secondObjectWidth, secondObjectHeight): *int* x, *int* y
 ------------------------------------------------------------------------

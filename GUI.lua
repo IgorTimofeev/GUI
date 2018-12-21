@@ -119,32 +119,9 @@ local GUI = {
 
 --------------------------------------------------------------------------------
 
-local function objectDraw(object)
-	return object
-end
-
-function GUI.object(x, y, width, height)
-	return {
-		x = x,
-		y = y,
-		width = width,
-		height = height,
-		draw = objectDraw
-	}
-end
-
---------------------------------------------------------------------------------
-
-function GUI.isPointInside(object, x, y)
-	return
-		x >= object.x and
-		x <= object.x + object.width - 1 and
-		y >= object.y and
-		y <= object.y + object.height - 1
-end
-
 function GUI.setAlignment(object, horizontalAlignment, verticalAlignment)
 	object.horizontalAlignment, object.verticalAlignment = horizontalAlignment, verticalAlignment
+	
 	return object
 end
 
@@ -182,6 +159,22 @@ function GUI.getMarginCoordinates(x, y, horizontalAlignment, verticalAlignment, 
 	end
 
 	return x, y
+end
+
+--------------------------------------------------------------------------------
+
+local function objectDraw(object)
+	return object
+end
+
+function GUI.object(x, y, width, height)
+	return {
+		x = x,
+		y = y,
+		width = width,
+		height = height,
+		draw = objectDraw
+	}
 end
 
 --------------------------------------------------------------------------------
@@ -2925,7 +2918,12 @@ function GUI.input(x, y, width, height, backgroundColor, textColor, placeholderT
 	input.stopInputObject = GUI.object(1, 1, 1, 1)
 	input.stopInputObject.eventHandler = function(mainContainer, object, e1, e2, e3, e4, ...)
 		if e1 == "touch" or e1 == "drop" then
-			if GUI.isPointInside(input, e3, e4) then
+			if 
+				e3 >= input.x and
+				e3 < input.x + input.width and
+				e4 >= input.y and
+				e4 < input.y + input.height
+			then
 				input.eventHandler(mainContainer, input, e1, e2, e3, e4, ...)
 			else
 				inputStopInput(mainContainer, input)
@@ -4156,7 +4154,14 @@ local function windowCheck(window, x, y)
 	for i = #window.children, 1, -1 do
 		child = window.children[i]
 		
-		if not child.hidden and not child.disabled and GUI.isPointInside(child, x, y) then
+		if
+			not child.hidden and
+			not child.disabled and
+			x >= child.x and
+			x < child.x + child.width and
+			y >= child.y and
+			y < child.y + child.height
+		then
 			if not child.passScreenEvents and child.eventHandler then
 				return true
 			elseif child.children then
@@ -4420,14 +4425,6 @@ function GUI.progressIndicator(x, y, passiveColor, primaryColor, secondaryColor)
 
 	return object
 end
-
----------------------------------------------------------------------------------------------------
-
--- local mainContainer = GUI.fullScreenContainer()
--- mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
-
--- mainContainer:drawOnScreen(true)
--- mainContainer:startEventHandling(0)
 
 ---------------------------------------------------------------------------------------------------
 
