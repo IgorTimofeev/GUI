@@ -511,16 +511,18 @@ function GUI.container(x, y, width, height)
 	local container = GUI.object(x, y, width, height)
 
 	container.children = {}
+	
 	container.draw = containerDraw
 	container.drawOnScreen = containerDrawOnScreen
+	
 	container.removeChildren = containerRemoveChildren
 	container.addChild = containerAddChild
-	container.returnData = containerReturnData
+
 	container.startEventHandling = containerStartEventHandling
 	container.stopEventHandling = containerStopEventHandling
 	container.passScreenEvents = true
 	container.consumeEvent = containerConsumeEvent
-
+	
 	return container
 end
 
