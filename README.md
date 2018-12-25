@@ -740,7 +740,7 @@ This object has following properties:
 | ------ | ------ | ------ |
 | *float* | .**value** | Current slider value variable |
 | *boolean* | .**roundValues** | This property will **visually** round silder values |
-| *callback-function* | .**onValueChanged**()| This function will be called after slider value changing |
+| *callback-function* | .**onValueChanged**() | This function will be called after slider value changing |
 
 Example of implementation:
 
@@ -754,7 +754,7 @@ mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height
 
 local slider = mainContainer:addChild(GUI.slider(4, 2, 30, 0x66DB80, 0x0, 0xFFFFFF, 0xAAAAAA, 0, 100, 50, true, "Prefix: ", " postfix"))
 slider.roundValues = true
-slider.onValueChanged = function(value)
+slider.onValueChanged = function()
 	-- Do something when slider's value changed
 end
 
