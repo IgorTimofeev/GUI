@@ -938,6 +938,7 @@ This object has following properties:
 | *function* | :**setAlignment**(*enum* horizontalAlignment, *enum* verticalAlignment): *table* list| Set list items alignment. By default it's set to GUI.**ALIGNMENT_HORIZONTAL_LEFT** and GUI.**ALIGNMENT_VERTICAL_TOP** |
 | *function* | :**setDirection**(*enum* direction): *table* list| Choose an items display option for List boundaries. The default alignment is **left** and **top** |
 | *function* | :**setSpacing**(*int* spacing): *table* list| Set spacing between List items |
+| *function* | :**setMargin**(*int* horizontalMargin, *int* verticalMargin): *table* list| Set margin in pixels depending on the current **alignment** of list |
 
 Example of implementation:
 
