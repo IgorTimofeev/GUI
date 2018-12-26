@@ -938,7 +938,8 @@ This object has following properties:
 | *function* | :**setAlignment**(*enum* horizontalAlignment, *enum* verticalAlignment): *table* list| Set list items alignment. By default it's set to GUI.**ALIGNMENT_HORIZONTAL_LEFT** and GUI.**ALIGNMENT_VERTICAL_TOP** |
 | *function* | :**setDirection**(*enum* direction): *table* list| Choose an items display option for List boundaries. The default alignment is **left** and **top** |
 | *function* | :**setSpacing**(*int* spacing): *table* list| Set spacing between List items |
-| *function* | :**setMargin**(*int* horizontalMargin, *int* verticalMargin): *table* list| Set margin in pixels depending on the current **alignment** of list |
+| *function* | :**setMargin**(*int* horizontalMargin, *int* verticalMargin): *table* list| Set margin in pixels depending on the current **alignment** of List |
+| *function* | :**getMargin**(): *int* row, *int* horizontalMargin, *int* verticalMargin | Get current margins in pixels of List |
 
 Example of implementation:
 
@@ -1676,6 +1677,7 @@ This object has following properties:
 | *function* | :**setAlignment**(*int* column, *int* row, *enum* horizontalAlignment, *enum* verticalAlignment): *table* layout | Assign the method for aligning child objects to the grid cell borders. Following values and any combination of them can be used: GUI.**ALIGNMENT_HORIZONTAL_LEFT**, GUI.**ALIGNMENT_HORIZONTAL_CENTER**, GUI.**ALIGNMENT_HORIZONTAL_RIGHT**, GUI.**ALIGNMENT_VERTICAL_TOP**, GUI.**ALIGNMENT_VERTICAL_CENTER** or GUI.**ALIGNMENT_VERTICAL_BOTTOM** |
 | *function* | :**setSpacing**(*int* column, *int* row, *int* spacing): *table* layout | Assign the specified grid cell distance in pixels between child objects. The default value is **1** |
 | *function* | :**setMargin**(*int* column, *int* row, *int* horizontalMargin, *int* verticalMargin): *table* layout | Assign the specified grid cell indents (margins) in pixels, depending on the current **alignment** of this cell |
+| *function* | :**getMargin**(*int* column, *int* row): *int* row, *int* horizontalMargin, *int* verticalMargin | Get current margins in pixels of specified cell |
 | *function* | :**setFitting**(*int* column, *int* row, *int* horizontalFitting, *int* verticalFitting[, *int* horizontalOffset, *int* verticalOffset] ): *table* layout | Assign the specified grid cell automatic resizing of child objects by horizonal, vertical or both directions. By default new child sizes will be equal the cell size. If optional parameters are specified, then it is possible to set an size reducing, i.e. the size of objects will be equal to **Cell size - Offset value** |
 | *function* | :**update**(): *table* layout | Forcibly recalculate child objects position. By default this function is being called automatically, but in some cases it can be helful |
 
