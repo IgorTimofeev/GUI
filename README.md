@@ -270,10 +270,8 @@ local GUI = require("GUI")
 
 -- Create new application
 local application = GUI.application()
--- Create and add second container to application
-local anotherContainer = application:addChild(GUI.container(3, 2, 50, 25))
 -- Create simple event handler for it
-anotherContainer.eventHandler = function(application, object, ...)
+application.eventHandler = function(application, object, ...)
     print("It works! The event data was: ", ...)
 end
 
