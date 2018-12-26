@@ -15,49 +15,51 @@ Let the abundance of text below not frighten you: this documentation has many il
 | Contents |
 | ----- |
 | [Installation](#installation) |
-| [Containers](#containers) |
 | [Objects](#objects) |
+| [Containers](#containers) |
+| [Applications](#applications) |
 | [Animations](#animations) |
 | [Constants](#constants) |
 | [Ready-to-use objects:](#ready-to-use-objects) |
-| [   GUI.panel](#guipanelx-y-width-height-color-transparency-table-panel) |
-| [   GUI.text](#guitextxy-textcolor-text-table-text) |
-| [   GUI.label](#guilabelx-y-width-height-textcolor-text-table-label) |
-| [   GUI.image](#guiimagex-y-loadedimage-table-image) |
-| [   GUI.button](#guibuttonx-y-width-height-buttoncolor-textcolor-buttonpressedcolor-textpressedcolor-text-table-button) |
-| [   GUI.actionButtons](#guiactionbuttonsx-y-fat-table-actionbuttons) |
-| [   GUI.input](#guiinputx-y-width-height-backgroundcolor-textcolor-placeholdertextcolor-backgroundfocusedcolor-textfocusedcolor-text-placeholdertext-erasetextonfocus-textmask-table-input) |
-| [   GUI.slider](#guisliderx-y-width-primarycolor-secondarycolor-pipecolor-valuecolor-minimumvalue-maximumvalue-value-showcornervalues-currentvalueprefix-currentvaluepostfix-table-slider) |
-| [   GUI.switch](#guiswitchx-y-width-primarycolor-secondarycolor-pipecolor-state-table-switch) |
-| [   GUI.switchAndLabel](#guiswitchandlabelx-y-width-switchwidth-primarycolor-secondarycolor-pipecolor-textcolor-text-switchstate-table-switchandlabel) |
-| [   GUI.colorSelector](#guicolorselectorx-y-width-height-color-text-table-colorselector) |
-| [   GUI.list](#guilistx-y-width-height-itemsize-spacing-backgroundcolor-textcolor-alternatebackgroundcolor-alternatetextcolor-backgroundselectedcolor-textselectedcolor-offsetmode-table-list) |
-| [   GUI.comboBox](#guicomboboxx-y-width-elementheight-backgroundcolor-textcolor-arrowbackgroundcolor-arrowtextcolor-table-combobox) |
-| [   GUI.menu](#guimenux-y-width-backgroundcolor-textcolor-backgroundpressedcolor-textpressedcolor-backgroundtransparency-table-menu) |
-| [   GUI.resizer](#guiresizerx-y-width-height-resizercolor-arrowcolor-table-resizer) |
-| [   GUI.progressBar](#guiprogressbarx-y-width-primarycolor-secondarycolor-valuecolor-value-thin-showvalue-valueprefix-valuepostfix-table-progressbar) |
-| [   GUI.filesystemTree](#guifilesystemtreex-y-width-height-backgroundcolor-directorycolor-filecolor-arrowcolor-backgroundselectioncolor-textselectioncolor-arrowselectioncolor-disabledcolor-scrollbarbackground-scrollbarforeground-showmode-selectionmode-table-filesystemtree) |
-| [   GUI.filesystemChooser](#guifilesystemchooserx-y-width-height-backgroundcolor-textcolor-tipbackgroundcolor-tiptextcolor-initialtext-sumbitbuttontext-cancelbuttontext-placeholdertext-filesystemdialogmode-filesystemdialogpath-table-filesystemchooser) |
-| [   GUI.codeView](#guicodeviewx-y-width-height-lines-fromsymbol-fromline-maximumlinelength-selections-highlights-highlightluasyntax-indentationwidth-table-codeview) |
-| [   GUI.chart](#guichartx-y-width-height-axiscolor-axisvaluecolor-axishelperscolor-chartcolor-xaxisvalueinterval-yaxisvalueinterval-xaxispostfix-yaxispostfix-fillchartarea-values-table-chart) |
-| [   GUI.brailleCanvas](#guibraillecanvasx-y-width-height-table-braillecanvas) |
-| [   GUI.scrollBar](#guiscrollbarx-y-width-height-backgroundcolor-foregroundcolor-minimumvalue-maximumvalue-value-shownvaluecount-onscrollvalueincrement-thinhorizontalmode-table-scrollbar) |
-| [   GUI.textBox](#guitextboxx-y-width-height-backgroundcolor-textcolor-lines-currentline-horizontaloffset-verticaloffset-autowrap-autoheight-table-textbox) |
-| [Ready-to-use containers:](#ready-to-use-containers) |
-| [   GUI.layout](#guilayoutx-y-width-height-columncount-rowcount-table-layout) |
-| [   GUI.window](#guiwindowx-y-width-height-table-window) |
-| [   GUI.filledWindow](#guifilledwindowx-y-width-height-fillcolor-table-window) |
-| [   GUI.titledWindow](#guititledwindowx-y-width-height-title-addtitlepanel-table-window) |
-| [   GUI.tabbedWindow](#guitabbedwindowx-y-width-height-table-window) |
-| [   GUI.palette](#guipalettex-y-initialcolor-table-palette) |
-| [Standalone methods:](#standalone-methods) |
-| [   GUI.alert](#guialertvarargs) |
-| [   GUI.addContextMenu](#guiaddcontextmenuparentcontainer-x-y-backgroundcolor-textcolor-backgroundpressedcolor-textpressedcolor-disabledcolor-separatorcolor-backgroundtransparency-shadowtransparency-table-contextmenu) |
-| [   GUI.highlightString](#guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
-| [   GUI.addFilesystemDialog](#guiaddfilesystemdialogparentcontainer-addpanel-table-filesystemdialog) |
-| [   GUI.addBackgroundContainer](#guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title-table-palette) |
-| [   GUI.getAlignmentCoordinates](#guigetalignmentcoordinatesfirstobjectx-firstobjecty-firstobjectwidth-firstobjectheight-firstobjecthorizontalalignment-firstobjectverticalalignment-secondobjectwidth-secondobjectheight-int-x-int-y) |
-| [   GUI.getMarginCoordinates](#guigetalignmentcoordinatesx-y-horizontalalignment-verticalalignment-horizontalmargin-verticalmargin-int-x-int-y) |
+| [   GUI.object](guiobjectx-y-width-height) |
+| [   GUI.container](guicontainerx-y-width-height-extends-guiobject) |
+| [   GUI.application](guiapplicationx-y-width-height-extends-guicontainer) |
+| [   GUI.panel](guipanelx-y-width-height-color-transparency-extends-guiobject) |
+| [   GUI.text](guitextx-y-textcolor-text-extends-guiobject) |
+| [   GUI.label](guilabelx-y-width-height-textcolor-text-extends-guiobject) |
+| [   GUI.image](guiimage-x-y-loadedimage--extends-guiobject) |
+| [   GUI.button](guibuttonx-y-width-height-buttoncolor-textcolor-buttonpressedcolor-textpressedcolor-text-extends-guiobject) |
+| [   GUI.actionButtons](guiactionbuttonsx-y-fat-extends-guiobject) |
+| [   GUI.input](guiinputx-y-width-height-backgroundcolor-textcolor-placeholdertextcolor-backgroundfocusedcolor-textfocusedcolor-text-placeholdertext-erasetextonfocus-textmask-extends-guiobject) |
+| [   GUI.slider](guisliderx-y-width-primarycolor-secondarycolor-pipecolor-valuecolor-minimumvalue-maximumvalue-value-showcornervalues-currentvalueprefix-currentvaluepostfix-extends-guiobject) |
+| [   GUI.switch](guiswitchx-y-width-primarycolor-secondarycolor-pipecolor-state-extends-guiobject) |
+| [   GUI.switchAndLabel](guiswitchandlabelx-y-width-switchwidth-primarycolor-secondarycolor-pipecolor-textcolor-text-switchstate-extends-guicontainer) |
+| [   GUI.colorSelector](guicolorselectorx-y-width-height-color-text-extends-guiobject) |
+| [   GUI.list](guilistx-y-width-height-itemsize-spacing-backgroundcolor-textcolor-alternatebackgroundcolor-alternatetextcolor-backgroundselectedcolor-textselectedcolor-offsetmode-extends-guilayout) |
+| [   GUI.menu](guimenux-y-width-backgroundcolor-textcolor-backgroundpressedcolor-textpressedcolor-backgroundtransparency-extends-guilayout) |
+| [   GUI.comboBox](guicomboboxx-y-width-elementheight-backgroundcolor-textcolor-arrowbackgroundcolor-arrowtextcolor-extends-guiobject) |
+| [   GUI.resizer](guiresizerx-y-width-height-resizercolor-arrowcolor-extends-guiobject) |
+| [   GUI.progressBar](guiprogressbarx-y-width-primarycolor-secondarycolor-valuecolor-value-thin-showvalue-valueprefix-valuepostfix-extends-guiobject) |
+| [   GUI.filesystemTree](guifilesystemtreex-y-width-height-backgroundcolor-directorycolor-filecolor-arrowcolor-backgroundselectioncolor-textselectioncolor-arrowselectioncolor-disabledcolor-scrollbarbackground-scrollbarforeground-showmode-selectionmode-extends-guiobject) |
+| [   GUI.filesystemChooser](guifilesystemchooserx-y-width-height-backgroundcolor-textcolor-tipbackgroundcolor-tiptextcolor-initialtext-sumbitbuttontext-cancelbuttontext-placeholdertext-filesystemdialogmode-filesystemdialogpath-extends-guiobject) |
+| [   GUI.codeView](guicodeviewx-y-width-height-fromsymbol-fromline-maximumlinelength-selections-highlights-syntaxpatterns-syntaxcolorscheme-syntaxhighlight-lines-extends-guiobject) |
+| [   GUI.chart](guichartx-y-width-height-axiscolor-axisvaluecolor-axishelperscolor-chartcolor-xaxisvalueinterval-yaxisvalueinterval-xaxispostfix-yaxispostfix-fillchartarea-values-extends-guiobject) |
+| [   GUI.brailleCanvas](guibraillecanvasx-y-width-height-extends-guiobject) |
+| [   GUI.scrollBar](guiscrollbarx-y-width-height-backgroundcolor-foregroundcolor-minimumvalue-maximumvalue-value-shownvaluecount-onscrollvalueincrement-thinmode-extends-guiobject) |
+| [   GUI.textBox](guitextboxx-y-width-height-backgroundcolor-textcolor-lines-currentline-horizontaloffset-verticaloffset-autowrap-autoheight-extends-guiobject) |
+| [   GUI.layout](guilayoutx-y-width-height-columncount-rowcount-extends-guicontainer) |
+| [   GUI.window](guiwindowx-y-width-height-extends-guicontainer) |
+| [   GUI.filledWindow](guifilledwindowx-y-width-height-fillcolor-extends-guiwindow) |
+| [   GUI.titledWindow](guititledwindowx-y-width-height-title-addtitlepanel-extends-guiwindow) |
+| [   GUI.tabbedWindow](guitabbedwindowx-y-width-height-extends-guiwindow) |
+| [   GUI.palette](guipalettex-y-initialcolor-extends-guiwindow) |
+| [   GUI.alert](guialertvarargs) |
+| [   GUI.addContextMenu](guiaddcontextmenuparentcontainer-x-y-backgroundcolor-textcolor-backgroundpressedcolor-textpressedcolor-disabledcolor-separatorcolor-backgroundtransparency-shadowtransparency) |
+| [   GUI.addFilesystemDialog](guiaddfilesystemdialogparentcontainer-addpanel-) |
+| [   GUI.addBackgroundContainer](guiaddbackgroundcontainerparentcontainer-addpanel-addlayout-title) |
+| [   GUI.highlightString](guihighlightstringx-y-width-fromsymbol-indentationwidth-syntaxpatterns-syntaxcolorscheme-data) |
+| [   GUI.getAlignmentCoordinates](guigetalignmentcoordinatesfirstobjectx-firstobjecty-firstobjectwidth-firstobjectheight-firstobjecthorizontalalignment-firstobjectverticalalignment-secondobjectwidth-secondobjectheight-int-x-int-y) |
+| [   GUI.getMarginCoordinates](guigetmargincoordinatesx-y-horizontalalignment-verticalalignment-horizontalmargin-verticalmargin-int-x-int-y) |
 | [Practical example #1: Creating an animated widget](#practical-example--1-creating-an-animated-widget) |
 
 Installation
@@ -78,147 +80,14 @@ However, you can download dependencies manually, if required. They are listed in
 | *[image](https://github.com/IgorTimofeev/Image/blob/master/Image.lua)* | Implementation of the image standard for OpenComputers and basic methods of their processing: transpose, crop, rotate, reflection, etc. | - | 
 | *[OCIF](https://github.com/IgorTimofeev/Image/blob/master/OCIF.lua)* | The OpenComputers Image Format module for the image library, written with regard to the features of the mod and realizing effective compression of pixel data | - | 
 
-Containers
-======
-
-The library is divided into two main concepts: containers and widgets. Containers is designed for grouping widgets, processing their positions and handle their events. Widgets is designed for user interactions: they can be buttons, scrollbars, sliders, etc. 
-
-First let's talk about containers:
-
-GUI.**container**( x, y, width, height ): *table* container
------------------------------------------------------------
-| Type | Parameter | Description |
-| ------ | ------ | ------ |
-| *int* | x | Container's coordinate by x-axis |
-| *int* | y | Container's coordinate by y-axis |
-| *int* | width | Container's width |
-| *int* | height | Container's height |
-
-Container is a grouper for other objects, its behavior is very similar to a folder that contains a some nested files and other folders. To create a container fit by screen size, use this:
-
-```lua
-GUI.fullScreenContainer()
-```
-
-All container child objects are stored in container.**children** table. To add an object to the container, use the following method:
-
-```lua
-container:addChild(<Object>)
-```
-
-After adding object to container, it will get two positions. The first one is **read-only** and represents current object position on screen. It's being calculated automatically and most of the time is used for performing some drawing operations:
-
-```lua
-object.x = 10
-object.y = 20
-```
-
-The second position is local and is used to locate child objects inside parent containers. Most of the time, the developer will work with the local position:
-
-```lua
-object.localX = 2
-object.localY = 4
-```
-
-The hierarchy and positioning of container's children is well presented in the following image:
-
-![](https://i.imgur.com/GJmDQ2j.png)
-
-Containers also have an important feature: any child that extends beyond the bounds of the container will be rendered only within the size of this container:
-
-![](https://i.imgur.com/SBuL1it.png)
-
-Of course, you can add to container another container, add a new ones to the added ones, creating complex hierarchical chains and grouping the child objects at your discretion.
-
-Finally, the most important feature of containers is the automated event processing. For example, it allows buttons to be pressed when user interacts with screen and it allows text input fields receive data from the keyboard.
-
-Every container can start processing events, after which it becomes "main". To do it, To do this, use the following:
-
-```lua
-container:startEventHandling([delay])
-```
-
-If event processing should be terminated, use the following:
-```lua
-container:stopEventHandling()
-```
-
-Once the "main" container sees the event, it recursively analyzes itself and all child objects for the .**eventHandler** function. If the child object has this function, then it runs with the following parameters:
-
-```lua
-function(mainContainer, object, ...eventData)
-    ...
-end
-```
-
-The first parameter is a pointer to the table of the "main" container, the second is a pointer to the table of the child object of the event in question, and the rest is the set of event parameters just like computer.**pullSignal**() do. For example, the "touch" event will generate 6 parameters:
-
-| Parameter | Description |
-| ------ | ------ |
-| "touch" | Event type |
-| "7842f8..." | Screen address |
-| 13 | Screen x |
-| 21 | Screen y |
-| 0 | Mouse button |
-| "ECS" | Username |
-
-The key detail of the event handlers is that if the event belongs to **screen** (touch, drag, drop, scroll), then the child object event handler will be called, and event processing for the remaining unprocessed child objects will be finished.
-
-If you want to skip some event during event processing, call :**consumeEvent**() method. This will prevent all unprocessed child objects to handle current event data.
-
-There is also an option to make any object **transparent** for screen events: just set .**passScreenEvents** = **true** variable for desired object. With this option it's event hanlder will be called as always, but event processing will continue for rest objects in container. This feature works with containers too.
-
-And if the event does not belong to the screen, or the object **does not have** event handler method, the processing of the remaining child elements will continue as always. You can see the logic and the order of event processing in the following image:
-
-![](https://i.imgur.com/eHqIFNN.png)
-
-This object has following properties:
-
-| Type | Property | Description |
-| ------ | ------ | ------ |
-| *table* | .**passScreenEvents** | Optional variable that allows screen events to pass througs objects |
-| *table* | .**children** | Table that contains all child objects of this container |
-| *function* | :**addChild**(*table* child[, *int* atIndex]): *table* child| Add specified object to the container as a child. When you do this, the object's global coordinates will become local. If the optional parameter **atIndex** is specified, then the element will be added to the corresponding position in container.**children** table |
-| *function* | :**removeChildren**([*int* fromIndex, *int* toIndex]) | Remove all child elements of the container. If the optional parameters of the element indices are specified, the deletion will be performed in the appropriate range |
-| *function* | :**startEventHandling**([*float* delay]) | Run the event processing for this container and analyse events for all it's child objects. The  **delay** parameter is similar to computer.**pullSignal** one |
-| *function* | :**stopEventHandling**() | Stop processing events for this container |
-| *function* | :**consumeEvent**() | Consume currently processing event and skip it's handling for rest unprocessed child objects |
-| *function* | :**draw**() | Recursively renders the contents of the container in the order of the queue of its children. I draw your attention to the fact that this method only draws data into the screen buffer. To display changes on the screen, you must use the doubleBuffering.**drawChanges**() method or use method below |
-| *function* | :**drawOnScreen**([*boolean* force]) | This method is similar to :**draw**() with the only difference that after drawing data into the screen buffer, it will automatically display changes on the screen. That is, in fact, it exists solely for the convenience of writing code |
-
-Below is a classic example of the implementation of the container:
-
-```lua
--- Import the library
-local GUI = require("GUI")
-
---------------------------------------------------------------------------------
-
--- Create container fitted to screen resolution
-local mainContainer = GUI.fullScreenContainer()
--- Create and add second container to main container
-local anotherContainer = mainContainer:addChild(GUI.container(3, 2, 50, 25))
--- Create simple event handler for it
-anotherContainer.eventHandler = function(mainContainer, object, ...)
-    print("It works! The event data was: ", ...)
-end
-
---------------------------------------------------------------------------------
-
--- Start processing events for main container
-mainContainer:startEventHandling()
-```
-
-As a result, you will get an amusing output of event data to the terminal:
-
-![](https://i.imgur.com/6xpX9L9.gif)
-
 Objects
 ======
 
-After understanding the concept of containers, you can easily start adding your widgets to the created container. Each widget is the inherited object of GUI.**object**
+The library is divided into three main concepts: applications, containers and widgets. Applications are designed for launching your cool interfaces and handling computer events when user touches the screen, presses some keys, etc. Containers are designed for grouping widgets and processing their positions. Widgets are designed for displaying different stuff: they can represent buttons, scrollbars, sliders, etc. 
 
-GUI.**object**( x, y, width, height ): *table* object
+First let's talk about objects. Every GUI.**object** is a rectangular entity with it's own width and height, it's used as a template for any other stuff like containers and applications. You can easily create object via this method:
+
+GUI.**object**(x, y, width, height)
 -----------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -227,20 +96,77 @@ GUI.**object**( x, y, width, height ): *table* object
 | *int* | width | Object width |
 | *int* | height | Object height |
 
-In addition to the coordinates and size, any object has several universal properties:
+Every created object and it's extended classes have several universal properties:
 
 | Type | Property | Description |
 | ------ | ------ | ------ |
+| *int* | .**x** | Current screen rendering coordinate of object by x-axis |
+| *int* | .**y** | Current screen rendering coordinate of object by y-axis |
+| *int* | .**width** | Object width |
+| *int* | .**height** | Object height |
 | *boolean* | .**hidden** | Whether the object is hidden. If the object is hidden, then its rendering and analysis of system events are ignored |
 | *boolean* | .**disabled** | Whether the object is disabled. If the object is disabled, then it can be rendered, but all system events are ignored |
-| *function* | :**draw**(*table* object) | Mandatory method that is called to render the widget on the screen. It can be defined by the user in any convenient way |
+| *boolean* | .**passScreenEvents** | Optional variable that allows screen events to pass througs objects withount being processed |
+| *function* | :**draw**(*table* object) | Main method that is called to render this object on the screen. It can be defined by the user in any convenient way |
 
-After adding an object to the container using the :**addChild()** method, it acquires additional properties for ease of use:
+Here is example of implementation of simple rectangle object. Don't worry if you don't understand what "application" or "container" means, it's just an template for copy-pasting, just read two sections below and everything will be OK:
+
+```lua
+-- Import this library
+local GUI = require("GUI")
+-- We will also need downloaded double buffering library to render rectangles
+local buffer = require("doubleBuffering")
+
+--------------------------------------------------------------------------------
+
+-- Create new application
+local application = GUI.application()
+
+-- Create and add template object to application
+local object = application:addChild(GUI.object(3, 2, 50, 10))
+-- Create own :draw() method and make it render green rectangle
+object.draw = function(object)
+	buffer.drawRectangle(object.x, object.y, object.width, object.height, 0x33FF80, 0x0, " ")
+end
+
+--------------------------------------------------------------------------------
+
+-- Draw application content once on screen when program starts
+application:draw(true)
+-- Start processing events for application
+application:start()
+```
+
+As a result, we will get a nice green rectangle:
+
+![](https://i.imgur.com/VBrEdyx.png)
+
+Containers
+======
+
+Now let's talk about containers. Container is a object that can store some other objects inside itself, its behavior is very similar to a folder that contains a some nested files and other folders. You can easily create empty container via this method:
+
+GUI.**container**(x, y, width, height) extends GUI.**object**
+-----------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| *int* | x | Container's coordinate by x-axis |
+| *int* | y | Container's coordinate by y-axis |
+| *int* | width | Container's width |
+| *int* | height | Container's height |
+
+All container child objects are stored in container.**children** table. To add an object to the container, use the following method:
+
+```lua
+container:addChild(<Object>)
+```
+
+After adding any object to container using :**addChild()** method, the object will acquire additional properties:
 
 | Type | Property | Description |
 | ------ | ------ | ------ |
 | *table* | .**parent** | A pointer to the parent container of the object |
-| *table* | .**firstParent** | A pointer to the first created container in children hierarchy. For exmaple, if there are many nested containers on screen, this field corresponds to the "main container" of them |
+| *table* | .**firstParent** | A pointer to the first created container in children hierarchy. For exmaple, if there are many nested containers on screen, this field corresponds to the first of them (most of the time it's an GUI.**application**) |
 | *int* | .**localX** | Local position on the x-axis in the parent container |
 | *int* | .**localY** | Local position on the y-axis in the parent container |
 | *function* | :**indexOf**() | Get the index of this object in the parent container (iterative method) |
@@ -250,37 +176,116 @@ After adding an object to the container using the :**addChild()** method, it acq
 | *function* | :**moveToBack**() | Move the object to the beginning of the container children hierarchy |
 | *function* | :**remove**() | Remove this object from the parent container. Roughly speaking, this is a convenient way of self-destruction |
 | *function* | :**addAnimation**(*function* frameHandler, *function* onFinish): *table* animation | Add an animation to this object, see below |
-| [*callback-function* | .**eventHandler**(*container* mainContainer, *object* object, ... *varargs* eventData) ]| An optional method for handling system events, called by the parent container handler. If it exists in the object under consideration, it will be called with the appropriate arguments |
+| [*callback-function* | .**eventHandler**(*container* application, *object* object, ... *varargs* eventData) ]| An optional method for handling system events, called by the parent container handler. If it exists in the object under consideration, it will be called with the appropriate arguments |
 
-An example of the implementation of the simplest rectangle object:
+Let's pay attention on object.**localX** and object.**localY** properties. They're represents local position of child object inside parent container. There's a difference from object.**x** and object.**y**: they're represents *current position of object on screen* and are being calculated automatically for performing drawing operations. But most of the time the developer will work with local position. The hierarchy and positioning of container's children is well presented in the following image:
+
+![](https://i.imgur.com/GJmDQ2j.png)
+
+Containers also have an important feature: any child that extends beyond the bounds of the container will be rendered only within the size of this container:
+
+![](https://i.imgur.com/SBuL1it.png)
+
+Of course, you can add to container another container, add a new ones to the added ones, creating complex hierarchy and grouping the child objects at your will.
+
+Every container has following properties:
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *table* | .**children** | Table that contains all child objects of this container |
+| *function* | :**addChild**(*table* child[, *int* atIndex]): *table* child| Add specified object to the container as a child. When you do this, the object's global coordinates will become local. If the optional parameter **atIndex** is specified, then the element will be added to the corresponding position in container.**children** table |
+| *function* | :**removeChildren**([*int* fromIndex, *int* toIndex]) | Remove all child elements of the container. If the optional parameters of the element indices are specified, the deletion will be performed in the appropriate range |
+
+Applications
+======
+
+Finally, let's talk about applications. Every application is full screen container that can automatically handle computer events. For example, it allows buttons to be pressed when user interacts with screen and it allows text fields receive data from the keyboard.
+
+GUI.**application**([x, y, width, height]) extends GUI.**container**
+-----------------------------------------------------------
+| Type | Parameter | Description |
+| ------ | ------ | ------ |
+| [*int* | x] | Optional coordinate by x-axis |
+| [*int* | y] | Optional coordinate by y-axis |
+| [*int* | width] | Optional width |
+| [*int* | height] | Optional height |
+
+Every application can be launched and start processing events. To do this, use the following:
 
 ```lua
--- We will need downloaded double buffering library to render rectangles
-local buffer = require("doubleBuffering")
+application:start([delay])
+```
+
+If event application should be terminated, use the following:
+```lua
+application:stop()
+```
+
+Once the application receives the event, it recursively analyzes itself and all child objects for the .**eventHandler** function. If the child object has this function, then it runs with following parameters:
+
+```lua
+object.eventHandler = function(application, object, ...eventData)
+    ...
+end
+```
+
+The first parameter is a pointer to the application, the second is a pointer to the child object event handler belongs to, and the rest is the set of event parameters just like computer.**pullSignal**() do. For example, the "touch" event will call .**eventHandler** with 8 arguments:
+
+| Argument | Description |
+| ------ | ------ |
+| table | Pointer to application object |
+| table | Pointer to event handler object |
+| "touch" | Event type |
+| "7842f8..." | Screen address |
+| 13 | Screen x |
+| 21 | Screen y |
+| 0 | Mouse button |
+| "ECS" | Username |
+
+The important detail of the event handlers is that if the event belongs to **screen** (touch, drag, drop, scroll), then the child object event handler will be called, and event processing for the remaining unprocessed child objects will be finished.
+
+If you want to skip some event during event processing, call :**consumeEvent**() method. This will prevent all unprocessed child objects to handle current event data.
+
+There is also an option to make any object **transparent** for screen events: just set .**passScreenEvents** = **true** variable for desired object. With this option it's event hanlder will be called as always, but event processing will continue for rest objects in container. This feature works with containers too.
+
+And if the event does not belong to the screen, or the object **does not have** event handler method, the processing of the remaining child elements will continue as always. You can see the logic and the order of event processing in the following image:
+
+![](https://i.imgur.com/eHqIFNN.png)
+
+Every application has following properties:
+
+| Type | Property | Description |
+| ------ | ------ | ------ |
+| *function* | :**start**([*float* delay]) | Run the event processing for this container and analyse events for all it's child objects. The  **delay** parameter is similar to computer.**pullSignal** one |
+| *function* | :**stop**() | Stop processing events for this container |
+| *function* | :**consumeEvent**() | Consume currently processing event and skip it's handling for rest unprocessed child objects |
+
+Below is a classic example of the implementation of the application:
+
+```lua
+-- Import the library
 local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-
--- Create and add basic object to main container
-local myObject = mainContainer:addChild(GUI.object(3, 2, 50, 10))
--- Create own :draw() method and make it render green rectangle
-myObject.draw = function(object)
-	buffer.drawRectangle(object.x, object.y, object.width, object.height, 0x33FF80, 0x0, " ")
+-- Create new application
+local application = GUI.application()
+-- Create and add second container to application
+local anotherContainer = application:addChild(GUI.container(3, 2, 50, 25))
+-- Create simple event handler for it
+anotherContainer.eventHandler = function(application, object, ...)
+    print("It works! The event data was: ", ...)
 end
 
 --------------------------------------------------------------------------------
 
--- Draw content of main container once on screen when program starts
-mainContainer:drawOnScreen(true)
--- Start processing events for main container
-mainContainer:startEventHandling()
+-- Start processing events for application
+application:start()
 ```
 
-As a result, we will get a nice green rectangle:
+As a result, you will get an amusing output of event data to the terminal:
 
-![](https://i.imgur.com/VBrEdyx.png)
+![](https://i.imgur.com/6xpX9L9.gif)
 
 Animations
 ======
@@ -295,10 +300,10 @@ As described above, to add an animation to object, call <object>:**addAnimation*
 | ------ | ------ | ------ |
 | *table* | .**object** | A pointer to the widget which contains this animation |
 | *float* | .**position** | Current animation playback position. It is always in **[0.0; 1.0]** range, where **0.0** is animation starting and **1.0** is animation ending |
-| *function* | :**start**() | Start animation playback. Interesting detail: during animation playing a main container which has some animated objects will temporary handle events with maximum available speed (i.e. like computer.**pullSignal**(0)). After finishing all animations, event handling delay will be the same it was in beginning |
+| *function* | :**start**() | Start animation playback. Interesting detail: during animation playing an application which has some animated objects will temporary handle events with maximum available speed (i.e. like computer.**pullSignal**(0)). After finishing all animations, event handling delay will be the same it was in beginning |
 | *function* | :**stop**() | Stop animation playback |
 | *function* | :**remove**() | Remove animation from it's widget |
-| *callback-function* | .**frameHandler**(*table* mainContainer, *table* animation) | An animation frame handler. It is called every frame before drawing stuff to screen buffer. The first parameter is a pointer to main container that handling events, and second one - pointer to animation object|
+| *callback-function* | .**frameHandler**(*table* animation) | An animation frame handler. It is called every frame before drawing stuff to screen buffer. A single parameter is a pointer to animation object |
 | *callback-function* | .**onFinish**() | This function is called after finishing animation playback. Important: calling :**stop**() will **not** call this function |
 
 Constants
@@ -325,8 +330,6 @@ This is a rather boring section of the documentation, but it is still necessary 
 | *enum* | GUI.**IO_MODE_SAVE** | Mode for saving data |
 
 Still not tired? Now think how I fucked up writing them during the library development. Shitty constants...
-
-![](https://i.imgur.com/ubwCv1W.jpg?1)
 
 | Type | Constant | Value | Description |
 | ------ | ------ | ------ | ------ |
@@ -364,7 +367,7 @@ Ready-to-use objects
 
 The objects are listed below comes with the library and are written on the instructions of this documentation. If you want, you can make absolutely similar or much more technically advanced widgets without any difficulties.
 
-GUI.**panel**(x, y, width, height, color[, transparency]): *table* panel
+GUI.**panel**(x, y, width, height, color[, transparency]) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -384,24 +387,25 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
+-- Create new application
+local application = GUI.application()
 
--- Add panel that fits main container size
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x262626))
+-- Add panel that fits application
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x262626))
 -- Add smaller red panel
-mainContainer:addChild(GUI.panel(10, 10, mainContainer.width - 20, mainContainer.height - 20, 0x880000))
+application:addChild(GUI.panel(10, 10, application.width - 20, application.height - 20, 0x880000))
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](http://i.imgur.com/Rho1RTl.png?1)
 
-GUI.**text**( x, y, textColor, text ): *table* text
+GUI.**text**(x, y, textColor, text) extends GUI.**object**
 --------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -420,23 +424,23 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-mainContainer:addChild(GUI.text(3, 2, 0xFFFFFF, "Hello, world!"))
-mainContainer:addChild(GUI.text(3, 3, 0xFFFFFF, "How are you? Wanna cast some EEWRD meatballs?"))
+application:addChild(GUI.text(3, 2, 0xFFFFFF, "Hello, world!"))
+application:addChild(GUI.text(3, 3, 0xFFFFFF, "How are you? Wanna cast some EEWRD meatballs?"))
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/ygqLguM.png)
 
-GUI.**label**( x, y, width, height, textColor, text ): *table* label
+GUI.**label**(x, y, width, height, textColor, text) extends GUI.**object**
 --------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -460,30 +464,30 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [left, top] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [center, top] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [right, top] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_RIGHT, GUI.ALIGNMENT_VERTICAL_TOP)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [left, center] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_CENTER)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [center, center] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_CENTER)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [right, center] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_RIGHT, GUI.ALIGNMENT_VERTICAL_CENTER)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [left, bottom] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_BOTTOM)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [center, bottom] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_BOTTOM)
-mainContainer:addChild(GUI.label(1, 1, mainContainer.width, mainContainer.height, 0xFFFFFF, "Label with [right, bottom] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_RIGHT, GUI.ALIGNMENT_VERTICAL_BOTTOM)
+application:addChild(GUI.label(1, 1, application.width, application.height, 0xFFFFFF, "Label with [left, top] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
+application:addChild(GUI.label(1, 1, application.width, application.height, 0xFFFFFF, "Label with [center, top] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
+application:addChild(GUI.label(1, 1, application.width, application.height, 0xFFFFFF, "Label with [right, top] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_RIGHT, GUI.ALIGNMENT_VERTICAL_TOP)
+application:addChild(GUI.label(1, 1, application.width, application.height, 0xFFFFFF, "Label with [left, center] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_CENTER)
+application:addChild(GUI.label(1, 1, application.width, application.height, 0xFFFFFF, "Label with [center, center] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_CENTER)
+application:addChild(GUI.label(1, 1, application.width, application.height, 0xFFFFFF, "Label with [right, center] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_RIGHT, GUI.ALIGNMENT_VERTICAL_CENTER)
+application:addChild(GUI.label(1, 1, application.width, application.height, 0xFFFFFF, "Label with [left, bottom] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_BOTTOM)
+application:addChild(GUI.label(1, 1, application.width, application.height, 0xFFFFFF, "Label with [center, bottom] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_BOTTOM)
+application:addChild(GUI.label(1, 1, application.width, application.height, 0xFFFFFF, "Label with [right, bottom] alighment")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_RIGHT, GUI.ALIGNMENT_VERTICAL_BOTTOM)
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/ftonciY.png)
 
-GUI.**image**( x, y, loadedImage ): *table* image
+GUI.**image**( x, y, loadedImage ) extends GUI.**object**
 -------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -507,23 +511,23 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
--- Load image, create widget from it and add it to main container
-mainContainer:addChild(GUI.image(2, 2, image.load("/Furnance.pic")))
+-- Load image, create widget from it and add it to application
+application:addChild(GUI.image(2, 2, image.load("/Furnance.pic")))
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](http://i91.fastpic.ru/big/2017/0402/80/3b0ec81c3b2f660b9a4c6f18908f4280.png)
 
-GUI.**button**(x, y, width, height, buttonColor, textColor, buttonPressedColor, textPressedColor, text): *table* button
+GUI.**button**(x, y, width, height, buttonColor, textColor, buttonPressedColor, textPressedColor, text) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -568,54 +572,54 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
 -- Add a regular button
-local regularButton = mainContainer:addChild(GUI.button(2, 2, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Regular button"))
+local regularButton = application:addChild(GUI.button(2, 2, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Regular button"))
 regularButton.onTouch = function()
 	GUI.alert("Regular button was pressed")
 end
 
 -- Add a regular button with disabled state
-local disabledButton = mainContainer:addChild(GUI.button(2, 6, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Disabled button"))
+local disabledButton = application:addChild(GUI.button(2, 6, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Disabled button"))
 disabledButton.disabled = true
 
 -- Add a regular button with switchMode state
-local switchButton = mainContainer:addChild(GUI.button(2, 10, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Switch button"))
+local switchButton = application:addChild(GUI.button(2, 10, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Switch button"))
 switchButton.switchMode = true
 switchButton.onTouch = function()
 	GUI.alert("Switch button was pressed")
 end
 
 -- Add a regular button with disabled animation
-local notAnimatedButton = mainContainer:addChild(GUI.button(2, 14, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Not animated button"))
+local notAnimatedButton = application:addChild(GUI.button(2, 14, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Not animated button"))
 notAnimatedButton.animated = false
 notAnimatedButton.onTouch = function()
 	GUI.alert("Not animated button was pressed")
 end
 
 -- Add a rounded button
-mainContainer:addChild(GUI.roundedButton(2, 18, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Rounded button")).onTouch = function()
+application:addChild(GUI.roundedButton(2, 18, 30, 3, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Rounded button")).onTouch = function()
 	GUI.alert("Rounded button was pressed")
 end
 
 -- Add a framed button
-mainContainer:addChild(GUI.framedButton(2, 22, 30, 3, 0xFFFFFF, 0xFFFFFF, 0x880000, 0x880000, "Framed button")).onTouch = function()
+application:addChild(GUI.framedButton(2, 22, 30, 3, 0xFFFFFF, 0xFFFFFF, 0x880000, 0x880000, "Framed button")).onTouch = function()
 	GUI.alert("Framed button was pressed")
 end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/Q2sX0P5.gif)
 
-GUI.**actionButtons**(x, y[, fat]): *table* actionButtons
+GUI.**actionButtons**(x, y[, fat]) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -640,11 +644,11 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-local actionButtonsRegular = mainContainer:addChild(GUI.actionButtons(3, 2, false))
-local actionButtonsFat = mainContainer:addChild(GUI.actionButtons(3, 4, true))
+local actionButtonsRegular = application:addChild(GUI.actionButtons(3, 2, false))
+local actionButtonsFat = application:addChild(GUI.actionButtons(3, 4, true))
 
 actionButtonsRegular.close.onTouch = function()
 	-- Do something when "close" button was touched
@@ -652,15 +656,15 @@ end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/lYUS7fl.png)
 
-GUI.**input**(x, y, width, height, backgroundColor, textColor, placeholderTextColor, backgroundFocusedColor, textFocusedColor, text[, placeholderText, eraseTextOnFocus, textMask]): *table* input
+GUI.**input**(x, y, width, height, backgroundColor, textColor, placeholderTextColor, backgroundFocusedColor, textFocusedColor, text[, placeholderText, eraseTextOnFocus, textMask]) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -697,24 +701,24 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-mainContainer:addChild(GUI.input(2, 2, 30, 3, 0xEEEEEE, 0x555555, 0x999999, 0xFFFFFF, 0x2D2D2D, "Hello world", "Placeholder text")).onInputFinished = function()
+application:addChild(GUI.input(2, 2, 30, 3, 0xEEEEEE, 0x555555, 0x999999, 0xFFFFFF, 0x2D2D2D, "Hello world", "Placeholder text")).onInputFinished = function()
 	GUI.alert("Input finished!")
 end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](http://i.imgur.com/njPN0eg.gif)
 
-GUI.**slider**(x, y, width, primaryColor, secondaryColor, pipeColor, valueColor, minimumValue, maximumValue, value[, showCornerValues, currentValuePrefix, currentValuePostfix]): *table* slider
+GUI.**slider**(x, y, width, primaryColor, secondaryColor, pipeColor, valueColor, minimumValue, maximumValue, value[, showCornerValues, currentValuePrefix, currentValuePostfix]) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -749,10 +753,10 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-local slider = mainContainer:addChild(GUI.slider(4, 2, 30, 0x66DB80, 0x0, 0xFFFFFF, 0xAAAAAA, 0, 100, 50, true, "Prefix: ", " postfix"))
+local slider = application:addChild(GUI.slider(4, 2, 30, 0x66DB80, 0x0, 0xFFFFFF, 0xAAAAAA, 0, 100, 50, true, "Prefix: ", " postfix"))
 slider.roundValues = true
 slider.onValueChanged = function()
 	-- Do something when slider's value changed
@@ -760,15 +764,15 @@ end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](http://i.imgur.com/F7jrTPM.gif)
 
-GUI.**switch**(x, y, width, primaryColor, secondaryColor, pipeColor, state): *table* switch
+GUI.**switch**(x, y, width, primaryColor, secondaryColor, pipeColor, state) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -797,26 +801,26 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-local switch1 = mainContainer:addChild(GUI.switch(3, 2, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, true))
-local switch2 = mainContainer:addChild(GUI.switch(3, 4, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, false))
+local switch1 = application:addChild(GUI.switch(3, 2, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, true))
+local switch2 = application:addChild(GUI.switch(3, 4, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, false))
 switch2.onStateChanged = function(state)
 	GUI.alert("Switch state changed!")
 end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](http://i.imgur.com/prBIAsL.gif)
 
-GUI.**switchAndLabel**(x, y, width, switchWidth, primaryColor, secondaryColor, pipeColor, textColor, text, switchState): *table* switchAndLabel
+GUI.**switchAndLabel**(x, y, width, switchWidth, primaryColor, secondaryColor, pipeColor, textColor, text, switchState) extends GUI.**container**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -846,23 +850,23 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-mainContainer:addChild(GUI.switchAndLabel(2, 2, 25, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, 0x999999, "Sample text 1:", true))
-mainContainer:addChild(GUI.switchAndLabel(2, 4, 25, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, 0x999999, "Sample text 2:", false))
+application:addChild(GUI.switchAndLabel(2, 2, 25, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, 0x999999, "Sample text 1:", true))
+application:addChild(GUI.switchAndLabel(2, 4, 25, 8, 0x66DB80, 0x1D1D1D, 0xEEEEEE, 0x999999, "Sample text 2:", false))
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](http://i.imgur.com/4zKOla9.gif)
 
-GUI.**colorSelector**(x, y, width, height, color, text): *table* colorSelector
+GUI.**colorSelector**(x, y, width, height, color, text) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -888,24 +892,24 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-mainContainer:addChild(GUI.colorSelector(2, 2, 30, 3, 0xFF55FF, "Choose color")).onColorSelected = function()
+application:addChild(GUI.colorSelector(2, 2, 30, 3, 0xFF55FF, "Choose color")).onColorSelected = function()
 	-- Do something after choosing color
 end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](http://i.imgur.com/QVxu2N0.gif)
 
-GUI.**list**(x, y, width, height, itemSize, spacing, backgroundColor, textColor, alternateBackgroundColor, alternateTextColor, backgroundSelectedColor, textSelectedColor[, offsetMode]): *table* list
+GUI.**list**(x, y, width, height, itemSize, spacing, backgroundColor, textColor, alternateBackgroundColor, alternateTextColor, backgroundSelectedColor, textSelectedColor[, offsetMode]) extends GUI.**layout**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -943,11 +947,11 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
 -- Create vertically oriented list
-local verticalList = mainContainer:addChild(GUI.list(3, 2, 25, 30, 3, 0, 0xE1E1E1, 0x4B4B4B, 0xD2D2D2, 0x4B4B4B, 0x3366CC, 0xFFFFFF, false))
+local verticalList = application:addChild(GUI.list(3, 2, 25, 30, 3, 0, 0xE1E1E1, 0x4B4B4B, 0xD2D2D2, 0x4B4B4B, 0x3366CC, 0xFFFFFF, false))
 verticalList:addItem("Hello world")
 verticalList:addItem("This is test").onTouch = function()
 	GUI.alert("Selected item: " .. verticalList.selectedItem)
@@ -956,7 +960,7 @@ verticalList:addItem("Beautiful")
 verticalList:addItem("Like a shit")
 
 -- Create horizontally oriented list
-local horizontalList = mainContainer:addChild(GUI.list(34, 2, 100, 3, 2, 0, 0xE1E1E1, 0x4B4B4B, 0xE1E1E1, 0x4B4B4B, 0x696969, 0xFFFFFF, true))
+local horizontalList = application:addChild(GUI.list(34, 2, 100, 3, 2, 0, 0xE1E1E1, 0x4B4B4B, 0xE1E1E1, 0x4B4B4B, 0x696969, 0xFFFFFF, true))
 horizontalList:setDirection(GUI.DIRECTION_HORIZONTAL)
 horizontalList:setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
 horizontalList:addItem("Applications")
@@ -966,15 +970,15 @@ horizontalList:addItem("Wallpapers")
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/lYzufn2.gif)
 
-GUI.**menu**(x, y, width, backgroundColor, textColor, backgroundPressedColor, textPressedColor[, backgroundTransparency]): *table* menu
+GUI.**menu**(x, y, width, backgroundColor, textColor, backgroundPressedColor, textPressedColor[, backgroundTransparency]) extends GUI.**layout**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1003,11 +1007,11 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
--- Add menu object to main container
-local menu = mainContainer:addChild(GUI.menu(1, 1, mainContainer.width, 0xEEEEEE, 0x666666, 0x3366CC, 0xFFFFFF))
+-- Add menu object to application
+local menu = application:addChild(GUI.menu(1, 1, application.width, 0xEEEEEE, 0x666666, 0x3366CC, 0xFFFFFF))
 -- Add first item with black color. Attack a callback-function to it
 menu:addItem("MineCode IDE", 0x0).onTouch = function()
 	GUI.alert("Hello world!")
@@ -1028,15 +1032,15 @@ menu:addItem("About")
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/OHOhvcy.gif)
 
-GUI.**comboBox**(x, y, width, elementHeight, backgroundColor, textColor, arrowBackgroundColor, arrowTextColor): *table* comboBox
+GUI.**comboBox**(x, y, width, elementHeight, backgroundColor, textColor, arrowBackgroundColor, arrowTextColor) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1070,10 +1074,10 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-local comboBox = mainContainer:addChild(GUI.comboBox(3, 2, 30, 3, 0xEEEEEE, 0x2D2D2D, 0xCCCCCC, 0x888888))
+local comboBox = application:addChild(GUI.comboBox(3, 2, 30, 3, 0xEEEEEE, 0x2D2D2D, 0xCCCCCC, 0x888888))
 comboBox:addItem(".PNG")
 comboBox:addItem(".JPG").onTouch = function()
 	-- Do something when .JPG was selected
@@ -1083,15 +1087,15 @@ comboBox:addItem(".PIC")
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](http://i.imgur.com/6ROzLAc.gif)
 
-GUI.**resizer**(x, y, width, height, resizerColor, arrowColor): *table* resizer
+GUI.**resizer**(x, y, width, height, resizerColor, arrowColor) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1119,20 +1123,20 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
 -- Add a panel that symbolizes the system window, the size of which we will change
-local panel = mainContainer:addChild(GUI.panel(3, 2, 30, 10, 0xE1E1E1))
+local panel = application:addChild(GUI.panel(3, 2, 30, 10, 0xE1E1E1))
 -- Add a resizer, by default located in the right part of the window. Make the width of the resizer at least 3 to handle the drag/drop events in both directions
-local resizer = mainContainer:addChild(GUI.resizer(panel.localX + panel.width - 2, panel.localY + math.floor(panel.height / 2 - 2), 3, 4, 0xAAAAAA, 0x0))
+local resizer = application:addChild(GUI.resizer(panel.localX + panel.width - 2, panel.localY + math.floor(panel.height / 2 - 2), 3, 4, 0xAAAAAA, 0x0))
 
 -- This function will be called during the "drag" event, when the user moves over the resizer
 resizer.onResize = function(dragWidth, dragHeight)
 	panel.width = panel.width + dragWidth
 	resizer.localX = resizer.localX + dragWidth
 
-	mainContainer:drawOnScreen()
+	application:draw()
 end
 
 -- This function will be called on "drop" event
@@ -1142,15 +1146,15 @@ end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/PvARN8j.gif)
 
-GUI.**progressBar**(x, y, width, primaryColor, secondaryColor, valueColor, value[, thin, showValue, valuePrefix, valuePostfix]): *table* progressBar
+GUI.**progressBar**(x, y, width, primaryColor, secondaryColor, valueColor, value[, thin, showValue, valuePrefix, valuePostfix]) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1181,22 +1185,22 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-mainContainer:addChild(GUI.progressBar(2, 2, 80, 0x3366CC, 0xEEEEEE, 0xEEEEEE, 80, true, true, "Value prefix: ", " value postfix"))
+application:addChild(GUI.progressBar(2, 2, 80, 0x3366CC, 0xEEEEEE, 0xEEEEEE, 80, true, true, "Value prefix: ", " value postfix"))
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](http://i89.fastpic.ru/big/2017/0402/f1/ef1da27531ccf899eb9eb59c010180f1.png)
 
-GUI.**filesystemTree**(x, y, width, height, backgroundColor, directoryColor, fileColor, arrowColor, backgroundSelectionColor, textSelectionColor, arrowSelectionColor, disabledColor, scrollBarBackground, scrollBarForeground, showMode, selectionMode): *table* filesystemTree
+GUI.**filesystemTree**(x, y, width, height, backgroundColor, directoryColor, fileColor, arrowColor, backgroundSelectionColor, textSelectionColor, arrowSelectionColor, disabledColor, scrollBarBackground, scrollBarForeground, showMode, selectionMode) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1238,22 +1242,22 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x262626))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x262626))
 
-local tree1 = mainContainer:addChild(GUI.filesystemTree(3, 2, 30, 41, 0xCCCCCC, 0x3C3C3C, 0x3C3C3C, 0x999999, 0x3C3C3C, 0xE1E1E1, 0xBBBBBB, 0xAAAAAA, 0xBBBBBB, 0x444444, GUI.IO_MODE_BOTH, GUI.IO_MODE_FILE))
+local tree1 = application:addChild(GUI.filesystemTree(3, 2, 30, 41, 0xCCCCCC, 0x3C3C3C, 0x3C3C3C, 0x999999, 0x3C3C3C, 0xE1E1E1, 0xBBBBBB, 0xAAAAAA, 0xBBBBBB, 0x444444, GUI.IO_MODE_BOTH, GUI.IO_MODE_FILE))
 tree1:updateFileList()
 tree1.onItemSelected = function(path)
 	GUI.alert("Something was selected, the path is: \"" .. path .. "\"")
 end
 
-local tree2 = mainContainer:addChild(GUI.filesystemTree(34, 2, 30, 41, 0xCCCCCC, 0x3C3C3C, 0x3C3C3C, 0x999999, 0x3C3C3C, 0xE1E1E1, 0xBBBBBB, 0xAAAAAA, 0xBBBBBB, 0x444444, GUI.IO_MODE_FILE, GUI.IO_MODE_FILE))
+local tree2 = application:addChild(GUI.filesystemTree(34, 2, 30, 41, 0xCCCCCC, 0x3C3C3C, 0x3C3C3C, 0x999999, 0x3C3C3C, 0xE1E1E1, 0xBBBBBB, 0xAAAAAA, 0xBBBBBB, 0x444444, GUI.IO_MODE_FILE, GUI.IO_MODE_FILE))
 tree2:updateFileList()
 tree2.onItemSelected = function(path)
 	GUI.alert("File was selected, the path is: \"" .. path .. "\"")
 end
 
-local tree3 = mainContainer:addChild(GUI.filesystemTree(66, 2, 30, 41, 0xCCCCCC, 0x3C3C3C, 0x3C3C3C, 0x999999, 0x3C3C3C, 0xE1E1E1, 0xBBBBBB, 0xAAAAAA, 0xBBBBBB, 0x444444, GUI.IO_MODE_DIRECTORY, GUI.IO_MODE_DIRECTORY))
+local tree3 = application:addChild(GUI.filesystemTree(66, 2, 30, 41, 0xCCCCCC, 0x3C3C3C, 0x3C3C3C, 0x999999, 0x3C3C3C, 0xE1E1E1, 0xBBBBBB, 0xAAAAAA, 0xBBBBBB, 0x444444, GUI.IO_MODE_DIRECTORY, GUI.IO_MODE_DIRECTORY))
 tree3:updateFileList()
 tree3.onItemSelected = function(path)
 	GUI.alert("Directory was selected, the path is: \"" .. path .. "\"")
@@ -1261,15 +1265,15 @@ end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/igGozFP.gif)
 
-GUI.**filesystemChooser**(x, y, width, height, backgroundColor, textColor, tipBackgroundColor, tipTextColor, initialText, sumbitButtonText, cancelButtonText, placeholderText, filesystemDialogMode, filesystemDialogPath): *table* filesystemChooser
+GUI.**filesystemChooser**(x, y, width, height, backgroundColor, textColor, tipBackgroundColor, tipTextColor, initialText, sumbitButtonText, cancelButtonText, placeholderText, filesystemDialogMode, filesystemDialogPath) extends GUI.**object**
 --------------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1306,10 +1310,10 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x262626))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x262626))
 
-local filesystemChooser = mainContainer:addChild(GUI.filesystemChooser(2, 2, 30, 3, 0xE1E1E1, 0x888888, 0x3C3C3C, 0x888888, nil, "Open", "Cancel", "Choose", "/"))
+local filesystemChooser = application:addChild(GUI.filesystemChooser(2, 2, 30, 3, 0xE1E1E1, 0x888888, 0x3C3C3C, 0x888888, nil, "Open", "Cancel", "Choose", "/"))
 filesystemChooser:setMode(GUI.IO_MODE_OPEN, GUI.IO_MODE_FILE)
 filesystemChooser.onSubmit = function(path)
 	GUI.alert("File \"" .. path .. "\" was selected")
@@ -1317,15 +1321,15 @@ end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/F0ch8yQ.gif)
 
-GUI.**codeView**(x, y, width, height, fromSymbol, fromLine, maximumLineLength, selections, highlights, syntaxPatterns, syntaxColorScheme, syntaxHighlight, lines): *table* codeView
+GUI.**codeView**(x, y, width, height, fromSymbol, fromLine, maximumLineLength, selections, highlights, syntaxPatterns, syntaxColorScheme, syntaxHighlight, lines) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1364,11 +1368,11 @@ local unicode = require("unicode")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x0))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x0))
 
--- Add codeView object to main container
-local codeView = mainContainer:addChild(GUI.codeView(2, 2, 72, 22, 1, 1, 1, {}, {}, GUI.LUA_SYNTAX_PATTERNS, GUI.LUA_SYNTAX_COLOR_SCHEME, true, {}))
+-- Add codeView object to application
+local codeView = application:addChild(GUI.codeView(2, 2, 72, 22, 1, 1, 1, {}, {}, GUI.LUA_SYNTAX_PATTERNS, GUI.LUA_SYNTAX_COLOR_SCHEME, true, {}))
 
 -- Open file and read it's lines
 local counter = 1
@@ -1386,15 +1390,15 @@ end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/UQJxhCn.png)
 
-GUI.**chart**(x, y, width, height, axisColor, axisValueColor, axisHelpersColor, chartColor, xAxisValueInterval, yAxisValueInterval, xAxisPostfix, yAxisPostfix, fillChartArea, values): *table* chart
+GUI.**chart**(x, y, width, height, axisColor, axisValueColor, axisHelpersColor, chartColor, xAxisValueInterval, yAxisValueInterval, xAxisPostfix, yAxisPostfix, fillChartArea, values) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1422,25 +1426,25 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-local chart = mainContainer:addChild(GUI.chart(2, 2, 100, 30, 0xEEEEEE, 0xAAAAAA, 0x888888, 0xFFDB40, 0.25, 0.25, "s", "t", true, {}))
+local chart = application:addChild(GUI.chart(2, 2, 100, 30, 0xEEEEEE, 0xAAAAAA, 0x888888, 0xFFDB40, 0.25, 0.25, "s", "t", true, {}))
 for i = 1, 100 do
 	table.insert(chart.values, {i, math.random(0, 80)})
 end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](http://i91.fastpic.ru/big/2017/0402/5b/66ff353492298f6a0c9b01c0fc8a525b.png)
 
-GUI.**brailleCanvas**(x, y, width, height): *table* brailleCanvas
+GUI.**brailleCanvas**(x, y, width, height) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1466,13 +1470,13 @@ local GUI = dofile("/lib/GUI.lua")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x262626))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x262626))
 
 -- Add a text label for size comparison
-mainContainer:addChild(GUI.label(3, 2, 30, 1, 0xFFFFFF, "Text for size comparison"))
+application:addChild(GUI.label(3, 2, 30, 1, 0xFFFFFF, "Text for size comparison"))
 -- Add BrailleCanvas with 30x15 screen pixels
-local brailleCanvas = mainContainer:addChild(GUI.brailleCanvas(3, 4, 30, 15))
+local brailleCanvas = application:addChild(GUI.brailleCanvas(3, 4, 30, 15))
 
 -- Let's draw! First we will create "border" around object with two vertical lines
 local canvasWidthInBraillePixels = brailleCanvas.width * 2
@@ -1500,15 +1504,15 @@ brailleCanvas:fill(25, 25, 10, 10, false)
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/FPWbQkv.png)
 
-GUI.**scrollBar**(x, y, width, height, backgroundColor, foregroundColor, minimumValue, maximumValue, value, shownValueCount, onScrollValueIncrement, thinMode): *table* scrollBar
+GUI.**scrollBar**(x, y, width, height, backgroundColor, foregroundColor, minimumValue, maximumValue, value, shownValueCount, onScrollValueIncrement, thinMode) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1542,32 +1546,32 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
--- Add vertical scrollBar to main container
-local verticalScrollBar = mainContainer:addChild(GUI.scrollBar(2, 3, 1, 15, 0x444444, 0x888888, 1, 100, 1, 10, 1, true))
+-- Add vertical scrollBar to application
+local verticalScrollBar = application:addChild(GUI.scrollBar(2, 3, 1, 15, 0x444444, 0x888888, 1, 100, 1, 10, 1, true))
 verticalScrollBar.onTouch = function()
 	GUI.alert("Vertical scrollbar was touched")
 end
 
 -- Add horizontal too
-local horizontalScrollBar = mainContainer:addChild(GUI.scrollBar(3, 2, 60, 1, 0x444444, 0x888888, 1, 100, 1, 10, 1, true))
+local horizontalScrollBar = application:addChild(GUI.scrollBar(3, 2, 60, 1, 0x444444, 0x888888, 1, 100, 1, 10, 1, true))
 horizontalScrollBar.onTouch = function()
 	-- Do something on scrollBar touch
 end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/XrqDvBk.png)
 
-GUI.**textBox**(x, y, width, height, backgroundColor, textColor, lines, currentLine, horizontalOffset, verticalOffset[, autoWrap, autoHeight]): *table* textBox
+GUI.**textBox**(x, y, width, height, backgroundColor, textColor, lines, currentLine, horizontalOffset, verticalOffset[, autoWrap, autoHeight]) extends GUI.**object**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1608,10 +1612,10 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-local textBox = mainContainer:addChild(GUI.textBox(2, 2, 32, 16, 0xEEEEEE, 0x2D2D2D, {}, 1, 1, 0))
+local textBox = application:addChild(GUI.textBox(2, 2, 32, 16, 0xEEEEEE, 0x2D2D2D, {}, 1, 1, 0))
 table.insert(textBox.lines, {text = "Sample colored line ", color = 0x880000})
 for i = 1, 100 do
 	table.insert(textBox.lines, "Sample line " .. i)
@@ -1619,8 +1623,8 @@ end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
@@ -1632,7 +1636,7 @@ Ready-to-use containers
 
 There are various containers listed below that support all features of GUI.**container**, however they have a special functional and methods
 
-GUI.**layout**(x, y, width, height, columnCount, rowCount): *table* layout
+GUI.**layout**(x, y, width, height, columnCount, rowCount) extends GUI.**container**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1683,11 +1687,11 @@ local GUI = require("GUI")
 
 ------------------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
--- Add an layout with 5x1 grid size to main container
-local layout = mainContainer:addChild(GUI.layout(1, 1, mainContainer.width, mainContainer.height, 5, 1))
+-- Add an layout with 5x1 grid size to application
+local layout = application:addChild(GUI.layout(1, 1, application.width, application.height, 5, 1))
 
 -- Add 9 buttons to layout and assign specified grid position to them
 -- As you can see, button object is being created first - after that it's being added as child object to layout
@@ -1719,20 +1723,20 @@ layout.children[1].onTouch = function()
 	-- Enable automatic children width calculation for last column with offset of 4 pixels (2 on each side)
 	layout:setFitting(3, 1, true, false, 4, 0)
 	-- Draw changes on screen
-	mainContainer:drawOnScreen()
+	application:draw()
 end
 
 ------------------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/DnNSX45.gif)
 
-GUI.**window**(x, y, width, height): *table* window
+GUI.**window**(x, y, width, height) extends GUI.**container**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1755,7 +1759,7 @@ This object has following properties:
 
 In addition to the empty window template, there are also several prepared window designs:
 
-GUI.**filledWindow**(x, y, width, height, fillColor): *table* window
+GUI.**filledWindow**(x, y, width, height, fillColor) extends GUI.**window**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1773,7 +1777,7 @@ This object has following properties:
 | *table* | .**backgroundPanel** | Pointer to GUI.**panel** object |
 | *table* | .**actionButtons** | Pointer to GUI.**actionButtons** object |
 
-GUI.**titledWindow**(x, y, width, height, title, addTitlePanel): *table* window
+GUI.**titledWindow**(x, y, width, height, title, addTitlePanel) extends GUI.**window**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1794,7 +1798,7 @@ This object has following properties:
 | *table* | .**titleLabel** | Pointer to title GUI.**label** object |
 | *table* | .**titlePanel** | Pointer to title GUI.**panel** object. Has a **nil** value if not specified |
 
-GUI.**tabbedWindow**(x, y, width, height): *table* window
+GUI.**tabbedWindow**(x, y, width, height) extends GUI.**window**
 ------------------------------------------------------------------------
 
 Creates a window with background panel, action buttons and tab bar objects
@@ -1817,17 +1821,17 @@ local GUI = require("GUI")
 
 ------------------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x1E1E1E))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x1E1E1E))
 
--- First, add an empty window to main container
-local window1 = mainContainer:addChild(GUI.window(90, 6, 60, 20))
+-- First, add an empty window to application
+local window1 = application:addChild(GUI.window(90, 6, 60, 20))
 -- Add a background panel and text widget to it
 window1:addChild(GUI.panel(1, 1, window1.width, window1.height, 0xF0F0F0))
 window1:addChild(GUI.text(3, 2, 0x2D2D2D, "Regular window example"))
 
 -- Next add tabbed window
-local window2 = mainContainer:addChild(GUI.tabbedWindow(4, 3, 60, 20))
+local window2 = application:addChild(GUI.tabbedWindow(4, 3, 60, 20))
 -- Use pointer to GUI.tabBar object to add some tabs
 window2.tabBar:addItem("Apps")
 window2.tabBar:addItem("Libs")
@@ -1836,23 +1840,23 @@ window2.tabBar:addItem("Updates")
 -- Add and .onTouch() method to close button to make window be able to close
 window2.actionButtons.close.onTouch = function()
 	window2:close()
-	mainContainer:drawOnScreen()
+	application:draw()
 end
 -- Do the same with maximize button
 window2.actionButtons.maximize.onTouch = function()
 	window2:maximize()
-	mainContainer:drawOnScreen()
+	application:draw()
 end
 -- Add callback method which is called on window resize. Use passed parameters to set sizes of window child objects
 window2.onResize = function(newWidth, newHeight)
 	window2.tabBar.width = newWidth
 	window2.backgroundPanel.width = newWidth
 	window2.backgroundPanel.height = newHeight - window2.tabBar.height
-	mainContainer:drawOnScreen()
+	application:draw()
 end
 
 -- Finally add titled window
-local window3 = mainContainer:addChild(GUI.titledWindow(50, 22, 60, 20, "Titled window example", true))
+local window3 = application:addChild(GUI.titledWindow(50, 22, 60, 20, "Titled window example", true))
 -- Attach an single cell layout to it
 local layout = window3:addChild(GUI.layout(1, 2, window3.width, window3.height - 1, 1, 1))
 -- Add some stuff to layout
@@ -1861,15 +1865,15 @@ layout:addChild(GUI.button(1, 1, 36, 3, 0xB4B4B4, 0xFFFFFF, 0x969696, 0xB4B4B4, 
 
 ------------------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/EZO66Ce.gif)
 
-GUI.**palette**(x, y, initialColor): *table* palette
+GUI.**palette**(x, y, initialColor) extends GUI.**window**
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1893,11 +1897,11 @@ local GUI = require("GUI")
 
 ------------------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x1E1E1E))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x1E1E1E))
 
--- Add a palette window to main container
-local palette = mainContainer:addChild(GUI.palette(3, 2, 0x9900FF))
+-- Add a palette window to application
+local palette = application:addChild(GUI.palette(3, 2, 0x9900FF))
 -- Specify an .onTouch() callback-function to submit button
 palette.submitButton.onTouch = function()
 	GUI.alert("You've been selected a color: " .. string.format("0x%X", palette.color.integer))
@@ -1905,8 +1909,8 @@ end
 
 ------------------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
@@ -1942,7 +1946,7 @@ Result:
 
 ![](http://i.imgur.com/s8mA2FL.png?1)
 
-GUI.**addContextMenu**(parentContainer, x, y[, backgroundColor, textColor, backgroundPressedColor, textPressedColor, disabledColor, separatorColor, backgroundTransparency, shadowTransparency]): *table* contextMenu
+GUI.**addContextMenu**(parentContainer, x, y[, backgroundColor, textColor, backgroundPressedColor, textPressedColor, disabledColor, separatorColor, backgroundTransparency, shadowTransparency])
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -1979,13 +1983,13 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
+local application = GUI.application()
 
 -- Add an background panel and attack event handler to it
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D)).eventHandler = function(mainContainer, object, e1, e2, e3, e4)
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D)).eventHandler = function(application, object, e1, e2, e3, e4)
 	if e1 == "touch" then
-		-- Add context menu object to main container and some items to it
-		local contextMenu = GUI.addContextMenu(mainContainer, e3, e4)
+		-- Add context menu object to application and some items to it
+		local contextMenu = GUI.addContextMenu(application, e3, e4)
 		contextMenu:addItem("New")
 		contextMenu:addItem("Open").onTouch = function()
 			-- Do something to open file or whatever
@@ -2009,21 +2013,21 @@ mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height
 			contextMenu:addItem("Do something " .. i)
 		end
 
-		mainContainer:drawOnScreen()
+		application:draw()
 	end
 end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/JqGXAs1.gif)
 
-GUI.**addFilesystemDialog**(parentContainer, addPanel, ...): *table* filesystemDialog
+GUI.**addFilesystemDialog**(parentContainer, addPanel, ...)
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -2047,10 +2051,10 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
-local filesystemDialog = GUI.addFilesystemDialog(mainContainer, false, 50, math.floor(mainContainer.height * 0.8), "Open", "Cancel", "File name", "/")
+local filesystemDialog = GUI.addFilesystemDialog(application, false, 50, math.floor(application.height * 0.8), "Open", "Cancel", "File name", "/")
 filesystemDialog:setMode(GUI.IO_MODE_OPEN, GUI.IO_MODE_FILE)
 filesystemDialog:addExtensionFilter(".pic")
 filesystemDialog.onSubmit = function(path)
@@ -2061,15 +2065,15 @@ filesystemDialog:show()
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
 
 ![](https://i.imgur.com/4WqJBVk.gif)
 
-GUI.**addBackgroundContainer**(parentContainer, addPanel, addLayout[, title]): *table* palette
+GUI.**addBackgroundContainer**(parentContainer, addPanel, addLayout[, title])
 ------------------------------------------------------------------------
 | Type | Parameter | Description |
 | ------ | ------ | ------ |
@@ -2095,21 +2099,21 @@ local GUI = require("GUI")
 
 --------------------------------------------------------------------------------
 
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
--- Add a button to main container and .onTouch() method
-mainContainer:addChild(GUI.button(3, 2, 36, 3, 0xE1E1E1, 0x4B4B4B, 0xA5A5A5, 0x0, "Add container")).onTouch = function()
-	-- Add a background container to main container with background panel and layout
-	local container = GUI.addBackgroundContainer(mainContainer, true, true, "Hello world")
+-- Add a button to application and .onTouch() method
+application:addChild(GUI.button(3, 2, 36, 3, 0xE1E1E1, 0x4B4B4B, 0xA5A5A5, 0x0, "Add container")).onTouch = function()
+	-- Add a background container to application with background panel and layout
+	local container = GUI.addBackgroundContainer(application, true, true, "Hello world")
 	-- Add a switch and label to it's layout
 	container.layout:addChild(GUI.switchAndLabel(1, 1, 36, 8, 0x66DB80, 0x2D2D2D, 0xE1E1E1, 0x878787, "I like to suck big dicks:", true))
 end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result:
@@ -2223,7 +2227,7 @@ end
 
 -- Create a switch event handler that is called after clicking on it.
 -- Again, use local functions for stuff like this
-local function switchEventHandler(mainContainer, switch, event)
+local function switchEventHandler(application, switch, event)
 	if event == "touch" then
 		-- Change switch state to opposite
 		switch.state = not switch.state
@@ -2232,7 +2236,7 @@ local function switchEventHandler(mainContainer, switch, event)
 			-- As an animation frame handler you need a function that will set "pipe" position dependent of current animation position
 			-- Remember that animation.position is always in [0.0; 1.0] range
 			-- If switch state has a false value, you need to invert animation position to play it reversed visually
-			function(mainContainer, animation)
+			function(application, animation)
 				if switch.state then
 					switch.pipePosition = math.round(1 + animation.position * (switch.bodyWidth - 2))
 				else	
@@ -2240,7 +2244,7 @@ local function switchEventHandler(mainContainer, switch, event)
 				end
 			end,
 			-- Specify a function that is called after animation finishing
-			function(mainContainer, animation)
+			function(application, animation)
 				-- Remove animation object from switch
 				animation:remove()
 				-- You can also create callback-functions support like this
@@ -2282,9 +2286,9 @@ end
 
 --------------------------------------------------------------------------------
 
--- Now let's create main container and fill it with our cool widget
-local mainContainer = GUI.fullScreenContainer()
-mainContainer:addChild(GUI.panel(1, 1, mainContainer.width, mainContainer.height, 0x2D2D2D))
+-- Now let's create application and fill it with our cool widget
+local application = GUI.application()
+application:addChild(GUI.panel(1, 1, application.width, application.height, 0x2D2D2D))
 
 -- First, specify required switch count
 -- Next, create some variables dependent of it: HUE from HSB color space, coordinates and animation duration
@@ -2298,10 +2302,10 @@ local animationDurationMax = 1.5
 local animationDuration = animationDurationMin
 local animationDurationStep = (animationDurationMax - animationDurationMin) / count
 
--- Add specified count of swithes to main container
+-- Add specified count of swithes to application
 for i = 1, count do
 	local switchColor = color.HSBToInteger(hue, 1, 1)
-	local switch = mainContainer:addChild(
+	local switch = application:addChild(
 		newSwitch(x, y, 19, 7,
 			switchColor,
 			0x1D1D1D,
@@ -2318,15 +2322,15 @@ for i = 1, count do
 	hue = hue + hueStep
 	animationDuration = animationDuration + animationDurationStep
 
-	if y >= mainContainer.height then
+	if y >= application.height then
 		x, y = x + switch.width + 3, 2
 	end
 end
 
 --------------------------------------------------------------------------------
 
-mainContainer:drawOnScreen(true)
-mainContainer:startEventHandling()
+application:draw(true)
+application:start()
 ```
 
 Result: 
