@@ -250,7 +250,7 @@ There is also an option to make any object **transparent** for screen events: ju
 
 And if the event does not belong to the screen, or the object **does not have** event handler method, the processing of the remaining child elements will continue as always. You can see the logic and the order of event processing in the following image:
 
-![](https://i.imgur.com/gRKaDik.png?1)
+![](https://i.imgur.com/iLYlSBo.png?1)
 
 Every application has following properties:
 
