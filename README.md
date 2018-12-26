@@ -180,7 +180,7 @@ After adding any object to container using :**addChild()** method, the object wi
 
 Let's pay attention on object.**localX** and object.**localY** properties. They're represents local position of child object inside parent container. There's a difference from object.**x** and object.**y**: they're represents *current position of object on screen* and are being calculated automatically for performing drawing operations. But most of the time the developer will work with local position. The hierarchy and positioning of container's children is well presented in the following image:
 
-![](https://i.imgur.com/GJmDQ2j.png)
+![](https://i.imgur.com/MQCNRbd.png?1
 
 Containers also have an important feature: any child that extends beyond the bounds of the container will be rendered only within the size of this container:
 
@@ -250,7 +250,7 @@ There is also an option to make any object **transparent** for screen events: ju
 
 And if the event does not belong to the screen, or the object **does not have** event handler method, the processing of the remaining child elements will continue as always. You can see the logic and the order of event processing in the following image:
 
-![](https://i.imgur.com/eHqIFNN.png)
+![](https://i.imgur.com/gRKaDik.png?1)
 
 Every application has following properties:
 
