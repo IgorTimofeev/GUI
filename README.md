@@ -270,6 +270,7 @@ local GUI = require("GUI")
 
 -- Create new application
 local application = GUI.application()
+
 -- Create simple event handler for it
 application.eventHandler = function(application, object, ...)
     print("It works! The event data was: ", ...)
