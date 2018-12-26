@@ -1560,7 +1560,7 @@ local function layoutUpdate(layout)
 			)
 
 			-- Учитываем отступы от краев ячейки
-			if cell.horizontalMargin or cell.verticalMargin then
+			if cell.horizontalMargin ~= 0 or cell.verticalMargin ~= 0 then
 				cell.x, cell.y = GUI.getMarginCoordinates(
 					cell.x,
 					cell.y,
@@ -1635,6 +1635,12 @@ local function layoutSetAlignment(layout, column, row, horizontalAlignment, vert
 	return layout
 end
 
+local function layoutGetMargin(layout, column, row)
+	layoutCheckCell(layout, column, row)
+
+	return layout.cells[row][column].horizontalMargin, layout.cells[row][column].verticalMargin
+end
+
 local function layoutSetMargin(layout, column, row, horizontalMargin, verticalMargin)
 	layoutCheckCell(layout, column, row)
 	layout.cells[row][column].horizontalMargin = horizontalMargin
@@ -1647,6 +1653,8 @@ local function layoutNewCell()
 	return {
 		horizontalAlignment = GUI.ALIGNMENT_HORIZONTAL_CENTER,
 		verticalAlignment = GUI.ALIGNMENT_VERTICAL_CENTER,
+		horizontalMargin = 0,
+		verticalMargin = 0,
 		direction = GUI.DIRECTION_VERTICAL,
 		spacing = 1
 	}
@@ -1853,6 +1861,7 @@ function GUI.layout(x, y, width, height, columnCount, rowCount)
 	layout.setSpacing = layoutSetSpacing
 	layout.setAlignment = layoutSetAlignment
 	layout.setMargin = layoutSetMargin
+	layout.getMargin = layoutGetMargin
 	
 	layout.fitToChildrenSize = layoutFitToChildrenSize
 	layout.setFitting = layoutSetFitting
@@ -3568,6 +3577,15 @@ local function listSetFitting(list, ...)
 	return list
 end
 
+local function listSetMargin(list, ...)
+	layoutSetMargin(list, 1, 1, ...)
+	return list
+end
+
+local function listGetMargin(list, ...)
+	return layoutGetMargin(list, 1, 1, ...)
+end
+
 local function listGetItem(list, what)
 	if type(what) == "number" then
 		return list.children[what]
@@ -3619,6 +3637,8 @@ function GUI.list(x, y, width, height, itemSize, spacing, backgroundColor, textC
 	list.setSpacing = listSetSpacing
 	list.setDirection = listSetDirection
 	list.setFitting = listSetFitting
+	list.setMargin = listSetMargin
+	list.getMargin = listGetMargin
 	list.update = listUpdate
 	list.draw = listDraw
 
