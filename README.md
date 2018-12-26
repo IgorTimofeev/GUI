@@ -259,6 +259,7 @@ Every application has following properties:
 | *function* | :**start**([*float* delay]) | Run the event processing for this container and analyse events for all it's child objects. The  **delay** parameter is similar to computer.**pullSignal** one |
 | *function* | :**stop**() | Stop processing events for this container |
 | *function* | :**consumeEvent**() | Consume currently processing event and skip it's handling for rest unprocessed child objects |
+| *function* | :**draw**(*table* application) | This method behaviour is similar to any object.**draw**, but after drawing application widgets it will also render changed pixels from buffer to computer screen. Most of the time you should use it to draw any changed visual data of your application |
 
 Below is a classic example of the implementation of the application:
 
