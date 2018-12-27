@@ -1114,8 +1114,7 @@ This object has following properties:
 
 | Type | Property | Description |
 | ------ | ------ | ------ |
-| *callback-function* | .**onResize**(*int* dragWidth, *int* dragHeight) | 
-This function is called while moving the mouse pointer with the left button pressed on the resizer. Two parameters are the distance traveled by the mouse pointer |
+| *callback-function* | .**onResize**(*int* dragWidth, *int* dragHeight) | This function is called while moving the mouse pointer with the left button pressed on the resizer. Two parameters are the distance traveled by the mouse pointer |
 | *callback-function* | .**onResizeFinished**() | This function is called after you stop moving the mouse pointer over the resizer |
 
 Example of implementation:
